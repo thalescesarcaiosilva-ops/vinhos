@@ -1,0 +1,38 @@
+{
+  "rewrites": [
+    {
+      "source": "/rest/v1/:path*",
+      "destination": "https://zsfhnjrotkbzyikkxmnm.supabase.co/rest/v1/:path*"
+    },
+    {
+      "source": "/auth/v1/:path*",
+      "destination": "https://zsfhnjrotkbzyikkxmnm.supabase.co/auth/v1/:path*"
+    },
+    {
+      "source": "/storage/v1/:path*",
+      "destination": "https://zsfhnjrotkbzyikkxmnm.supabase.co/storage/v1/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/storage/v1/object/public/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "all" },
+        { "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/storage/v1/render/image/public/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "all" },
+        { "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=86400" }
+      ]
+    }
+  ]
+}

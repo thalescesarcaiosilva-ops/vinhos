@@ -1,0 +1,1 @@
+UPDATE public.products SET video_url = '/__l5e/assets-v1/8dd2a1bc-a017-43ea-a005-a42884c98682/casa-valduga-premivm-extra-brut.mp4' WHERE slug = 'casa-valduga-premivm-extra-brut';

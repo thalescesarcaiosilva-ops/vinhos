@@ -1,0 +1,634 @@
+{
+  "generatedAt": "2026-07-13T15:36:07.821Z",
+  "dryRun": true,
+  "sources": {
+    "vinBackup": {
+      "file": "scripts/data/backups/produtos-ativos-backup-2026-07-11-22-48-26.csv",
+      "products": 522,
+      "uniqueSkus": 522
+    },
+    "wcCorrigido": {
+      "file": "c:/Users/rodri/Downloads/produtos_corrigidos.csv",
+      "products": 652,
+      "uniqueSkus": 652
+    },
+    "unionUniqueSkus": 1174,
+    "overlapSkus": 0
+  },
+  "database": {
+    "total": 1173,
+    "active": 1173,
+    "inactive": 0,
+    "outsideCsvs": 0,
+    "outsideCsvsSamples": [],
+    "missingFromDb": {
+      "vin": [
+        "VIN369"
+      ],
+      "wc": []
+    }
+  },
+  "duplicates": {
+    "crossCsvByName": {
+      "count": 10,
+      "productsInvolved": 20,
+      "groups": [
+        {
+          "nameKey": "espumante casa perini black edition extra brut 750ml",
+          "displayName": "Espumante Casa Perini Black Edition Extra Brut 750ml",
+          "vin": [
+            {
+              "sku": "VIN362",
+              "slug": "casa-perini-black-edition-extra-brut",
+              "price": 60.45,
+              "gtin": "7896452101647"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97283-5pjw3RJlWV32lQq",
+              "slug": "espumante-casa-perini-black-edition-extra-brut-750ml",
+              "price": 41.93,
+              "gtin": "7896452101647"
+            }
+          ]
+        },
+        {
+          "nameKey": "espumante casa perini demi-sec 750ml",
+          "displayName": "Espumante Casa Perini Demi-sec 750ml",
+          "vin": [
+            {
+              "sku": "VIN369",
+              "slug": "casa-perini-demi-sec",
+              "price": 55.23,
+              "gtin": "7896452112179"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "95793-5pjw3RJlWV32lQq",
+              "slug": "espumante-casa-perini-demi-sec-750ml",
+              "price": 33.53,
+              "gtin": "7896452112179"
+            }
+          ]
+        },
+        {
+          "nameKey": "espumante casa valduga 130 brut 750ml",
+          "displayName": "Espumante Casa Valduga 130 Brut 750ml",
+          "vin": [
+            {
+              "sku": "VIN802",
+              "slug": "espumante-casa-valduga-130-brut-750ml",
+              "price": 128.28,
+              "gtin": "7898276970072"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97021-5pjw3RJlWV32lQq",
+              "slug": "espumante-casa-valduga-130-brut-750ml",
+              "price": 106.33,
+              "gtin": "7898276972441"
+            }
+          ]
+        },
+        {
+          "nameKey": "espumante cave amadeu brut 750ml",
+          "displayName": "Espumante Cave Amadeu Brut 750ml",
+          "vin": [
+            {
+              "sku": "VIN354",
+              "slug": "cave-amadeu-brut",
+              "price": 74.42,
+              "gtin": "7898249840319"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97208-5pjw3RJlWV32lQq",
+              "slug": "espumante-cave-amadeu-brut-750ml",
+              "price": 74.13,
+              "gtin": "7898249840319"
+            }
+          ]
+        },
+        {
+          "nameKey": "espumante cave amadeu rose brut 750ml",
+          "displayName": "Espumante Cave Amadeu Rosé Brut 750ml",
+          "vin": [
+            {
+              "sku": "VIN339",
+              "slug": "cave-amadeu-rose-brut",
+              "price": 74.42,
+              "gtin": "7898249840562"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97521-5pjw3RJlWV32lQq",
+              "slug": "espumante-cave-amadeu-rose-brut-750ml",
+              "price": 74.13,
+              "gtin": "7292849840562"
+            }
+          ]
+        },
+        {
+          "nameKey": "espumante cave geisse brut 750ml",
+          "displayName": "Espumante Cave Geisse Brut 750ml",
+          "vin": [
+            {
+              "sku": "VIN741",
+              "slug": "cave-geisse-brut",
+              "price": 125.62,
+              "gtin": "7898249840357"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97510-5pjw3RJlWV32lQq",
+              "slug": "espumante-cave-geisse-brut-750ml",
+              "price": 125.23,
+              "gtin": "7898249840357"
+            }
+          ]
+        },
+        {
+          "nameKey": "espumante cave geisse nature 750ml",
+          "displayName": "Espumante Cave Geisse Nature 750ml",
+          "vin": [
+            {
+              "sku": "VIN742",
+              "slug": "cave-geisse-nature",
+              "price": 125.62,
+              "gtin": "7898249840364"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97507-5pjw3RJlWV32lQq",
+              "slug": "espumante-cave-geisse-nature-750ml",
+              "price": 125.23,
+              "gtin": null
+            }
+          ]
+        },
+        {
+          "nameKey": "espumante luiz argenta jovem brut 750ml",
+          "displayName": "Espumante Luiz Argenta Jovem Brut 750ml",
+          "vin": [
+            {
+              "sku": "VIN1322",
+              "slug": "espumante-luiz-argenta-jovem-brut-750ml",
+              "price": 86.39,
+              "gtin": "7898918946083"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97519-5pjw3RJlWV32lQq",
+              "slug": "espumante-luiz-argenta-jovem-brut-750ml",
+              "price": 74.83,
+              "gtin": "7898918946083"
+            }
+          ]
+        },
+        {
+          "nameKey": "espumante ponto nero live celebration brut 750ml",
+          "displayName": "Espumante Ponto Nero Live Celebration Brut 750ml",
+          "vin": [
+            {
+              "sku": "VIN341",
+              "slug": "ponto-nero-live-celebration-brut",
+              "price": 49.81,
+              "gtin": "7898932685470"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "96262-5pjw3RJlWV32lQq",
+              "slug": "espumante-ponto-nero-live-celebration-brut-750ml",
+              "price": 34.9,
+              "gtin": "7898932685715"
+            }
+          ]
+        },
+        {
+          "nameKey": "espumante ponto nero live celebration moscatel 750ml",
+          "displayName": "Espumante Ponto Nero Live Celebration Moscatel 750ml",
+          "vin": [
+            {
+              "sku": "VIN321",
+              "slug": "ponto-nero-live-celebration-moscatel",
+              "price": 45.82,
+              "gtin": "7898932685463"
+            }
+          ],
+          "wc": [
+            {
+              "sku": "95771-5pjw3RJlWV32lQq",
+              "slug": "espumante-ponto-nero-live-celebration-moscatel-750ml",
+              "price": 28.63,
+              "gtin": "7898932685463"
+            }
+          ]
+        }
+      ]
+    },
+    "crossCsvByGtin": {
+      "count": 17,
+      "groups": [
+        {
+          "gtin": "7896452112582",
+          "vin": [
+            {
+              "sku": "VIN319",
+              "name": "Espumante Casa Perini Aquarela Moscatel Rosé 750ml",
+              "price": 55.23
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97982-5pjw3RJlWV32lQq",
+              "name": "Pack 6 Espumantes Casa Perini Moscatel Aquarela 750ml",
+              "price": 186.9
+            }
+          ]
+        },
+        {
+          "gtin": "7896452101647",
+          "vin": [
+            {
+              "sku": "VIN362",
+              "name": "Espumante Casa Perini Black Edition Extra Brut 750ml",
+              "price": 60.45
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97283-5pjw3RJlWV32lQq",
+              "name": "Espumante Casa Perini Black Edition Extra Brut 750ml",
+              "price": 41.93
+            }
+          ]
+        },
+        {
+          "gtin": "7896452112179",
+          "vin": [
+            {
+              "sku": "VIN369",
+              "name": "Espumante Casa Perini Demi-sec 750ml",
+              "price": 55.23
+            }
+          ],
+          "wc": [
+            {
+              "sku": "95793-5pjw3RJlWV32lQq",
+              "name": "Espumante Casa Perini Demi-Sec 750ml",
+              "price": 33.53
+            },
+            {
+              "sku": "98006-5pjw3RJlWV32lQq",
+              "name": "Pack 6 Espumantes Casa Perini Demi-Sec 750ml",
+              "price": 181.4
+            }
+          ]
+        },
+        {
+          "gtin": "7896452112506",
+          "vin": [
+            {
+              "sku": "VIN325",
+              "name": "Espumante Casa Perini Moscatel 750ml",
+              "price": 55.23
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97039-5pjw3RJlWV32lQq",
+              "name": "Espumante Casa Perini Moscatel 375ml",
+              "price": 26.9
+            },
+            {
+              "sku": "97990-5pjw3RJlWV32lQq",
+              "name": "Pack 6 Espumantes Casa Perini Moscatel 750ml",
+              "price": 183.4
+            }
+          ]
+        },
+        {
+          "gtin": "7898276972137",
+          "vin": [
+            {
+              "sku": "VIN356",
+              "name": "Espumante Casa Valduga 130 Blanc de Blanc 750ml",
+              "price": 173.5
+            }
+          ],
+          "wc": [
+            {
+              "sku": "96985-5pjw3RJlWV32lQq",
+              "name": "Espumante Casa Valduga 130 Brut Blanc de Blanc 750ml",
+              "price": 135.49
+            }
+          ]
+        },
+        {
+          "gtin": "7898249840319",
+          "vin": [
+            {
+              "sku": "VIN354",
+              "name": "Espumante Cave Amadeu Brut 750ml",
+              "price": 74.42
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97208-5pjw3RJlWV32lQq",
+              "name": "Espumante Cave Amadeu Brut 750ml",
+              "price": 74.13
+            }
+          ]
+        },
+        {
+          "gtin": "7898249840357",
+          "vin": [
+            {
+              "sku": "VIN741",
+              "name": "Espumante Cave Geisse Brut 750ml",
+              "price": 125.62
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97510-5pjw3RJlWV32lQq",
+              "name": "Espumante Cave Geisse Brut 750ml",
+              "price": 125.23
+            }
+          ]
+        },
+        {
+          "gtin": "7898918946083",
+          "vin": [
+            {
+              "sku": "VIN1322",
+              "name": "Espumante Luiz Argenta Jovem Brut 750ml",
+              "price": 86.39
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97519-5pjw3RJlWV32lQq",
+              "name": "Espumante Luiz Argenta Jovem Brut 750ml",
+              "price": 74.83
+            }
+          ]
+        },
+        {
+          "gtin": "8410384020051",
+          "vin": [
+            {
+              "sku": "VIN316",
+              "name": "Espumante Mia White Sweet Moscato 750ml",
+              "price": 53.8
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97360-5pjw3RJlWV32lQq",
+              "name": "Espumante Freixenet Mía Fruity & Sweet 750ml",
+              "price": 51.03
+            }
+          ]
+        },
+        {
+          "gtin": "7898276971383",
+          "vin": [
+            {
+              "sku": "VIN689",
+              "name": "Espumante Naturelle Moscatel Branco 750ml",
+              "price": 49.81
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97013-5pjw3RJlWV32lQq",
+              "name": "Espumante Casa Valduga Naturelle Moscatel 750ml",
+              "price": 42.63
+            },
+            {
+              "sku": "98090-5pjw3RJlWV32lQq",
+              "name": "Pack 6 Espumantes Casa Valduga Naturelle Moscatel Rosé 750ml",
+              "price": 275.9
+            },
+            {
+              "sku": "98092-5pjw3RJlWV32lQq",
+              "name": "Pack 6 Espumantes Casa Valduga Naturelle Moscatel 750ml",
+              "price": 275.9
+            }
+          ]
+        },
+        {
+          "gtin": "7898932685463",
+          "vin": [
+            {
+              "sku": "VIN321",
+              "name": "Espumante Ponto Nero Live Celebration Moscatel 750ml",
+              "price": 45.82
+            }
+          ],
+          "wc": [
+            {
+              "sku": "95771-5pjw3RJlWV32lQq",
+              "name": "Espumante Ponto Nero Live Celebration Moscatel 750ml",
+              "price": 28.63
+            },
+            {
+              "sku": "97014-5pjw3RJlWV32lQq",
+              "name": "Espumante Ponto Nero Live Celebration Moscatel Rosé 750ml",
+              "price": 30.03
+            },
+            {
+              "sku": "98010-5pjw3RJlWV32lQq",
+              "name": "Pack 6 Espumantes Ponto Nero Live Celebration Moscatel 750ml",
+              "price": 188.9
+            }
+          ]
+        },
+        {
+          "gtin": "7896023082634",
+          "vin": [
+            {
+              "sku": "VIN382",
+              "name": "Espumante Salton Moscatel 750ml",
+              "price": 38.51
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97022-5pjw3RJlWV32lQq",
+              "name": "Espumante Salton Classic Moscatel 750ml",
+              "price": 29.9
+            },
+            {
+              "sku": "98008-5pjw3RJlWV32lQq",
+              "name": "Pack 6 Espumantes Salton Moscatel 750ml",
+              "price": 173.9
+            }
+          ]
+        },
+        {
+          "gtin": "7898276970607",
+          "vin": [
+            {
+              "sku": "VIN014",
+              "name": "Vinho Branco Casa Valduga Terroir Exclusivo Gewürztraminer 750ml",
+              "price": 120.3
+            }
+          ],
+          "wc": [
+            {
+              "sku": "96416-5pjw3RJlWV32lQq",
+              "name": "Vinho Casa Valduga Terroir Exclusivo Gewurztraminer 750ml",
+              "price": 95.83
+            }
+          ]
+        },
+        {
+          "gtin": "5601996355485",
+          "vin": [
+            {
+              "sku": "VIN911",
+              "name": "Vinho Branco Porta 6 750ml",
+              "price": 53.8
+            }
+          ],
+          "wc": [
+            {
+              "sku": "96821-5pjw3RJlWV32lQq",
+              "name": "Vinho Porta 6 Branco 750ml",
+              "price": 46.13
+            }
+          ]
+        },
+        {
+          "gtin": "8410384048055",
+          "vin": [
+            {
+              "sku": "VIN285",
+              "name": "Vinho Rosé Freixenet Mia Demi-sec 750ml",
+              "price": 44.49
+            }
+          ],
+          "wc": [
+            {
+              "sku": "96927-5pjw3RJlWV32lQq",
+              "name": "Vinho Freixenet Fino Mia Rose Demi Sec 750ml",
+              "price": 36.33
+            }
+          ]
+        },
+        {
+          "gtin": "3330620004735",
+          "vin": [
+            {
+              "sku": "VIN1012",
+              "name": "Vinho Rosé Manon Côtes de Provence 750ml",
+              "price": 164.19
+            }
+          ],
+          "wc": [
+            {
+              "sku": "96866-5pjw3RJlWV32lQq",
+              "name": "Vinho Manon Côtes de Provence Rosé 750ml",
+              "price": 183.33
+            }
+          ]
+        },
+        {
+          "gtin": "6009675641888",
+          "vin": [
+            {
+              "sku": "VIN1239",
+              "name": "Vinho Tinto African King Pinotage 750ml",
+              "price": 64.44
+            }
+          ],
+          "wc": [
+            {
+              "sku": "97429-5pjw3RJlWV32lQq",
+              "name": "Vinho African King Pinotage 750ml",
+              "price": 41.93
+            }
+          ]
+        }
+      ]
+    },
+    "vinInternalByName": {
+      "count": 1,
+      "groups": [
+        {
+          "name": "combo 3 vinhos tintos 750ml",
+          "products": [
+            {
+              "sku": "VIN921",
+              "price": 363.09
+            },
+            {
+              "sku": "VIN839",
+              "price": 268.59
+            }
+          ]
+        }
+      ]
+    },
+    "wcInternalByName": {
+      "count": 3,
+      "groups": [
+        {
+          "name": "kit 8 paseo red blend valle central d.o.",
+          "products": [
+            {
+              "sku": "96089-5pjw3RJlWV32lQq",
+              "price": 128.24
+            },
+            {
+              "sku": "98466-5pjw3RJlWV32lQq",
+              "price": 128.24
+            }
+          ]
+        },
+        {
+          "name": "kit 8 vina de los andes malbec",
+          "products": [
+            {
+              "sku": "96094-5pjw3RJlWV32lQq",
+              "price": 188.16
+            },
+            {
+              "sku": "98470-5pjw3RJlWV32lQq",
+              "price": 188.16
+            }
+          ]
+        },
+        {
+          "name": "vinho ravanello cabernet sauvignon merlot 2015 750ml",
+          "products": [
+            {
+              "sku": "97104-5pjw3RJlWV32lQq",
+              "price": 55.93
+            },
+            {
+              "sku": "97246-5pjw3RJlWV32lQq",
+              "price": 59.43
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "sync": {
+    "toActivate": 0,
+    "toDeactivate": 0
+  }
+}

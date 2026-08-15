@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-07-13T16:23:18.451Z",
+  "pending": 4,
+  "restored": 4,
+  "movedToTemp": 3,
+  "reactivated": 0,
+  "errors": 0,
+  "errorSamples": [],
+  "wcWithNumericSuffix": 6,
+  "remainingMismatches": 3,
+  "mismatchSamples": [
+    {
+      "sku": "96094-5pjw3RJlWV32lQq",
+      "cur": "__restore-72523399",
+      "want": "kit-8-vina-de-los-andes-malbec-2"
+    },
+    {
+      "sku": "97104-5pjw3RJlWV32lQq",
+      "cur": "__restore-483a35ff",
+      "want": "vinho-ravanello-cabernet-sauvignon-merlot-2015-750ml-2"
+    },
+    {
+      "sku": "96089-5pjw3RJlWV32lQq",
+      "cur": "__restore-e6e695dd",
+      "want": "kit-8-paseo-red-blend-valle-central-d-o-2"
+    }
+  ]
+}

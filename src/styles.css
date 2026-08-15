@@ -1,0 +1,178 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Uma família só: Jost (geométrica). Hierarquia via peso/tamanho, não via segunda face. */
+  --font-sans: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-wine: var(--wine);
+  --color-cream: var(--cream);
+  --color-buy: var(--buy);
+  --color-buy-foreground: var(--buy-foreground);
+  --color-sale: var(--sale);
+  --color-sale-foreground: var(--sale-foreground);
+}
+
+:root {
+  --radius: 0.25rem;
+  /* Pure white background */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.18 0.02 20);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.02 20);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.02 20);
+
+  /* Bordô — deep wine red */
+  --primary: oklch(0.32 0.12 18);
+  --primary-foreground: oklch(0.98 0.01 80);
+
+  /* Soft cream secondary */
+  --secondary: oklch(0.95 0.015 70);
+  --secondary-foreground: oklch(0.25 0.05 18);
+
+  --muted: oklch(0.95 0.01 70);
+  --muted-foreground: oklch(0.48 0.02 30);
+
+  /* Gold accent */
+  --accent: oklch(0.72 0.13 80);
+  --accent-foreground: oklch(0.2 0.05 20);
+
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  --border: oklch(0.9 0.01 70);
+  --input: oklch(0.9 0.01 70);
+  --ring: oklch(0.32 0.12 18);
+
+  --gold: oklch(0.72 0.13 80);
+  --gold-foreground: oklch(0.18 0.02 20);
+  --wine: oklch(0.32 0.12 18);
+  --cream: oklch(0.985 0.004 80);
+
+  /* Green CTA used on buy buttons */
+  --buy: oklch(0.58 0.16 145);
+  --buy-foreground: oklch(0.99 0 0);
+
+  /* Bright red used on sale badges, "Mais Vendido" pills, price highlight */
+  --sale: oklch(0.58 0.22 28);
+  --sale-foreground: oklch(0.99 0 0);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: 0.01em;
+  }
+
+  /* Mesma família — destaque só por peso e tracking (evita “mix” de tipografias) */
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-serif {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Fora de @layer para vencer utilitários Tailwind (text-sm) no mobile.
+   iOS Safari dá zoom ao focar inputs com fonte computada < 16px. */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]):not(
+      [type="file"]
+    ),
+  select,
+  textarea {
+    font-size: max(16px, 1em) !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @layer base {
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 7.5rem;
+    }
+
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"] {
+      transition-duration: 160ms;
+      transition-property: color, background-color, border-color, box-shadow, opacity;
+      transition-timing-function: ease-out;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    transition-delay: 0s !important;
+    transition-duration: 0s !important;
+  }
+}

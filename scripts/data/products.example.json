@@ -1,0 +1,21 @@
+[
+  {
+    "sku": "VIN001",
+    "name": "Exemplo Tinto Reserva",
+    "slug": "exemplo-tinto-reserva-vin001",
+    "price": 89.9,
+    "compare_at_price": 109.9,
+    "stock": 24,
+    "description": "Descrição completa do produto.",
+    "short_description": "Resumo curto para listagens.",
+    "country": "Brasil",
+    "grape": "Cabernet Sauvignon",
+    "brand": "Vinícola Exemplo",
+    "image": "VIN001_1.jpg",
+    "gallery": ["VIN001_2.jpg"],
+    "category_slugs": ["tintos", "brasil"],
+    "featured": false,
+    "best_seller": true,
+    "is_active": true
+  }
+]

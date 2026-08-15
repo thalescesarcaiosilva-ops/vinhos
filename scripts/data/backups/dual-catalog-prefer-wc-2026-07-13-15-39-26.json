@@ -1,0 +1,149 @@
+{
+  "generatedAt": "2026-07-13T15:39:26.203Z",
+  "dryRun": true,
+  "policy": "Ambos CSVs ativos; duplicata por nome → mantém WC corrigido, desativa VIN",
+  "counts": {
+    "vinTotal": 522,
+    "wcTotal": 652,
+    "vinDeactivatedAsDuplicate": 10,
+    "vinActive": 512,
+    "wcActive": 652,
+    "expectedActive": 1164
+  },
+  "duplicateGroups": [
+    {
+      "name": "Espumante Casa Perini Black Edition Extra Brut 750ml",
+      "vin": {
+        "sku": "VIN362",
+        "price": 60.45
+      },
+      "wcKept": [
+        {
+          "sku": "97283-5pjw3RJlWV32lQq",
+          "price": 41.93
+        }
+      ]
+    },
+    {
+      "name": "Espumante Casa Perini Demi-sec 750ml",
+      "vin": {
+        "sku": "VIN369",
+        "price": 55.23
+      },
+      "wcKept": [
+        {
+          "sku": "95793-5pjw3RJlWV32lQq",
+          "price": 33.53
+        }
+      ]
+    },
+    {
+      "name": "Espumante Casa Valduga 130 Brut 750ml",
+      "vin": {
+        "sku": "VIN802",
+        "price": 128.28
+      },
+      "wcKept": [
+        {
+          "sku": "97021-5pjw3RJlWV32lQq",
+          "price": 106.33
+        }
+      ]
+    },
+    {
+      "name": "Espumante Cave Amadeu Brut 750ml",
+      "vin": {
+        "sku": "VIN354",
+        "price": 74.42
+      },
+      "wcKept": [
+        {
+          "sku": "97208-5pjw3RJlWV32lQq",
+          "price": 74.13
+        }
+      ]
+    },
+    {
+      "name": "Espumante Cave Amadeu Rosé Brut 750ml",
+      "vin": {
+        "sku": "VIN339",
+        "price": 74.42
+      },
+      "wcKept": [
+        {
+          "sku": "97521-5pjw3RJlWV32lQq",
+          "price": 74.13
+        }
+      ]
+    },
+    {
+      "name": "Espumante Cave Geisse Brut 750ml",
+      "vin": {
+        "sku": "VIN741",
+        "price": 125.62
+      },
+      "wcKept": [
+        {
+          "sku": "97510-5pjw3RJlWV32lQq",
+          "price": 125.23
+        }
+      ]
+    },
+    {
+      "name": "Espumante Cave Geisse Nature 750ml",
+      "vin": {
+        "sku": "VIN742",
+        "price": 125.62
+      },
+      "wcKept": [
+        {
+          "sku": "97507-5pjw3RJlWV32lQq",
+          "price": 125.23
+        }
+      ]
+    },
+    {
+      "name": "Espumante Luiz Argenta Jovem Brut 750ml",
+      "vin": {
+        "sku": "VIN1322",
+        "price": 86.39
+      },
+      "wcKept": [
+        {
+          "sku": "97519-5pjw3RJlWV32lQq",
+          "price": 74.83
+        }
+      ]
+    },
+    {
+      "name": "Espumante Ponto Nero Live Celebration Brut 750ml",
+      "vin": {
+        "sku": "VIN341",
+        "price": 49.81
+      },
+      "wcKept": [
+        {
+          "sku": "96262-5pjw3RJlWV32lQq",
+          "price": 34.9
+        }
+      ]
+    },
+    {
+      "name": "Espumante Ponto Nero Live Celebration Moscatel 750ml",
+      "vin": {
+        "sku": "VIN321",
+        "price": 45.82
+      },
+      "wcKept": [
+        {
+          "sku": "95771-5pjw3RJlWV32lQq",
+          "price": 28.63
+        }
+      ]
+    }
+  ],
+  "sync": {
+    "activated": 0,
+    "deactivated": 0
+  }
+}

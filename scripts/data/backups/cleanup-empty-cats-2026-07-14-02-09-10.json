@@ -1,0 +1,375 @@
+{
+  "generatedAt": "2026-07-14T02:09:10.789Z",
+  "dryRun": false,
+  "patched": 27,
+  "updates": [
+    {
+      "id": "05083e6f-af75-464d-ae49-9320f220ae4e",
+      "sku": "97325-5pjw3RJlWV32lQq",
+      "name": "Vinho Pizzato LEGNO Chardonnay 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "branco",
+        "country": "Brasil"
+      }
+    },
+    {
+      "id": "f85e0577-5568-4e92-9216-de9acc5c0784",
+      "sku": "97281-5pjw3RJlWV32lQq",
+      "name": "Cava Don Román Brut 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "product_type": "espumante",
+        "color": "branco",
+        "country": "Espanha"
+      }
+    },
+    {
+      "id": "2e7e290f-4687-401c-8133-4fa06c1afb3e",
+      "sku": "97321-5pjw3RJlWV32lQq",
+      "name": "Vinho Santa Carolina Reserva de Família Cabernet Sauvignon 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "12cc6529-a73f-4cb4-92f3-ab6193631508",
+      "sku": "97322-5pjw3RJlWV32lQq",
+      "name": "Vinho Flamingo Merlot 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "d3a604db-e91f-4387-ba70-b2d059b5b222",
+      "sku": "97256-5pjw3RJlWV32lQq",
+      "name": "Vinho Pichilemu Carmenere 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "ab555a7a-6bfa-4b85-9634-af3b6acd098a",
+      "sku": "97970-5pjw3RJlWV32lQq",
+      "name": "Pack 6 Vinhos Casa Perini Fração Única Merlot 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "c4d872a1-e1d8-4a14-abd4-d17db4c717fe",
+      "sku": "97319-5pjw3RJlWV32lQq",
+      "name": "Vinho Errazuriz Max Cabernet Sauvignon Reserva 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "b624df67-d52c-4d10-9542-3a7f75a3a77c",
+      "sku": "97964-5pjw3RJlWV32lQq",
+      "name": "Pack 6 Vinhos Casa Perini Fração Única Cabernet Franc 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "caaac37e-2323-4b5b-aa14-69a7d40e75a8",
+      "sku": "97257-5pjw3RJlWV32lQq",
+      "name": "Vinho Miolo Reserva Malbec 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto",
+        "country": "Argentina"
+      }
+    },
+    {
+      "id": "adc5cc5e-ed52-4812-b353-b6c39d66413b",
+      "sku": "97974-5pjw3RJlWV32lQq",
+      "name": "Pack 6 Vinhos Casa Perini Solidário 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "a47754ab-9368-4b5b-9660-84ded3357e3c",
+      "sku": "96411-5pjw3RJlWV32lQq",
+      "name": "Salton Lunae Drinks Clericot 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": "Brasil"
+      },
+      "patch": {
+        "color": "rose"
+      }
+    },
+    {
+      "id": "eed3e56d-bea0-49ed-bafa-f930d7301d4f",
+      "sku": "97326-5pjw3RJlWV32lQq",
+      "name": "Vinho Santa Colina Cabernet Sauvignon Suave 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "86be4a08-9bbd-4de4-b50f-ae779feadc94",
+      "sku": "96723-5pjw3RJlWV32lQq",
+      "name": "Vinho Morande Selección de Parcelas Carmenere 187ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "b927493b-322d-4325-aca2-a12997beafb5",
+      "sku": "97314-5pjw3RJlWV32lQq",
+      "name": "Vinho Amitié Colheitas Cabernet Franc 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto",
+        "country": "Brasil"
+      }
+    },
+    {
+      "id": "42240a9b-622e-46c8-a741-62c8d6d64fc2",
+      "sku": "97320-5pjw3RJlWV32lQq",
+      "name": "Vinho Douglas Green Shiraz 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "273383e6-23ee-4e3c-ad18-a1ac8cdcb267",
+      "sku": "97946-5pjw3RJlWV32lQq",
+      "name": "Pack 6 Vinho Casa Perini Vitis Marselan 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": "Brasil"
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "fd012c29-2312-4c55-9db2-eb15e13eb871",
+      "sku": "97041-5pjw3RJlWV32lQq",
+      "name": "Vinho Almadén Frisante Moscatel Blanc 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": "Brasil"
+      },
+      "patch": {
+        "color": "branco"
+      }
+    },
+    {
+      "id": "caa0cea2-5f90-4369-95ad-cd6022035a44",
+      "sku": "97318-5pjw3RJlWV32lQq",
+      "name": "Vinho Santa Alba Family Collection Cabernet Sauvignon 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "e29cf4c4-9699-4b7d-b9de-360261c8240f",
+      "sku": "97311-5pjw3RJlWV32lQq",
+      "name": "Vinho Malma Esencia Family Wines Cabernet Sauvignon 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "5bc4dec6-a42a-47ec-8d43-6d6d79ec2958",
+      "sku": "97254-5pjw3RJlWV32lQq",
+      "name": "Vinho Casa Valduga Origem Sauvignon Blanc 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "branco",
+        "country": "Chile"
+      }
+    },
+    {
+      "id": "195a445c-057e-4807-8fb3-157f5581ac0d",
+      "sku": "97313-5pjw3RJlWV32lQq",
+      "name": "Vinho Aurora Varietal Viognier 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "branco"
+      }
+    },
+    {
+      "id": "38e6245d-f42f-43ee-a93f-666a3161850d",
+      "sku": "97316-5pjw3RJlWV32lQq",
+      "name": "Vinho Capoani Merlot 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "f0d114f2-4485-4f2d-a3ac-873cc6e90e11",
+      "sku": "97317-5pjw3RJlWV32lQq",
+      "name": "Vinho Mazzei Fonterutoli Nº10 Toscana IGT 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto",
+        "country": "Itália"
+      }
+    },
+    {
+      "id": "52f77f33-8748-49ad-a217-702196c1d4c0",
+      "sku": "97966-5pjw3RJlWV32lQq",
+      "name": "Pack 6 Vinhos Casa Perini Fração Única Cabernet Sauvignon 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "b90abc1f-2e1a-4e22-9218-1aed7497674c",
+      "sku": "97968-5pjw3RJlWV32lQq",
+      "name": "Pack 6 Vinhos Casa Perini Fração Única Chardonnay 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": null
+      },
+      "patch": {
+        "color": "branco"
+      }
+    },
+    {
+      "id": "72432dbe-7ac2-471d-a145-c58b820dc596",
+      "sku": "97948-5pjw3RJlWV32lQq",
+      "name": "Pack 6 Vinho Casa Perini Vitis Barbera 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": "Brasil"
+      },
+      "patch": {
+        "color": "tinto"
+      }
+    },
+    {
+      "id": "74829b52-fbdf-4947-9a1d-6f976522b8a8",
+      "sku": "96278-5pjw3RJlWV32lQq",
+      "name": "Vinho Monte Paschoal Frisante Moscato 750ml",
+      "before": {
+        "color": "na",
+        "product_type": "vinho",
+        "country": "Brasil"
+      },
+      "patch": {
+        "color": "branco"
+      }
+    }
+  ],
+  "activated": 3,
+  "deleted": [
+    "grecia",
+    "combos-vinhos-tintos-brancos",
+    "combos-ve-brancos-roses",
+    "combos-ve-tintos-brancos",
+    "hungria",
+    "libano"
+  ],
+  "stillOrphan": []
+}

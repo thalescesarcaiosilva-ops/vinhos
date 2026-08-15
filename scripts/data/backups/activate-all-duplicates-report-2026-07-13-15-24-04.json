@@ -1,0 +1,1619 @@
+{
+  "generatedAt": "2026-07-13T15:24:02.714Z",
+  "totalProducts": 1173,
+  "before": {
+    "active": 649,
+    "inactive": 524
+  },
+  "duplicates": {
+    "bySku": [],
+    "bySlug": [],
+    "byName": [
+      {
+        "name": "espumante cave amadeu rosé brut 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "62620e0e-dcdf-499a-a4b8-d54af0f4258b",
+            "sku": "97521-5pjw3RJlWV32lQq",
+            "slug": "espumante-cave-amadeu-rose-brut-750ml-2",
+            "is_active": true,
+            "price": 74.13
+          },
+          {
+            "id": "b6e1b535-e341-40a8-be7a-c27c18540f8c",
+            "sku": "VIN339",
+            "slug": "cave-amadeu-rose-brut",
+            "is_active": false,
+            "price": 74.42
+          }
+        ]
+      },
+      {
+        "name": "espumante cave geisse nature 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "b4d2ed5a-2a50-49c4-967a-00a66ea3224f",
+            "sku": "97507-5pjw3RJlWV32lQq",
+            "slug": "espumante-cave-geisse-nature-750ml-2",
+            "is_active": true,
+            "price": 125.23
+          },
+          {
+            "id": "73fddd6e-e845-407a-89ef-212500a19111",
+            "sku": "VIN742",
+            "slug": "cave-geisse-nature",
+            "is_active": false,
+            "price": 125.62
+          }
+        ]
+      },
+      {
+        "name": "espumante cave amadeu brut 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "aa8df611-d185-4b31-9006-ab72b47354f4",
+            "sku": "VIN354",
+            "slug": "cave-amadeu-brut",
+            "is_active": false,
+            "price": 74.42
+          },
+          {
+            "id": "196c3a21-6c3b-47ec-b8da-993126ffae8b",
+            "sku": "97208-5pjw3RJlWV32lQq",
+            "slug": "espumante-cave-amadeu-brut-750ml-2",
+            "is_active": true,
+            "price": 74.13
+          }
+        ]
+      },
+      {
+        "name": "kit 8 viña de los andes malbec",
+        "count": 2,
+        "products": [
+          {
+            "id": "72523399-686a-4bcb-aef1-be7f61f04d68",
+            "sku": "98470-5pjw3RJlWV32lQq",
+            "slug": "kit-8-vina-de-los-andes-malbec-4",
+            "is_active": true,
+            "price": 188.16
+          },
+          {
+            "id": "72399d35-55c1-4ed1-b5c5-d2a42bb0e9ba",
+            "sku": "96094-5pjw3RJlWV32lQq",
+            "slug": "kit-8-vina-de-los-andes-malbec-3",
+            "is_active": false,
+            "price": 188.16
+          }
+        ]
+      },
+      {
+        "name": "combo 3 vinhos tintos 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "5d71f228-48ab-47af-8b95-05fdec878562",
+            "sku": "VIN921",
+            "slug": "combo-3-vinhos-tintos-750ml-VIN921",
+            "is_active": false,
+            "price": 363.09
+          },
+          {
+            "id": "554afa7e-bcaa-414b-acda-c78cbbea0098",
+            "sku": "VIN839",
+            "slug": "combo-3-vinhos-tintos-750ml",
+            "is_active": false,
+            "price": 228.3
+          }
+        ]
+      },
+      {
+        "name": "vinho ravanello cabernet sauvignon merlot 2015 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "ec0264e1-b46f-4a35-bf36-c96ca83e6e43",
+            "sku": "97104-5pjw3RJlWV32lQq",
+            "slug": "vinho-ravanello-cabernet-sauvignon-merlot-2015-750ml-3",
+            "is_active": false,
+            "price": 55.93
+          },
+          {
+            "id": "483a35ff-744a-444b-805b-a298e8ddca47",
+            "sku": "97246-5pjw3RJlWV32lQq",
+            "slug": "vinho-ravanello-cabernet-sauvignon-merlot-2015-750ml-4",
+            "is_active": true,
+            "price": 59.43
+          }
+        ]
+      },
+      {
+        "name": "espumante casa perini black edition extra brut 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "5432f421-6f11-4e8b-8d9f-5ee96f5510c2",
+            "sku": "97283-5pjw3RJlWV32lQq",
+            "slug": "espumante-casa-perini-black-edition-extra-brut-750ml-2",
+            "is_active": true,
+            "price": 41.93
+          },
+          {
+            "id": "6d52354d-788c-4257-bafe-17a52a563562",
+            "sku": "VIN362",
+            "slug": "casa-perini-black-edition-extra-brut",
+            "is_active": false,
+            "price": 60.45
+          }
+        ]
+      },
+      {
+        "name": "kit 8 paseo red blend valle central d.o.",
+        "count": 2,
+        "products": [
+          {
+            "id": "e4964548-bf1c-4161-b940-41a11b8aa414",
+            "sku": "96089-5pjw3RJlWV32lQq",
+            "slug": "kit-8-paseo-red-blend-valle-central-d-o-3",
+            "is_active": false,
+            "price": 128.24
+          },
+          {
+            "id": "e6e695dd-c9ad-4e81-978e-6cf79a48f162",
+            "sku": "98466-5pjw3RJlWV32lQq",
+            "slug": "kit-8-paseo-red-blend-valle-central-d-o-4",
+            "is_active": true,
+            "price": 128.24
+          }
+        ]
+      },
+      {
+        "name": "espumante luiz argenta jovem brut 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "12b2413a-b736-41a6-9a83-623ffccf086b",
+            "sku": "VIN1322",
+            "slug": "espumante-luiz-argenta-jovem-brut-750ml-vin1322",
+            "is_active": false,
+            "price": 86.39
+          },
+          {
+            "id": "5968240f-a4c8-445e-9471-1480ac4dea83",
+            "sku": "97519-5pjw3RJlWV32lQq",
+            "slug": "espumante-luiz-argenta-jovem-brut-750ml",
+            "is_active": true,
+            "price": 74.83
+          }
+        ]
+      },
+      {
+        "name": "espumante cave geisse brut 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "99a900c7-32d1-44a2-8dd9-1bf876fe20dc",
+            "sku": "97510-5pjw3RJlWV32lQq",
+            "slug": "espumante-cave-geisse-brut-750ml-2",
+            "is_active": true,
+            "price": 125.23
+          },
+          {
+            "id": "2cfa732b-ef91-4ee6-adf5-b4e13777dfcd",
+            "sku": "VIN741",
+            "slug": "cave-geisse-brut",
+            "is_active": false,
+            "price": 125.62
+          }
+        ]
+      },
+      {
+        "name": "espumante casa valduga 130 brut 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "bb8e4166-a06e-47c0-971d-3977433ad478",
+            "sku": "97021-5pjw3RJlWV32lQq",
+            "slug": "espumante-casa-valduga-130-brut-750ml",
+            "is_active": true,
+            "price": 106.33
+          },
+          {
+            "id": "b833b3e6-9e06-4c8a-8174-321e52da9b8e",
+            "sku": "VIN802",
+            "slug": "espumante-casa-valduga-130-brut-750ml-vin802",
+            "is_active": false,
+            "price": 128.28
+          }
+        ]
+      },
+      {
+        "name": "espumante ponto nero live celebration brut 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "dec42c77-28c2-4c92-bc3e-a312c2523bd3",
+            "sku": "VIN341",
+            "slug": "ponto-nero-live-celebration-brut",
+            "is_active": false,
+            "price": 49.81
+          },
+          {
+            "id": "040e401f-7d5d-4773-aa4f-c9b5bddfbff3",
+            "sku": "96262-5pjw3RJlWV32lQq",
+            "slug": "espumante-ponto-nero-live-celebration-brut-750ml-2",
+            "is_active": true,
+            "price": 34.9
+          }
+        ]
+      },
+      {
+        "name": "espumante ponto nero live celebration moscatel 750ml",
+        "count": 2,
+        "products": [
+          {
+            "id": "d78e944a-f062-41c4-983b-7a4edd6b4d1d",
+            "sku": "VIN321",
+            "slug": "ponto-nero-live-celebration-moscatel",
+            "is_active": false,
+            "price": 45.82
+          },
+          {
+            "id": "58550877-f9e9-4863-a818-edf0097c9af1",
+            "sku": "95771-5pjw3RJlWV32lQq",
+            "slug": "espumante-ponto-nero-live-celebration-moscatel-750ml-2",
+            "is_active": true,
+            "price": 28.63
+          }
+        ]
+      }
+    ],
+    "byGtin": [
+      {
+        "gtin": "7896452100381",
+        "count": 2,
+        "products": [
+          {
+            "id": "13c4d2be-fab0-4d5c-bc8d-0b99268c3728",
+            "name": "Pack 6 Vinho Casa Perini Fração Única Chardonnay 750ml",
+            "sku": "97952-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "b90abc1f-2e1a-4e22-9218-1aed7497674c",
+            "name": "Pack 6 Vinhos Casa Perini Fração Única Chardonnay 750ml",
+            "sku": "97968-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898276972137",
+        "count": 2,
+        "products": [
+          {
+            "id": "f36fe13d-a926-4b0b-b1aa-f2c4e5208c1c",
+            "name": "Espumante Casa Valduga 130 Blanc de Blanc 750ml",
+            "sku": "VIN356",
+            "is_active": false
+          },
+          {
+            "id": "65786c1f-775a-4723-9ff1-f4f1970ef48a",
+            "name": "Espumante Casa Valduga 130 Brut Blanc de Blanc 750ml",
+            "sku": "96985-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898932685715",
+        "count": 4,
+        "products": [
+          {
+            "id": "660f0dce-bc12-41ee-a46c-91076864e244",
+            "name": "Espumante Ponto Nero Live Celebration Brut Rosé 750ml",
+            "sku": "95769-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "6b0d3f05-4457-4d3a-b34f-848923ecde3d",
+            "name": "Pack 6 Espumantes Ponto Nero Live Celebration Brut Rosé 750ml",
+            "sku": "97996-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "a8caf9d9-3156-491c-8aa0-d3edf5f4b028",
+            "name": "Pack 6 Espumante Ponto Nero Live Celebration Brut 750ml",
+            "sku": "97960-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "040e401f-7d5d-4773-aa4f-c9b5bddfbff3",
+            "name": "Espumante Ponto Nero Live Celebration Brut 750ml",
+            "sku": "96262-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7891141001161",
+        "count": 2,
+        "products": [
+          {
+            "id": "cc602306-8ce7-4a1e-84ac-2ef73f91f2d4",
+            "name": "Pack 6 Espumantes Conde de Foucauld Demi-Sec 750ml",
+            "sku": "98058-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "703fa16e-0db0-48b1-90ca-83c6986f00da",
+            "name": "Espumante Conde de Foucauld Demi-Sec 750ml",
+            "sku": "97042-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896452112179",
+        "count": 2,
+        "products": [
+          {
+            "id": "58569693-3090-47f1-86be-251606652b28",
+            "name": "Espumante Casa Perini Demi-Sec 750ml",
+            "sku": "95793-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "a4422d98-e45c-4388-86b9-08bb7c737653",
+            "name": "Pack 6 Espumantes Casa Perini Demi-Sec 750ml",
+            "sku": "98006-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896034302097",
+        "count": 3,
+        "products": [
+          {
+            "id": "c25f6ba3-923d-4262-9057-fb9128e52776",
+            "name": "Pack 6 Espumante Garibaldi Vero Brut 750ml",
+            "sku": "97962-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "3458d2b9-0e2a-4fb2-ac48-bd47910ab181",
+            "name": "Pack 6 Espumantes Garibaldi Vero Brut 750ml",
+            "sku": "97992-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "70274e7a-a5be-47a7-ae24-4042b0b1950d",
+            "name": "Pack 6 Espumantes Garibaldi Vero Brut Rosé 750ml",
+            "sku": "97988-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896023082634",
+        "count": 3,
+        "products": [
+          {
+            "id": "495a9cee-4cb8-4649-a511-e0bc9391e721",
+            "name": "Espumante Salton Moscatel 750ml",
+            "sku": "VIN382",
+            "is_active": false
+          },
+          {
+            "id": "6455fc3c-e471-4187-839c-95a8a53b0a27",
+            "name": "Pack 6 Espumantes Salton Moscatel 750ml",
+            "sku": "98008-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "b876f6c8-cdb1-42ae-b7c9-d4de6348a821",
+            "name": "Espumante Salton Classic Moscatel 750ml",
+            "sku": "97022-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898276971383",
+        "count": 4,
+        "products": [
+          {
+            "id": "44ad6469-2f8b-4ac8-a49a-8a907e0b675d",
+            "name": "Pack 6 Espumantes Casa Valduga Naturelle Moscatel 750ml",
+            "sku": "98092-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "2c62f02e-808e-463c-8568-5ba3fec63d53",
+            "name": "Espumante Naturelle Moscatel Branco 750ml",
+            "sku": "VIN689",
+            "is_active": false
+          },
+          {
+            "id": "2dc9ddf3-5770-40e5-b8b6-bde3aca96f69",
+            "name": "Pack 6 Espumantes Casa Valduga Naturelle Moscatel Rosé 750ml",
+            "sku": "98090-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "159e0be4-b2f0-48fd-9136-40c5f358d356",
+            "name": "Espumante Casa Valduga Naturelle Moscatel 750ml",
+            "sku": "97013-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896452112582",
+        "count": 2,
+        "products": [
+          {
+            "id": "9e1dcecc-64db-437f-9cf7-a337ff741855",
+            "name": "Pack 6 Espumantes Casa Perini Moscatel Aquarela 750ml",
+            "sku": "97982-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "a5f9e45e-7c24-4935-b259-2f1122d4993f",
+            "name": "Espumante Casa Perini Aquarela Moscatel Rosé 750ml",
+            "sku": "VIN319",
+            "is_active": false
+          }
+        ]
+      },
+      {
+        "gtin": "7898932686033",
+        "count": 3,
+        "products": [
+          {
+            "id": "a05bdd90-bca8-4e01-9645-ecbfd17a72aa",
+            "name": "Espumante Ponto Nero Cult SO2 Free 750ml",
+            "sku": "97531-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "0b5cb378-b276-4e15-84b5-b39e390cd6e4",
+            "name": "Pack 6 Espumantes Ponto Nero Cult SO2 FREE 750ml",
+            "sku": "98096-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "ecdaa4c9-9c96-417e-ba8c-254dd58e4ea0",
+            "name": "Pack 6 Espumantes Ponto Nero Cult SO2 Free Rosé 750ml",
+            "sku": "98102-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896034302509",
+        "count": 2,
+        "products": [
+          {
+            "id": "f67a884c-5645-4298-99ab-2df03c980e53",
+            "name": "Espumante Garibaldi Vero Demi-Sec Rosé 750ml",
+            "sku": "97016-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "aba424ac-7b7b-4676-b6ef-a9bcf0d39c11",
+            "name": "Pack 6 Espumantes Garibaldi Vero Demi-Sec Rosé 750ml",
+            "sku": "98024-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7808726906261",
+        "count": 2,
+        "products": [
+          {
+            "id": "04116411-c4f6-4c5f-80be-fb3ce395869f",
+            "name": "Pack 6 Vinhos Lorenzo & Gaspar Gran Reserva 750ml",
+            "sku": "97972-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "70c2c413-673a-4509-9475-567537bb218f",
+            "name": "Pack 6 Vinho Lorenzo & Gaspar Gran Reserva 750ml",
+            "sku": "97954-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898931361016",
+        "count": 2,
+        "products": [
+          {
+            "id": "e3642dc1-ecd7-4839-bbfe-9a7e6e8f8b9d",
+            "name": "Vinho Giaretta Reserva Cabernet Sauvignon 750ml",
+            "sku": "97097-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "87f14807-5a52-4464-8417-7d95f35b4f50",
+            "name": "Vinho Giaretta Rosé Cabernet Sauvignon/Merlot 750ml",
+            "sku": "97430-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898932685722",
+        "count": 2,
+        "products": [
+          {
+            "id": "79ae475a-ea24-4993-9b87-68286e555f4f",
+            "name": "Pack 6 Espumantes Ponto Nero Live Celebration Glera Prosecco 750ml",
+            "sku": "98020-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "f1acb646-3ba0-4197-9d1a-f1558ce60739",
+            "name": "Espumante Ponto Nero Live Celebration Glera Prosecco 750ml",
+            "sku": "96987-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7891141001086",
+        "count": 2,
+        "products": [
+          {
+            "id": "254625af-e8bd-4471-aee0-877cc702493b",
+            "name": "Pack 6 Espumantes Conde de Foucauld Brut 750ml",
+            "sku": "98032-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "e9f0cdf3-d665-4fc9-a943-ee6fceda3133",
+            "name": "Espumante Conde de Foucauld Brut 750ml",
+            "sku": "96980-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896034302493",
+        "count": 2,
+        "products": [
+          {
+            "id": "ddeaedf9-262d-4ea5-879b-e5d936100614",
+            "name": "Pack 6 Espumantes Garibaldi Pinot Noir Brut Rosé 750ml",
+            "sku": "98066-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "8322e84b-eca6-4444-a4aa-eb78c36c322e",
+            "name": "Espumante Garibaldi Pinot Noir Brut Rosé 750ml",
+            "sku": "97036-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896023015731",
+        "count": 3,
+        "products": [
+          {
+            "id": "1887acfe-92af-4f5f-813b-19ef8f59dace",
+            "name": "Pack 6 Espumantes Séries by Salton Rosé Moscato 750ml",
+            "sku": "98080-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "cd5a7b8c-1110-4336-ba88-1c0a3eb4213c",
+            "name": "Espumante Salton Moscato Rosé 750ml",
+            "sku": "97516-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "c89770f6-327f-43f6-b504-7cb3c464a05f",
+            "name": "Espumante Séries by Salton Rosé Moscato 750ml",
+            "sku": "97038-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896034302561",
+        "count": 4,
+        "products": [
+          {
+            "id": "5be9874a-bd07-4839-b54f-f62675c07c3b",
+            "name": "Espumante Garibaldi Prosecco Rosé 750ml",
+            "sku": "97034-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "e3473e80-f855-40d5-a80d-b23faa4dccbb",
+            "name": "Pack 6 Espumantes Garibaldi Prosecco Rosé 750ml",
+            "sku": "98074-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "63d1bddd-32e5-4821-a745-b9a276f8cd3b",
+            "name": "Espumante Garibaldi Prosecco Ice 750ml",
+            "sku": "97026-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "6bed5741-071b-41ba-bcab-b62ba3667e35",
+            "name": "Pack 6 Espumantes Garibaldi Prosecco 750ml",
+            "sku": "98014-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896034300963",
+        "count": 2,
+        "products": [
+          {
+            "id": "88a4aac0-2011-49b3-be9b-40af4ff3be38",
+            "name": "Pack 6 Espumantes Garibaldi Chardonnay Brut 750ml",
+            "sku": "98030-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "5ca2be00-597c-4bf6-8baf-7b61c2bea9d4",
+            "name": "Espumante Garibaldi Chardonnay Brut 750ml",
+            "sku": "96977-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898933236398",
+        "count": 3,
+        "products": [
+          {
+            "id": "cc3d98c8-34b5-45b1-b741-b0e52fb4f3fe",
+            "name": "Pack 6 Espumantes Gran Legado Champenoise Brut 750ml",
+            "sku": "98108-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "d6ad627c-19bf-4e1c-ba11-c6311bba503d",
+            "name": "Espumante Gran Legado Brut Champenoise Rosé 750ml",
+            "sku": "97526-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "37b4e0c8-4c42-461e-a9cf-8835f9304d41",
+            "name": "Pack 6 Espumantes Gran Legado Champenoise Brut Rosé 750ml",
+            "sku": "98124-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898276971703",
+        "count": 2,
+        "products": [
+          {
+            "id": "7dce0e7c-4046-4040-a335-24525f748257",
+            "name": "Espumante Casa Valduga Arte Tradicional Brut Rosé 750ml",
+            "sku": "97040-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "8d7317d1-0b73-4639-b023-080a4a74fbad",
+            "name": "Pack 6 Espumantes Casa Valduga Arte Tradicional Brut Rosé 750ml",
+            "sku": "98064-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898276970607",
+        "count": 2,
+        "products": [
+          {
+            "id": "cc15d682-3c29-4d09-834d-1e6a99a04110",
+            "name": "Vinho Casa Valduga Terroir Exclusivo Gewurztraminer 750ml",
+            "sku": "96416-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "e654116e-9466-4a46-81d9-24a04c593b17",
+            "name": "Vinho Branco Casa Valduga Terroir Exclusivo Gewürztraminer 750ml",
+            "sku": "VIN014",
+            "is_active": false
+          }
+        ]
+      },
+      {
+        "gtin": "7896452104556",
+        "count": 2,
+        "products": [
+          {
+            "id": "a5cf75d4-23c0-4cab-8027-575d47983205",
+            "name": "Vinho Casa Perini Vitis Marselan 750ml",
+            "sku": "96434-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "273383e6-23ee-4e3c-ad18-a1ac8cdcb267",
+            "name": "Pack 6 Vinho Casa Perini Vitis Marselan 750ml",
+            "sku": "97946-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896756801182",
+        "count": 3,
+        "products": [
+          {
+            "id": "d82026f7-e2bb-4f2b-89c4-f692bf605b61",
+            "name": "Pack 6 Espumantes Miolo Cuvée Tradition Brut Rosé 750ml",
+            "sku": "98118-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "3f9c98c4-dcd9-4965-bc73-e752d3bb977c",
+            "name": "Pack 6 Espumantes Miolo Cuvée Tradition Brut 750ml",
+            "sku": "98120-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "8e2d6111-9868-43a4-af88-f2f9e7df5598",
+            "name": "Espumante Miolo Cuvée Brut Rosé 750ml",
+            "sku": "97292-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898956540052",
+        "count": 2,
+        "products": [
+          {
+            "id": "7151db74-3f85-4227-8b82-e0ecede78f70",
+            "name": "Vinho Don Laurindo Reserva Merlot 750ml",
+            "sku": "96462-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "c7b1d1e5-ffff-4947-bbff-92d307a08b98",
+            "name": "Vinho Don Guerino Reserva Merlot 750ml",
+            "sku": "96573-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896452112506",
+        "count": 3,
+        "products": [
+          {
+            "id": "4e44363f-24c6-4200-8b44-281ba0a9e9b3",
+            "name": "Espumante Casa Perini Moscatel 750ml",
+            "sku": "VIN325",
+            "is_active": false
+          },
+          {
+            "id": "7c7bcdb9-ff35-4cb6-a07b-5b5c22f73875",
+            "name": "Espumante Casa Perini Moscatel 375ml",
+            "sku": "97039-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "0dd83f6a-cfc9-4a1f-8cf3-8fe2f1cd601b",
+            "name": "Pack 6 Espumantes Casa Perini Moscatel 750ml",
+            "sku": "97990-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "5601996355485",
+        "count": 2,
+        "products": [
+          {
+            "id": "2f63d688-057e-4ad8-8a2d-212c38efb37b",
+            "name": "Vinho Branco Porta 6 750ml",
+            "sku": "VIN911",
+            "is_active": false
+          },
+          {
+            "id": "9844f429-f433-44ea-96ab-e953fd7101dd",
+            "name": "Vinho Porta 6 Branco 750ml",
+            "sku": "96821-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898933236084",
+        "count": 2,
+        "products": [
+          {
+            "id": "3190eff3-25be-44e6-bcbb-eda58b2093bf",
+            "name": "Pack 6 Espumantes Gran Legado Moscatel 750ml",
+            "sku": "98078-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "295d7e06-98ea-4e83-a0e7-76552eb7a451",
+            "name": "Espumante Gran Legado Moscatel 750ml",
+            "sku": "97218-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898276971017",
+        "count": 2,
+        "products": [
+          {
+            "id": "3793e4b4-265e-466d-b77c-535fbcaa5b5d",
+            "name": "Espumante Casa Valduga Arte Tradicional Demi-Sec 750ml",
+            "sku": "97204-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "9b4d2d7e-ac26-411b-84c6-f41435982088",
+            "name": "Pack 6 Espumantes Casa Valduga Arte Tradicional Demi-Sec 750ml",
+            "sku": "98086-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "6009675641888",
+        "count": 2,
+        "products": [
+          {
+            "id": "3b26b46a-8425-41f6-93f9-a4aff05e8001",
+            "name": "Vinho Tinto African King Pinotage 750ml",
+            "sku": "VIN1239",
+            "is_active": false
+          },
+          {
+            "id": "a104407f-f084-4286-bc7a-f73c6eab0668",
+            "name": "Vinho African King Pinotage 750ml",
+            "sku": "97429-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7891141024870",
+        "count": 2,
+        "products": [
+          {
+            "id": "65d5d0ef-f365-46ec-90a3-e92d641dab2a",
+            "name": "Pack 6 Espumantes Conde de Foucauld Brut Rosé 750ml",
+            "sku": "98046-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "44d2dbb1-8389-4406-baa4-e3f341dff79c",
+            "name": "Espumante Conde de Foucauld Brut Rosé 750ml",
+            "sku": "97018-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7891141021336",
+        "count": 2,
+        "products": [
+          {
+            "id": "0a9fbe0a-ff49-4498-9677-6bd119701855",
+            "name": "Espumante Aurora Prosecco 750ml",
+            "sku": "97289-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "a6fd0133-5d52-4f1c-a4e2-56185981fe9a",
+            "name": "Pack 6 Espumantes Aurora Prosecco 750ml",
+            "sku": "98094-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7804304101004",
+        "count": 2,
+        "products": [
+          {
+            "id": "c4d872a1-e1d8-4a14-abd4-d17db4c717fe",
+            "name": "Vinho Errazuriz Max Cabernet Sauvignon Reserva 750ml",
+            "sku": "97319-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "596dbb2b-831f-4f8a-86a0-94b7f57eda14",
+            "name": "Vinho Errazuriz Estate Cabernet Sauvignon 750ml",
+            "sku": "96796-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898276970836",
+        "count": 2,
+        "products": [
+          {
+            "id": "a3002f5c-5dd4-4dce-a998-f304ade10dd1",
+            "name": "Vinho Casa Valduga Terroir Exclusivo Marselan 750ml",
+            "sku": "96628-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "41809928-11a5-4aed-bca7-588b2fa36b95",
+            "name": "Vinho Casa Valduga Terroir Exclusivo Malbec 750ml",
+            "sku": "96832-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898932685463",
+        "count": 4,
+        "products": [
+          {
+            "id": "6f04126e-7f2d-411d-90b2-cd3cd3e38811",
+            "name": "Pack 6 Espumantes Ponto Nero Live Celebration Moscatel 750ml",
+            "sku": "98010-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "9c4eeffb-0436-4838-8fef-7630f80cd1ad",
+            "name": "Espumante Ponto Nero Live Celebration Moscatel Rosé 750ml",
+            "sku": "97014-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "d78e944a-f062-41c4-983b-7a4edd6b4d1d",
+            "name": "Espumante Ponto Nero Live Celebration Moscatel 750ml",
+            "sku": "VIN321",
+            "is_active": false
+          },
+          {
+            "id": "58550877-f9e9-4863-a818-edf0097c9af1",
+            "name": "Espumante Ponto Nero Live Celebration Moscatel 750ml",
+            "sku": "95771-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898249840319",
+        "count": 2,
+        "products": [
+          {
+            "id": "aa8df611-d185-4b31-9006-ab72b47354f4",
+            "name": "Espumante Cave Amadeu Brut 750ml",
+            "sku": "VIN354",
+            "is_active": false
+          },
+          {
+            "id": "196c3a21-6c3b-47ec-b8da-993126ffae8b",
+            "name": "Espumante Cave Amadeu Brut 750ml",
+            "sku": "97208-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896452104204",
+        "count": 2,
+        "products": [
+          {
+            "id": "b559e0a6-6d68-4ada-bb29-149fc3c60400",
+            "name": "Vinho Arbo Cabernet Sauvignon 750ml",
+            "sku": "96623-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "f166c13a-f7cc-4685-bc57-c518162fc205",
+            "name": "Vinho Argento Cabernet Sauvignon 750ml",
+            "sku": "96443-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896100506121",
+        "count": 2,
+        "products": [
+          {
+            "id": "8dafab80-cc5d-4493-8827-59e7f77c06e2",
+            "name": "Pack 6 Espumantes Wave Moscatel Branco 660ml",
+            "sku": "98126-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "e5aea1bf-320b-4320-b755-8af0499cfe5e",
+            "name": "Espumante Wave Moscatel Branco 660ml",
+            "sku": "97518-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "8410384020051",
+        "count": 2,
+        "products": [
+          {
+            "id": "b36d7dee-e7d2-4d10-8ccb-2344f018f5b0",
+            "name": "Espumante Mia White Sweet Moscato 750ml",
+            "sku": "VIN316",
+            "is_active": false
+          },
+          {
+            "id": "36f97f4a-ec7e-4190-9a83-6ec938325294",
+            "name": "Espumante Freixenet Mía Fruity & Sweet 750ml",
+            "sku": "97360-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896034302981",
+        "count": 2,
+        "products": [
+          {
+            "id": "da0719b0-d2aa-4cf3-9725-836896bde3d2",
+            "name": "Espumante Garibaldi Prosecco Rosé Sweet 750ml",
+            "sku": "97511-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "f7231b9b-acc0-4ed2-80e9-8ff095354e10",
+            "name": "Pack 6 Espumantes Garibaldi Prosecco Rosé Sweet 750ml",
+            "sku": "98104-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896023085321",
+        "count": 2,
+        "products": [
+          {
+            "id": "e7fcd23d-4941-43fb-9022-4ce065a4ff43",
+            "name": "Pack 6 Vinho Salton Virtude Chardonnay 750ml",
+            "sku": "97958-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "5cfcc5f6-7c2b-4b0a-b554-83297cfd5230",
+            "name": "Vinho Salton Virtude Chardonnay 750ml",
+            "sku": "96724-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896756802349",
+        "count": 2,
+        "products": [
+          {
+            "id": "97a0cbb5-5db5-43a3-875b-29986082f49b",
+            "name": "Espumante Miolo Cuvée Demi-Sec 750ml",
+            "sku": "97512-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "3d35831f-dd46-4168-a75b-c7bb480acbe3",
+            "name": "Pack 6 Espumantes Miolo Cuvée Tradition Demi-Sec 750ml",
+            "sku": "98130-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896023016837",
+        "count": 2,
+        "products": [
+          {
+            "id": "6659c73f-10b5-4e11-bade-ef2a711b5843",
+            "name": "Espumante Salton Ouro Natural Brut Rosé 750ml",
+            "sku": "97515-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "71b78c22-c789-4f36-bac9-8d8524d2b3af",
+            "name": "Espumante Salton Ouro Brut 750ml",
+            "sku": "97017-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898623390065",
+        "count": 2,
+        "products": [
+          {
+            "id": "f32f7884-3955-43f2-aee1-9ed0ab457b1f",
+            "name": "Vinho Capoani Merlot/Tannat 750ml",
+            "sku": "96765-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "38e6245d-f42f-43ee-a93f-666a3161850d",
+            "name": "Vinho Capoani Merlot 750ml",
+            "sku": "97316-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896100506114",
+        "count": 2,
+        "products": [
+          {
+            "id": "cc5a109b-b9f4-4b12-9cd5-b2ed9b37c99e",
+            "name": "Pack 6 Espumantes Wave Moscatel Rosé 660ml",
+            "sku": "98110-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "d02ee2a9-e13f-4bb8-9a2a-e158cc22ff2e",
+            "name": "Espumante Wave Moscatel Rosé 660ml",
+            "sku": "97215-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896776800813",
+        "count": 2,
+        "products": [
+          {
+            "id": "51cf488d-a97a-4e27-a7d1-226df273a9b8",
+            "name": "Vinho Dom Cândido Autêntico Merlot 750ml",
+            "sku": "96864-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "d1772f23-43f8-4a3b-85ed-ab02abf78bdb",
+            "name": "Vinho Dom Cândido Autêntico Rosé 750ml",
+            "sku": "96613-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898933236169",
+        "count": 2,
+        "products": [
+          {
+            "id": "bfb2939d-b8e1-4cfd-b0f2-eb3c2e6c1c69",
+            "name": "Pack 6 Espumantes Gran Legado Charmat Brut Rosé 750ml",
+            "sku": "98060-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "303517cb-93d4-494d-9517-888dee272fb8",
+            "name": "Espumante Gran Legado Brut Charmat Rose 750ml",
+            "sku": "97020-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "8410384048055",
+        "count": 2,
+        "products": [
+          {
+            "id": "58338fdd-71ad-46c4-b040-1d63f26fb267",
+            "name": "Vinho Rosé Freixenet Mia Demi-sec 750ml",
+            "sku": "VIN285",
+            "is_active": false
+          },
+          {
+            "id": "fa9dfd12-72fd-4851-a18f-10b3259824df",
+            "name": "Vinho Freixenet Fino Mia Rose Demi Sec 750ml",
+            "sku": "96927-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896023017933",
+        "count": 2,
+        "products": [
+          {
+            "id": "74c72be2-08a5-4eba-9dd3-de90c22819c9",
+            "name": "Pack 6 Espumantes Salton Prosecco Rosé 750ml",
+            "sku": "98076-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "1f2ecd61-cd2d-4fa7-bd6f-84c520d264e5",
+            "name": "Espumante Salton Prosecco Rosé 750ml",
+            "sku": "97206-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896034300604",
+        "count": 2,
+        "products": [
+          {
+            "id": "814ebecb-608c-4c33-ae36-82ed8a54777b",
+            "name": "Espumante Garibaldi Vero Demi-Sec 750ml",
+            "sku": "96981-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "f0dc57ef-6613-4202-bf5f-86c343335ce7",
+            "name": "Pack 6 Espumantes Garibaldi Vero Demi-Sec 750ml",
+            "sku": "98016-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896756805043",
+        "count": 3,
+        "products": [
+          {
+            "id": "bf11cf48-5cf4-43d4-b2d8-d3d540415bd7",
+            "name": "Espumante Miolo Seival Brut 750ml",
+            "sku": "97027-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "0f257f36-d58c-4bfd-8465-68d0f7909065",
+            "name": "Espumante Miolo Seival Brut Rosé 750ml",
+            "sku": "97203-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "7e7be62e-e685-4c2d-b9c1-c25cdb868b5f",
+            "name": "Pack 6 Espumantes Miolo Seival Brut Rosé 750ml",
+            "sku": "98056-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7891141024917",
+        "count": 2,
+        "products": [
+          {
+            "id": "47bd4939-2ead-4880-a771-f32ec6a97988",
+            "name": "Espumante Aurora Moscatel Rosé 750ml",
+            "sku": "97024-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "a0fe5d55-237e-4dd5-af34-d5bf4b1bded8",
+            "name": "Pack 6 Espumantes Aurora Moscatel Rosé 750ml",
+            "sku": "98054-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7790415128217",
+        "count": 2,
+        "products": [
+          {
+            "id": "5f684fb9-4515-46ec-b7c9-d26e9b553415",
+            "name": "Vinho Escorihuela Familia Gascón Syrah 750ml",
+            "sku": "97096-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "167c8aed-6360-4968-9476-715b48a03b7d",
+            "name": "Vinho Escorihuela Gascón Syrah 750ml",
+            "sku": "97107-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896267774180",
+        "count": 2,
+        "products": [
+          {
+            "id": "4f254338-f4c0-41b7-9c49-ff26e1aedb41",
+            "name": "Espumante Di Mallo Moscatel 750ml",
+            "sku": "97286-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "b9884273-2f50-4e69-979a-16cd82fbd097",
+            "name": "Espumante Di Mallo Moscatel Rosé 750ml",
+            "sku": "97210-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896452101821",
+        "count": 2,
+        "products": [
+          {
+            "id": "af8d7a09-5393-4593-bf47-8f16a9a53e41",
+            "name": "Vinho Casa Perini Drella Rosé 750ml",
+            "sku": "97251-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "cba5f777-1c0f-496e-8afc-3f81910c3e52",
+            "name": "Vinho Casa Perini Fração Única Rosé de Pinot Noir 750ml",
+            "sku": "97425-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "5603541756075",
+        "count": 2,
+        "products": [
+          {
+            "id": "75f50b07-1e32-42d9-9869-e7f154e1e83f",
+            "name": "Vinho Churchill's Meio Queijo Douro Branco 750ml",
+            "sku": "97250-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "5e08c2b0-7394-48ec-a12a-d2030616b03c",
+            "name": "Vinho Churchill's Meio Queijo Douro 750ml",
+            "sku": "96889-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896452101647",
+        "count": 2,
+        "products": [
+          {
+            "id": "5432f421-6f11-4e8b-8d9f-5ee96f5510c2",
+            "name": "Espumante Casa Perini Black Edition Extra Brut 750ml",
+            "sku": "97283-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "6d52354d-788c-4257-bafe-17a52a563562",
+            "name": "Espumante Casa Perini Black Edition Extra Brut 750ml",
+            "sku": "VIN362",
+            "is_active": false
+          }
+        ]
+      },
+      {
+        "gtin": "7896034301076",
+        "count": 2,
+        "products": [
+          {
+            "id": "835ff76f-5737-4d4b-9c66-0dab649ab08c",
+            "name": "Pack 6 Espumantes Garibaldi Moscatel Rosé 750ml",
+            "sku": "98028-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "9949e3bf-f6b0-4fb5-88c5-bfbf052372e6",
+            "name": "Espumante Garibaldi Moscatel Rosé 750ml",
+            "sku": "95836-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7891141018541",
+        "count": 3,
+        "products": [
+          {
+            "id": "5d51048c-61d8-4f8d-9313-cedaf5bcece9",
+            "name": "Pack 6 Espumantes Aurora Moscatel 750ml",
+            "sku": "98048-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "3ab075ad-ef57-4305-ae0e-059487ea57f7",
+            "name": "Pack 12 Espumantes Aurora Moscatel 750ml",
+            "sku": "98142-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "26de3776-9cd0-43da-a9ca-e772f3314401",
+            "name": "Espumante Aurora Moscatel 750ml",
+            "sku": "96976-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7891141024856",
+        "count": 2,
+        "products": [
+          {
+            "id": "0fe024da-9987-4379-84f4-cdc10e48d74b",
+            "name": "Pack 6 Espumantes Conde de Foucauld Demi-Sec Rosé 750ml",
+            "sku": "98036-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "c5b5c878-5c72-4ae6-92a0-61574bb9922d",
+            "name": "Espumante Conde de Foucauld Demi-Sec Rosé 750ml",
+            "sku": "97015-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898932685036",
+        "count": 4,
+        "products": [
+          {
+            "id": "5f8b9dcb-8afe-45d8-ab49-947af4ca121a",
+            "name": "Pack 6 Espumantes Ponto Nero Cult Brut 750ml",
+            "sku": "98038-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "eafb0116-bd76-47cb-a940-92ab23fd1bc5",
+            "name": "Pack 6 Espumantes Ponto Nero Cult Brut Rosé 750ml",
+            "sku": "98050-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "6170dbea-4174-4dde-a535-dea1364e2668",
+            "name": "Espumante Ponto Nero Cult Brut 750ml",
+            "sku": "95794-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "8419f881-1239-49af-b846-342445354237",
+            "name": "Espumante Ponto Nero Cult Brut Rosé 750ml",
+            "sku": "95837-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7898249840357",
+        "count": 2,
+        "products": [
+          {
+            "id": "99a900c7-32d1-44a2-8dd9-1bf876fe20dc",
+            "name": "Espumante Cave Geisse Brut 750ml",
+            "sku": "97510-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "2cfa732b-ef91-4ee6-adf5-b4e13777dfcd",
+            "name": "Espumante Cave Geisse Brut 750ml",
+            "sku": "VIN741",
+            "is_active": false
+          }
+        ]
+      },
+      {
+        "gtin": "7898249840920",
+        "count": 3,
+        "products": [
+          {
+            "id": "4307fa82-a000-4fcb-bfb6-36f97387e19e",
+            "name": "Espumante Victoria Geisse Extra Brut Vintage 12 meses 750ml",
+            "sku": "97357-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "a40caee5-8c59-4df9-acba-7ee440f27930",
+            "name": "Espumante Victoria Geisse Extra Brut Vintage Rosé 12 meses 750ml",
+            "sku": "97528-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "1d6e85ad-19d8-4e6e-b7b6-648b34dfee2c",
+            "name": "Pack 6 Espumantes Victoria Geisse Extra Brut Vintage Rosé 750ml",
+            "sku": "98136-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896452100367",
+        "count": 2,
+        "products": [
+          {
+            "id": "52f77f33-8748-49ad-a217-702196c1d4c0",
+            "name": "Pack 6 Vinhos Casa Perini Fração Única Cabernet Sauvignon 750ml",
+            "sku": "97966-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "67c1cf13-0766-4922-8179-5d24dd786e88",
+            "name": "Vinho Casa Perini Fração Única Cabernet Sauvignon 750ml",
+            "sku": "96348-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "3330620004735",
+        "count": 2,
+        "products": [
+          {
+            "id": "bab7680e-b43b-4394-9cbc-adcb16afab07",
+            "name": "Vinho Rosé Manon Côtes de Provence 750ml",
+            "sku": "VIN1012",
+            "is_active": false
+          },
+          {
+            "id": "69fc9199-0289-4d99-a39d-366fb634ed92",
+            "name": "Vinho Manon Côtes de Provence Rosé 750ml",
+            "sku": "96866-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7730931132671",
+        "count": 2,
+        "products": [
+          {
+            "id": "4c4393b8-9ec9-4e73-8d61-150c519318e1",
+            "name": "Vinho Olas y Vientos Cabernet Sauvignon Demi-Sec 750ml",
+            "sku": "96488-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "41aca509-fc61-4451-90ce-cb2b8ce9a1cf",
+            "name": "Vinho Olas y Vientos Sauvignon Blanc 750ml",
+            "sku": "96716-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "gtin": "7896023014833",
+        "count": 3,
+        "products": [
+          {
+            "id": "b021ddeb-db65-42c9-928f-c9f266713cf3",
+            "name": "Vinho Salton Domênico Campanha Marselan e Tannat 750ml",
+            "sku": "96619-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "19d04342-958c-4d56-8e7e-bdd356a5314a",
+            "name": "Vinho Salton Domênico Campanha Tannat 750ml",
+            "sku": "96795-5pjw3RJlWV32lQq",
+            "is_active": true
+          },
+          {
+            "id": "34ebff62-5b23-47c5-a746-8fbbcdd88318",
+            "name": "Vinho Salton Domênico Campanha Marselan 750ml",
+            "sku": "96863-5pjw3RJlWV32lQq",
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "duplicateSkuGroups": 0,
+    "duplicateSlugGroups": 0,
+    "duplicateNameGroups": 13,
+    "duplicateGtinGroups": 67,
+    "duplicateNameProducts": 26
+  },
+  "after": {
+    "active": 1173,
+    "inactive": 0
+  }
+}

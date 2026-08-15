@@ -1,0 +1,133 @@
+{
+  "generatedAt": "2026-07-13T16:15:37.475Z",
+  "dryRun": true,
+  "slugRenames": 650,
+  "slugRenameSamples": [
+    {
+      "id": "05083e6f-af75-464d-ae49-9320f220ae4e",
+      "sku": "97325-5pjw3RJlWV32lQq",
+      "from": "vinho-pizzato-legno-chardonnay-750ml-2",
+      "to": "vinho-pizzato-legno-chardonnay-750ml"
+    },
+    {
+      "id": "13c4d2be-fab0-4d5c-bc8d-0b99268c3728",
+      "sku": "97952-5pjw3RJlWV32lQq",
+      "from": "pack-6-vinho-casa-perini-fracao-unica-chardonnay-750ml-2",
+      "to": "pack-6-vinho-casa-perini-fracao-unica-chardonnay-750ml"
+    },
+    {
+      "id": "47b2dc08-ac5a-470d-a7b3-df69b032629c",
+      "sku": "96076-5pjw3RJlWV32lQq",
+      "from": "kit-5-emporium-negroamaro-primitivo-puglia-igt-2",
+      "to": "kit-5-emporium-negroamaro-primitivo-puglia-igt"
+    },
+    {
+      "id": "3d4cde43-aea6-4ff2-8b5d-516c1fea502b",
+      "sku": "96134-5pjw3RJlWV32lQq",
+      "from": "kit-12-garrafas-espumante-rose-italiano-costa-furra-brut-2",
+      "to": "kit-12-garrafas-espumante-rose-italiano-costa-furra-brut"
+    },
+    {
+      "id": "b4725370-2ed0-4308-b301-7a805b8580ca",
+      "sku": "96080-5pjw3RJlWV32lQq",
+      "from": "kit-4-vientos-de-altura-malbec-2",
+      "to": "kit-4-vientos-de-altura-malbec"
+    },
+    {
+      "id": "6b255166-b2d4-416d-be1c-1a0eb4f4e972",
+      "sku": "97327-5pjw3RJlWV32lQq",
+      "from": "vinho-santa-carolina-reservado-cabernet-sauvignon-rose-750ml-2",
+      "to": "vinho-santa-carolina-reservado-cabernet-sauvignon-rose-750ml"
+    },
+    {
+      "id": "560927b1-dbc1-4d91-b1f1-b0f944945e21",
+      "sku": "96087-5pjw3RJlWV32lQq",
+      "from": "kit-5-the-african-horizon-sauvignon-blanc-western-cape-w-o-2",
+      "to": "kit-5-the-african-horizon-sauvignon-blanc-western-cape-w-o"
+    },
+    {
+      "id": "40bdcb66-bf31-4300-a488-2a7c7da4a01c",
+      "sku": "96157-5pjw3RJlWV32lQq",
+      "from": "kit-12-garrafas-espumante-blanc-de-blancs-brut-2",
+      "to": "kit-12-garrafas-espumante-blanc-de-blancs-brut"
+    },
+    {
+      "id": "ab555a7a-6bfa-4b85-9634-af3b6acd098a",
+      "sku": "97970-5pjw3RJlWV32lQq",
+      "from": "pack-6-vinhos-casa-perini-fracao-unica-merlot-750ml-2",
+      "to": "pack-6-vinhos-casa-perini-fracao-unica-merlot-750ml"
+    },
+    {
+      "id": "c396cd46-42f7-4418-98a5-58056b1be76f",
+      "sku": "96164-5pjw3RJlWV32lQq",
+      "from": "kit-6-tanggier-brut-rose-2",
+      "to": "kit-6-tanggier-brut-rose"
+    },
+    {
+      "id": "702f22a3-737f-4e4a-acd8-d29600d421db",
+      "sku": "97432-5pjw3RJlWV32lQq",
+      "from": "vinho-yali-wild-swan-chardonnay-750ml-2",
+      "to": "vinho-yali-wild-swan-chardonnay-750ml"
+    },
+    {
+      "id": "660f0dce-bc12-41ee-a46c-91076864e244",
+      "sku": "95769-5pjw3RJlWV32lQq",
+      "from": "espumante-ponto-nero-live-celebration-brut-rose-750ml-2",
+      "to": "espumante-ponto-nero-live-celebration-brut-rose-750ml"
+    },
+    {
+      "id": "086f6562-49ed-4192-b6cc-fc7e15e04bc0",
+      "sku": "96090-5pjw3RJlWV32lQq",
+      "from": "kit-6-les-calandieres-rose-terres-du-midi-igp-2",
+      "to": "kit-6-les-calandieres-rose-terres-du-midi-igp"
+    },
+    {
+      "id": "c756782e-9fd4-45b8-aeef-1e67f6fed475",
+      "sku": "96165-5pjw3RJlWV32lQq",
+      "from": "kit-3-champagne-charles-collin-classique-brut-2",
+      "to": "kit-3-champagne-charles-collin-classique-brut"
+    },
+    {
+      "id": "cc602306-8ce7-4a1e-84ac-2ef73f91f2d4",
+      "sku": "98058-5pjw3RJlWV32lQq",
+      "from": "pack-6-espumantes-conde-de-foucauld-demi-sec-750ml-2",
+      "to": "pack-6-espumantes-conde-de-foucauld-demi-sec-750ml"
+    },
+    {
+      "id": "8ceaf8a7-39b5-4c44-b7ac-891f6947c077",
+      "sku": "98112-5pjw3RJlWV32lQq",
+      "from": "pack-6-espumantes-casa-perini-lotus-750ml-2",
+      "to": "pack-6-espumantes-casa-perini-lotus-750ml"
+    },
+    {
+      "id": "948c68c7-ada9-4b70-877d-d7df691ab9db",
+      "sku": "97435-5pjw3RJlWV32lQq",
+      "from": "vinho-namaqua-chenin-blanc-750ml-2",
+      "to": "vinho-namaqua-chenin-blanc-750ml"
+    },
+    {
+      "id": "30e57140-c878-4e83-b78d-b5edeb8702fc",
+      "sku": "97522-5pjw3RJlWV32lQq",
+      "from": "espumante-salton-evidence-750ml-2",
+      "to": "espumante-salton-evidence-750ml"
+    },
+    {
+      "id": "58569693-3090-47f1-86be-251606652b28",
+      "sku": "95793-5pjw3RJlWV32lQq",
+      "from": "espumante-casa-perini-demi-sec-750ml-2",
+      "to": "espumante-casa-perini-demi-sec-750ml"
+    },
+    {
+      "id": "082fd69e-4bca-40f2-8c25-47dee1cda62b",
+      "sku": "96176-5pjw3RJlWV32lQq",
+      "from": "kit-6-tanggier-brut-2",
+      "to": "kit-6-tanggier-brut"
+    }
+  ],
+  "deactivatedSkus": [
+    "96094-5pjw3RJlWV32lQq",
+    "96089-5pjw3RJlWV32lQq",
+    "97104-5pjw3RJlWV32lQq",
+    "VIN921"
+  ]
+}

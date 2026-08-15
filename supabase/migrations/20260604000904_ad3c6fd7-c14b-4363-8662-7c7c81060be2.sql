@@ -1,0 +1,1 @@
+ALTER TABLE public.categories RENAME COLUMN banner_url TO banner_image;
