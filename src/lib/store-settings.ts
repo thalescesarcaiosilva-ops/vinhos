@@ -2,6 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { normalizeTrackingSettings } from "@/lib/analytics";
 import { STORE } from "@/lib/settings";
+import {
+  DEFAULT_INSTALLMENT_RATES,
+  mergeInstallmentRates,
+  type InstallmentRates,
+} from "@/lib/installments";
+
+export type { InstallmentRates, InstallmentPlanItem } from "@/lib/installments";
+export { DEFAULT_INSTALLMENT_RATES, installmentPlan, installmentRateFor } from "@/lib/installments";
 
 export type ShippingMethod = {
   id: string;
@@ -30,6 +38,7 @@ export type ShippingSettings = {
   regions: ShippingRegion[];
 };
 
+/** Taxa total (%) cobrada no valor do pedido para aquela quantidade de parcelas. */
 export type PaymentSettings = {
   pixEnabled: boolean;
   pixDiscount: number; // % off on PIX
@@ -38,7 +47,10 @@ export type PaymentSettings = {
   maxInstallments: number;
   minInstallment: number;
   interestFreeUpTo: number; // installments without interest
-  monthlyInterest: number; // % per month after threshold
+  /** @deprecated Preferir installmentRates (taxa total por parcela). */
+  monthlyInterest: number;
+  /** Taxa total em %: 2x → 23, 3x → 23.96, etc. */
+  installmentRates: InstallmentRates;
 };
 
 export type ColorSettings = {
@@ -125,10 +137,11 @@ export const DEFAULT_SETTINGS: StoreSettingsData = {
     pixDiscount: 0,
     boletoEnabled: false,
     cardEnabled: true,
-    maxInstallments: 12,
+    maxInstallments: 6,
     minInstallment: 25,
     interestFreeUpTo: 1,
     monthlyInterest: 0,
+    installmentRates: { ...DEFAULT_INSTALLMENT_RATES },
   },
   colors: {
     primary: "#5a1a1f",
@@ -185,7 +198,7 @@ function merge(data: any): StoreSettingsData {
   }
   return {
     shipping: ship,
-    payments: { ...DEFAULT_SETTINGS.payments, ...(data?.payments ?? {}) },
+    payments: mergePaymentSettings(data?.payments),
     colors: { ...DEFAULT_SETTINGS.colors, ...(data?.colors ?? {}) },
     brand: { ...DEFAULT_SETTINGS.brand, ...(data?.brand ?? {}) },
     footer,
@@ -227,15 +240,10 @@ export async function saveStoreSettings(next: StoreSettingsData) {
   if (error) throw error;
 }
 
-/** Compute installment plan from settings + card total */
-export function installmentPlan(cardPrice: number, p: PaymentSettings) {
-  const out: { n: number; value: number; total: number; hasInterest: boolean }[] = [];
-  for (let n = 1; n <= p.maxInstallments; n++) {
-    const hasInterest = n > p.interestFreeUpTo && p.monthlyInterest > 0;
-    const total = hasInterest ? cardPrice * Math.pow(1 + p.monthlyInterest / 100, n) : cardPrice;
-    const value = total / n;
-    if (value < p.minInstallment && n > 1) break;
-    out.push({ n, value, total, hasInterest });
-  }
-  return out;
+export function mergePaymentSettings(raw?: Partial<PaymentSettings> | null): PaymentSettings {
+  return {
+    ...DEFAULT_SETTINGS.payments,
+    ...(raw ?? {}),
+    installmentRates: mergeInstallmentRates(raw?.installmentRates),
+  };
 }

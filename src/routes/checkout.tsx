@@ -115,6 +115,8 @@ function Checkout() {
     () => (payments ? installmentPlan(cardPrice, payments) : []),
     [cardPrice, payments],
   );
+  const selectedPlan = plan.find((p) => p.n === installments) ?? plan[0];
+  const cardTotal = selectedPlan?.total ?? cardPrice;
 
 
 
@@ -123,6 +125,12 @@ function Checkout() {
     if (method === "pix" && !pixEnabled && cardEnabled) setMethod("credit_card");
     if (method === "credit_card" && !cardEnabled && pixEnabled) setMethod("pix");
   }, [method, pixEnabled, cardEnabled]);
+
+  useEffect(() => {
+    if (plan.length > 0 && !plan.some((p) => p.n === installments)) {
+      setInstallments(plan[0].n);
+    }
+  }, [plan, installments]);
 
   const upd = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }));
@@ -361,7 +369,7 @@ function Checkout() {
       subtotal,
       shipping,
       discount: discount + pixDiscount,
-      total,
+      total: method === "credit_card" ? cardPrice : total,
       couponCode: coupon?.code ?? null,
       notes: form.notes || null,
     };
@@ -387,7 +395,7 @@ function Checkout() {
           return createCard({ data: { ...baseData, token, installments } });
         });
         if (res.status === "confirmed") {
-          setPaid({ orderId: res.orderId, order_number: res.orderNumber, total });
+          setPaid({ orderId: res.orderId, order_number: res.orderNumber, total: cardPrice });
           clear();
         } else if (res.status === "cancelled") {
           toast.error(cardDeclineMessage(res.refusedReason));
@@ -605,7 +613,7 @@ function Checkout() {
                           <PayoutCardForm
                             installments={installments}
                             setInstallments={setInstallments}
-                            maxInstallments={payments?.maxInstallments ?? 12}
+                            maxInstallments={payments?.maxInstallments ?? 6}
                             plan={plan}
                             onReadyChange={setCardReady}
                             onValidChange={setCardValid}
@@ -616,7 +624,7 @@ function Checkout() {
                             disabled={loading || !cardReady || !cardValid}
                             className={btnPrimary}
                           >
-                            {loading ? "Processando pagamento..." : `Pagar ${brl(total)}`}
+                            {loading ? "Processando pagamento..." : `Pagar ${brl(cardPrice)}`}
                           </button>
                         </div>
                       )}
@@ -765,11 +773,14 @@ function Checkout() {
 
                 <div className="flex items-baseline justify-between border-t border-border pt-4">
                   <span className="text-sm font-semibold uppercase tracking-wider text-foreground">Total</span>
-                  <span className="font-serif text-2xl font-bold text-[color:var(--buy)]">{brl(total)}</span>
+                  <span className="font-serif text-2xl font-bold text-[color:var(--buy)]">
+                    {brl(method === "credit_card" ? cardPrice : total)}
+                  </span>
                 </div>
-                {method === "credit_card" && plan.length > 0 && (
+                {method === "credit_card" && selectedPlan && (
                   <p className="text-right text-xs text-muted-foreground">
-                    ou em até {plan[plan.length - 1].n}x de {brl(plan[plan.length - 1].value)}
+                    {selectedPlan.n}x de {brl(selectedPlan.value)}
+                    {selectedPlan.hasInterest ? " com juros no cartão" : " sem juros"}
                   </p>
                 )}
               </div>

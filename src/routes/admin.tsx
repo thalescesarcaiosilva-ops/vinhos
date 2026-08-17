@@ -370,7 +370,7 @@ function Login() {
           options: { emailRedirectTo: redirectUrl },
         });
         if (error) throw error;
-        toast.success("Conta criada. Verifique seu e-mail.");
+        toast.success("Conta criada.");
       }
     } catch (err: any) {
       toast.error(err.message ?? "Erro");
@@ -2955,7 +2955,7 @@ function SettingsAdmin() {
               (v) =>
                 setS({
                   ...s,
-                  payments: { ...s.payments, maxInstallments: Math.max(1, Math.floor(v)) },
+                  payments: { ...s.payments, maxInstallments: Math.max(1, Math.min(12, Math.floor(v))) },
                 }),
               "1",
             )}
@@ -2982,19 +2982,41 @@ function SettingsAdmin() {
               "1",
             )}
           </label>
-          <label className="md:col-span-2">
-            <span className="text-xs uppercase text-muted-foreground">
-              Juros mensal após o limite (%)
-            </span>
-            {num(
-              s.payments.monthlyInterest,
-              (v) => setS({ ...s, payments: { ...s.payments, monthlyInterest: v } }),
-              "0.1",
-            )}
-            <span className="mt-1 block text-[11px] text-muted-foreground">
-              Aplica juros compostos por mês nas parcelas que ultrapassam o limite sem juros.
-            </span>
-          </label>
+        </div>
+        <div className="mt-4">
+          <p className="mb-2 text-xs uppercase text-muted-foreground">
+            Taxa total no parcelado (%)
+          </p>
+          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {Array.from(
+              { length: Math.max(0, Math.min(12, s.payments.maxInstallments) - 1) },
+              (_, i) => i + 2,
+            ).map((n) => (
+              <label key={n}>
+                <span className="text-xs uppercase text-muted-foreground">{n}x — taxa (%)</span>
+                {num(
+                  Number(s.payments.installmentRates?.[String(n)] ?? 0),
+                  (v) =>
+                    setS({
+                      ...s,
+                      payments: {
+                        ...s.payments,
+                        installmentRates: {
+                          ...s.payments.installmentRates,
+                          [String(n)]: v,
+                        },
+                      },
+                    }),
+                  "0.01",
+                )}
+              </label>
+            ))}
+          </div>
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Usadas só para exibir as parcelas na loja. Devem ser as mesmas taxas da PayoutBR.
+            O checkout envia o valor do pedido sem somar essa taxa de novo — senão o cliente
+            pagaria juros duas vezes.
+          </p>
         </div>
       </section>
 

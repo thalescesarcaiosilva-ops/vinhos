@@ -5,7 +5,7 @@ import { useCart } from "@/lib/cart";
 import { toast } from "sonner";
 import { useFavorites, useToggleFavorite } from "@/lib/favorites";
 import { ProductImage } from "@/components/store/ProductImage";
-import { useStoreSettings } from "@/lib/store-settings";
+import { useStoreSettings, installmentPlan } from "@/lib/store-settings";
 import { flagUrlFor } from "@/lib/country-flags";
 
 export type Product = {
@@ -27,6 +27,9 @@ export function ProductCard({ p }: { p: Product }) {
   const isFav = favs?.has(p.id) ?? false;
   const { data: settings } = useStoreSettings();
   const flagUrl = flagUrlFor(p.country, 40);
+  const pay = settings?.payments;
+  const installmentPreview = pay?.cardEnabled ? installmentPlan(Number(p.price), pay) : [];
+  const installment = installmentPreview[installmentPreview.length - 1];
 
   return (
     <article className="group flex h-full flex-col overflow-hidden border border-border/60 bg-card text-center">
@@ -113,6 +116,12 @@ export function ProductCard({ p }: { p: Product }) {
               <span className="ml-1 font-normal text-muted-foreground">
                 (-{settings.payments.pixDiscount}%)
               </span>
+            </div>
+          )}
+          {installment && (
+            <div className="mt-0.5 text-[11px] leading-snug text-muted-foreground sm:text-xs">
+              ou {installment.n}x de {brl(installment.value)}{" "}
+              {installment.hasInterest ? "com juros" : "sem juros"}
             </div>
           )}
         </div>

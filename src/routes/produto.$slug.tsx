@@ -323,9 +323,7 @@ function ProductPage() {
   const pixPrice = price * (1 - pixDiscountPct / 100);
   const cardPrice = price;
   const plan = installmentPlan(cardPrice, pay);
-  const interestFreePlans = plan.filter((p) => !p.hasInterest);
-  const bestFree = interestFreePlans[interestFreePlans.length - 1];
-  const featuredInstallment = bestFree ?? plan[plan.length - 1];
+  const featuredInstallment = plan[plan.length - 1];
   const headlinePrice = showPix ? pixPrice : price;
 
   const galleryArr = Array.isArray(p.gallery) ? (p.gallery as string[]) : [];
@@ -1108,7 +1106,7 @@ function PaymentMethodsDialog({
                 Visa, Mastercard, Elo, Amex, Hipercard
               </p>
               <div className="mt-3 max-h-60 space-y-1 overflow-y-auto text-sm">
-                {plan.map(({ n, value, total, hasInterest }) => (
+                {plan.map(({ n, value, total, hasInterest, rate }) => (
                   <div
                     key={n}
                     className="grid grid-cols-[auto_1fr] items-center gap-x-3 border-b border-border/60 py-2 last:border-0"
@@ -1117,7 +1115,9 @@ function PaymentMethodsDialog({
                       <strong>{n}x</strong> de {brl(value)}
                     </span>
                     <span className="text-right text-xs text-muted-foreground">
-                      {hasInterest ? "com juros" : "sem juros"} · total {brl(total)}
+                      {hasInterest
+                        ? `com juros (${String(rate).replace(".", ",")}%) · total ${brl(total)}`
+                        : `sem juros · total ${brl(total)}`}
                     </span>
                   </div>
                 ))}

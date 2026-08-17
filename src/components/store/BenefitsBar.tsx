@@ -17,7 +17,9 @@ export function BenefitsBar() {
     maxInstallments != null && maxInstallments > 0
       ? interestFree != null && interestFree >= maxInstallments
         ? "Sem juros no cartão"
-        : `Até ${interestFree ?? 1}x sem juros`
+        : interestFree != null && interestFree >= 1
+          ? `1x sem juros · até ${maxInstallments}x com juros`
+          : `Até ${maxInstallments}x com juros`
       : "Parcelamento disponível";
 
   const items = [

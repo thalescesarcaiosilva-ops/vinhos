@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { getPayoutPublicConfig } from "@/lib/payoutbr.functions";
 import { CreditCard, Loader2 } from "lucide-react";
+import type { InstallmentPlanItem } from "@/lib/installments";
 
 export type PayoutCardHandle = {
   submit: (createTransaction: (token: string) => Promise<any>) => Promise<any>;
@@ -96,7 +97,7 @@ export function PayoutCardForm({
   registerHandle,
   installments,
   setInstallments,
-  maxInstallments = 12,
+  maxInstallments = 6,
   plan,
 }: {
   onReadyChange?: (ready: boolean) => void;
@@ -106,7 +107,7 @@ export function PayoutCardForm({
   installments: number;
   setInstallments: (n: number) => void;
   maxInstallments?: number;
-  plan?: { n: number; value: number; total: number; hasInterest: boolean }[];
+  plan?: InstallmentPlanItem[];
 }) {
   const [number, setNumber] = useState("");
   const [holder, setHolder] = useState("");

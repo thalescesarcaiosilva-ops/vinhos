@@ -7,6 +7,7 @@ import {
   extractPixExpiration,
   extractPixImageFromApi,
 } from "@/lib/pix-qrcode";
+import { installmentPlan, mergeInstallmentRates, type InstallmentPlanInput } from "@/lib/installments";
 
 type SupabaseAdmin = Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"];
 
@@ -499,6 +500,21 @@ const CardInput = CheckoutInput.extend({
   installments: z.number().int().min(1).max(12).default(1),
 });
 
+async function loadPaymentSettings(supabaseAdmin: SupabaseAdmin): Promise<InstallmentPlanInput> {
+  const { data } = await supabaseAdmin
+    .from("store_settings")
+    .select("data")
+    .eq("id", "singleton")
+    .maybeSingle();
+  const raw = (data as { data?: { payments?: Record<string, unknown> } } | null)?.data?.payments ?? {};
+  return {
+    maxInstallments: Number(raw.maxInstallments) || 6,
+    minInstallment: Number(raw.minInstallment) || 0,
+    interestFreeUpTo: Number(raw.interestFreeUpTo) || 1,
+    installmentRates: mergeInstallmentRates(raw.installmentRates as Record<string, number> | undefined),
+  };
+}
+
 export const getPayoutPublicConfig = createServerFn({ method: "GET" }).handler(async () => {
   const publicKey = serverEnv("PAYOUTBR_PUBLIC_KEY")?.trim() ?? "";
   if (!publicKey) {
@@ -603,12 +619,32 @@ export const createCheckoutCard = createServerFn({ method: "POST" })
   .inputValidator((d) => CardInput.parse(d))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const order = await createOrderWithItems(supabaseAdmin, { ...data, payment_method: "credit_card" });
+    const payments = await loadPaymentSettings(supabaseAdmin);
+    const cardBase = Math.max(0, data.subtotal - data.discount) + data.shipping;
+    const plan = installmentPlan(cardBase, payments);
+    const chosen = plan.find((p) => p.n === data.installments);
+    if (!chosen) {
+      throw new Error("Número de parcelas inválido para este pedido.");
+    }
+    // Valor enviado à PayoutBR = total do pedido (itens + frete − desconto), SEM somar
+    // de novo as taxas de 2x–6x. Essas taxas já estão no painel da operadora e entram
+    // uma vez no cartão via `installments`. Somar aqui cobraria o cliente em dobro.
+    const charged = {
+      ...data,
+      total: cardBase,
+      notes: [
+        data.notes,
+        `Cartão em ${chosen.n}x${chosen.hasInterest ? " com juros (taxa da operadora, sem acréscimo extra da loja)" : " sem juros"}`,
+      ]
+        .filter(Boolean)
+        .join(" | "),
+    };
+    const order = await createOrderWithItems(supabaseAdmin, { ...charged, payment_method: "credit_card" });
 
     const { amountCents, shippingCents, items: payoutItems } = payoutLineItems(
-      data.items,
-      data.total,
-      data.shipping,
+      charged.items,
+      cardBase,
+      charged.shipping,
     );
     const compliance = buildTransactionCompliance(order.id, data.customer.email);
 

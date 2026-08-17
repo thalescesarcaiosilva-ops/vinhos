@@ -35,7 +35,7 @@ function SignupPage() {
     if (form.password.length < 8) return toast.error("Senha deve ter ao menos 8 caracteres");
 
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
       options: {
@@ -51,8 +51,8 @@ function SignupPage() {
     });
     setLoading(false);
     if (error) return toast.error(error.message);
-    toast.success("Conta criada! Verifique seu e-mail para confirmar.");
-    navigate({ to: "/login" });
+    toast.success("Conta criada!");
+    navigate({ to: data.session ? "/minha-conta" : "/login" });
   };
 
   return (
