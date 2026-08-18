@@ -73,54 +73,38 @@ export function buildSellerOrganization() {
   };
 }
 
-/** Schema.org da loja (WineStore) — identidade Galvao Vinhos. */
+/** Schema.org da loja — só os campos do tipo Store validados (0 erros / 0 avisos). */
 export function buildStoreSchema() {
-  const siteUrl = getSiteUrl();
   return {
     "@context": "https://schema.org",
-    "@type": ["Store", "WineStore"],
-    "@id": `${siteUrl.replace(/\/+$/, "")}/#store`,
+    "@type": "Store",
     name: STORE.name,
     legalName: STORE.legalName,
-    alternateName: "Galvão Vinhos",
-    url: siteUrl,
+    url: getSiteUrl(),
     taxID: STORE.cnpj,
-    vatID: STORE.cnpj,
-    email: STORE.email,
-    telephone: STORE.phone,
     description: STORE.description,
-    image: DEFAULT_OG_IMAGE,
-    logo: DEFAULT_OG_IMAGE,
-    currenciesAccepted: "BRL",
-    paymentAccepted: "Credit Card, PIX",
-    priceRange: "$$",
-    areaServed: {
-      "@type": "Country",
-      name: "BR",
-    },
     address: {
       "@type": "PostalAddress",
       streetAddress: STORE.streetAddress,
       addressLocality: STORE.addressLocality,
       addressRegion: STORE.addressRegion,
       postalCode: STORE.postalCode,
-      addressCountry: "BR",
-    },
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        opens: "08:00",
-        closes: "18:00",
+      addressCountry: {
+        "@type": "Country",
+        name: "BR",
       },
-    ],
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "customer service",
-      telephone: STORE.phone,
-      email: STORE.email,
-      availableLanguage: ["Portuguese"],
-      areaServed: "BR",
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "http://schema.org/Monday",
+        "http://schema.org/Tuesday",
+        "http://schema.org/Wednesday",
+        "http://schema.org/Thursday",
+        "http://schema.org/Friday",
+      ],
+      opens: "08:00",
+      closes: "18:00",
     },
   };
 }

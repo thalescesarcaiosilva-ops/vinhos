@@ -34,8 +34,21 @@ export type ShippingSettings = {
   // legacy (kept for back-compat with older saved settings)
   flatShipping: number;
   expressShipping: number;
+  /** Separação/embalagem após o pagamento (dias úteis). */
+  prepMinDays: number;
+  prepMaxDays: number;
   methods: ShippingMethod[];
   regions: ShippingRegion[];
+};
+
+/** Frete da política: grátis ≥ R$ 300; abaixo R$ 43,20; transporte 6–9 dias úteis. */
+export const POLICY_SHIPPING_METHOD: ShippingMethod = {
+  id: "entrega-padrao",
+  label: "Entrega",
+  price: STORE.flatShipping,
+  etaMinDays: 6,
+  etaMaxDays: 9,
+  enabled: true,
 };
 
 /** Taxa total (%) cobrada no valor do pedido para aquela quantidade de parcelas. */
@@ -125,11 +138,12 @@ export type StoreSettingsData = {
 
 export const DEFAULT_SETTINGS: StoreSettingsData = {
   shipping: {
-    // Só usado no merge admin/API incompleta — NUNCA como placeholder de UI.
     freeShippingFrom: STORE.freeShippingFrom,
     flatShipping: STORE.flatShipping,
     expressShipping: STORE.expressShipping,
-    methods: [],
+    prepMinDays: 1,
+    prepMaxDays: 2,
+    methods: [{ ...POLICY_SHIPPING_METHOD }],
     regions: [],
   },
   payments: {
@@ -185,8 +199,16 @@ export const DEFAULT_SETTINGS: StoreSettingsData = {
 
 function merge(data: any): StoreSettingsData {
   const rawShip = data?.shipping ?? {};
-  const ship: ShippingSettings = { ...DEFAULT_SETTINGS.shipping, ...rawShip };
-  ship.methods = Array.isArray(rawShip.methods) ? rawShip.methods : [];
+  const ship: ShippingSettings = {
+    ...DEFAULT_SETTINGS.shipping,
+    ...rawShip,
+    prepMinDays: Number(rawShip.prepMinDays) >= 0 ? Number(rawShip.prepMinDays) : DEFAULT_SETTINGS.shipping.prepMinDays,
+    prepMaxDays: Number(rawShip.prepMaxDays) >= 0 ? Number(rawShip.prepMaxDays) : DEFAULT_SETTINGS.shipping.prepMaxDays,
+  };
+  ship.methods =
+    Array.isArray(rawShip.methods) && rawShip.methods.length > 0
+      ? rawShip.methods
+      : DEFAULT_SETTINGS.shipping.methods.map((m) => ({ ...m }));
   ship.regions = Array.isArray(rawShip.regions) ? rawShip.regions : [];
   const rawFooter = data?.footer ?? {};
   const footer: FooterSettings = { ...DEFAULT_SETTINGS.footer, ...rawFooter };

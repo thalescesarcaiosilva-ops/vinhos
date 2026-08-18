@@ -21,6 +21,7 @@ import {
   Plus,
 } from "lucide-react";
 import {
+  POLICY_SHIPPING_METHOD,
   DEFAULT_SETTINGS,
   fetchStoreSettings,
   saveStoreSettings,
@@ -2613,7 +2614,17 @@ function SettingsAdmin() {
     if (!s) return;
     setSaving(true);
     try {
-      await saveStoreSettings(s);
+      const shipping = {
+        ...s.shipping,
+        prepMinDays: s.shipping.prepMinDays ?? 1,
+        prepMaxDays: s.shipping.prepMaxDays ?? 2,
+        methods:
+          s.shipping.methods.length > 0
+            ? s.shipping.methods
+            : [{ ...POLICY_SHIPPING_METHOD, price: s.shipping.flatShipping || STORE.flatShipping }],
+      };
+      await saveStoreSettings({ ...s, shipping });
+      setS((prev) => (prev ? { ...prev, shipping } : prev));
       qc.invalidateQueries({ queryKey: ["store-settings"] });
       toast.success("Configurações salvas.");
     } catch (e: any) {
@@ -2640,12 +2651,19 @@ function SettingsAdmin() {
     <div className="space-y-6">
       {/* Frete */}
       <section className="rounded-sm border border-border bg-card p-6">
-        <h3 className="mb-4 font-serif text-lg font-bold text-primary">Frete</h3>
+        <h3 className="mb-1 font-serif text-lg font-bold text-primary">Frete</h3>
+        <p className="mb-4 text-sm text-muted-foreground">
+          Conforme a Política de frete e os Termos: envio para todo o Brasil, separação de 1 a 2
+          dias úteis, transporte de 6 a 9 dias úteis (prazo total 7 a 11 dias úteis após o
+          pagamento), frete grátis a partir de R$ 300,00 e frete fixo de R$ 43,20 abaixo desse valor.
+          Carrinho, checkout e calculadora de CEP mostram só o prazo de transporte (transit time),
+          como no Google Merchant Center — a separação não entra nessa cotação.
+        </p>
 
-        <div className="mb-6 grid gap-4 md:grid-cols-2">
+        <div className="mb-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <label>
             <span className="text-xs uppercase text-muted-foreground">
-              Frete grátis a partir de (R$) — global
+              Frete grátis a partir de (R$)
             </span>
             {num(
               s.shipping.freeShippingFrom,
@@ -2653,7 +2671,58 @@ function SettingsAdmin() {
               "1",
             )}
           </label>
+          <label>
+            <span className="text-xs uppercase text-muted-foreground">
+              Frete abaixo do limiar (R$)
+            </span>
+            {num(
+              s.shipping.flatShipping,
+              (v) => {
+                const methods = s.shipping.methods.map((m, i) =>
+                  i === 0 ? { ...m, price: v } : m,
+                );
+                setS({
+                  ...s,
+                  shipping: {
+                    ...s.shipping,
+                    flatShipping: v,
+                    expressShipping: v,
+                    methods: methods.length ? methods : [{ ...POLICY_SHIPPING_METHOD, price: v }],
+                  },
+                });
+              },
+              "0.01",
+            )}
+          </label>
+          <label>
+            <span className="text-xs uppercase text-muted-foreground">Separação mín. (dias úteis)</span>
+            {num(
+              s.shipping.prepMinDays ?? 1,
+              (v) =>
+                setS({
+                  ...s,
+                  shipping: { ...s.shipping, prepMinDays: Math.max(0, Math.floor(v)) },
+                }),
+              "1",
+            )}
+          </label>
+          <label>
+            <span className="text-xs uppercase text-muted-foreground">Separação máx. (dias úteis)</span>
+            {num(
+              s.shipping.prepMaxDays ?? 2,
+              (v) =>
+                setS({
+                  ...s,
+                  shipping: { ...s.shipping, prepMaxDays: Math.max(0, Math.floor(v)) },
+                }),
+              "1",
+            )}
+          </label>
         </div>
+        <p className="mb-6 text-[11px] text-muted-foreground">
+          Carrinho e checkout exibem apenas o transporte (6–9 dias úteis). A separação (1–2) fica
+          na política da loja e no handling time do Merchant Center, para não misturar os dois prazos.
+        </p>
 
         {/* Métodos */}
         <div className="mb-6">
@@ -2669,12 +2738,9 @@ function SettingsAdmin() {
                     methods: [
                       ...s.shipping.methods,
                       {
+                        ...POLICY_SHIPPING_METHOD,
                         id: `m_${Date.now()}`,
-                        label: "Novo método",
-                        price: 0,
-                        etaMinDays: 3,
-                        etaMaxDays: 7,
-                        enabled: true,
+                        label: "Entrega",
                       },
                     ],
                   },
@@ -2685,6 +2751,10 @@ function SettingsAdmin() {
               + Adicionar método
             </button>
           </div>
+          <p className="mb-2 text-[11px] text-muted-foreground">
+            Preço base e prazo de transporte (dias úteis após o despacho). A política usa um único
+            método para todo o Brasil.
+          </p>
           <div className="space-y-2">
             {s.shipping.methods.map((m, i) => {
               const update = (patch: Partial<ShippingMethod>) => {
@@ -2727,7 +2797,7 @@ function SettingsAdmin() {
                   </label>
                   <label>
                     <span className="text-[11px] uppercase text-muted-foreground">
-                      ETA mín (dias)
+                      Transporte mín. (dias)
                     </span>
                     <input
                       type="number"
@@ -2739,7 +2809,7 @@ function SettingsAdmin() {
                   </label>
                   <label>
                     <span className="text-[11px] uppercase text-muted-foreground">
-                      ETA máx (dias)
+                      Transporte máx. (dias)
                     </span>
                     <input
                       type="number"
@@ -2801,8 +2871,8 @@ function SettingsAdmin() {
             </button>
           </div>
           <p className="mb-2 text-[11px] text-muted-foreground">
-            Multiplica o preço base do método e adiciona dias extras conforme a UF do CEP do
-            cliente.
+            A política vigente é frete único para todo o Brasil. Só cadastre regiões se o preço ou
+            o prazo passar a variar por UF.
           </p>
           <div className="space-y-2">
             {s.shipping.regions.map((r, i) => {

@@ -251,6 +251,27 @@ export function Header() {
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
+            <HeaderAction
+              to="/rastreio"
+              label="Rastrear pedido"
+              icon={<PackageSearch />}
+              className="flex xl:hidden"
+              onClick={() => {
+                setOpen(false);
+                setSearchOpen(false);
+              }}
+            />
+            <HeaderAction
+              to="/favoritos"
+              label="Favoritos"
+              icon={<Heart />}
+              className="flex xl:hidden"
+              count={favorites.length}
+              onClick={() => {
+                setOpen(false);
+                setSearchOpen(false);
+              }}
+            />
 
             <nav className="hidden items-center xl:flex" aria-label="Categorias de produtos">
               <DesktopNavMenu
@@ -353,14 +374,14 @@ export function Header() {
               to="/favoritos"
               label="Favoritos"
               icon={<Heart />}
-              className="hidden sm:flex"
+              className="hidden xl:flex"
               count={favorites.length}
             />
             <HeaderAction
               to="/rastreio"
               label="Rastrear pedido"
               icon={<PackageSearch />}
-              className="hidden lg:flex"
+              className="hidden xl:flex"
             />
             <HeaderAction
               to="/fale-conosco"
@@ -693,16 +714,19 @@ function HeaderAction({
   icon,
   className = "",
   count,
+  onClick,
 }: {
   to: HeaderStaticRoute;
   label: string;
   icon: React.ReactNode;
   className?: string;
   count?: number;
+  onClick?: () => void;
 }) {
   return (
     <Link
       to={to}
+      onClick={onClick}
       className={`relative h-9 w-9 items-center justify-center text-foreground transition-colors hover:text-primary sm:h-10 sm:w-10 ${className}`}
       aria-label={label}
       title={label}

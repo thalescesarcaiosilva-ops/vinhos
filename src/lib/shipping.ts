@@ -60,9 +60,14 @@ export function calcShipping(
     .filter((m) => m.enabled)
     .map((m) => {
       const price = subtotal >= threshold ? 0 : Math.round(m.price * factor * 100) / 100;
+      // Só o transporte (transit time). Separação/handling fica na política e no Merchant Center,
+      // para o prazo do checkout não divergir do transit_time do Google.
       const min = m.etaMinDays + extra;
       const max = m.etaMaxDays + extra;
-      const eta = min === max ? `${min} dia${min === 1 ? "" : "s"} útil${min === 1 ? "" : "eis"}` : `${min}–${max} dias úteis`;
+      const eta =
+        min === max
+          ? `${min} dia${min === 1 ? "" : "s"} útil${min === 1 ? "" : "eis"}`
+          : `${min}–${max} dias úteis`;
       return { label: m.label, price, eta };
     });
 }
