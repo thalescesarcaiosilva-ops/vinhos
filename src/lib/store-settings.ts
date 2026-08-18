@@ -118,6 +118,8 @@ export type TrackingSettings = {
   googleAdsId: string;
   /** Conversão Ads — send_to AW-…/label */
   googleAdsConversionSendTo: string;
+  /** Google Tag Manager — GTM-… */
+  googleTagManagerId: string;
   /** Microsoft Clarity — ID do projeto (ou snippet colado) */
   microsoftClarityId: string;
   /**
@@ -192,6 +194,7 @@ export const DEFAULT_SETTINGS: StoreSettingsData = {
     googleAnalyticsId: "",
     googleAdsId: "",
     googleAdsConversionSendTo: "",
+    googleTagManagerId: "",
     microsoftClarityId: "",
     headScripts: "",
   },

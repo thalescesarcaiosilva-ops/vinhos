@@ -4,6 +4,7 @@ export type TrackingIdsInput = {
   googleAnalyticsId?: string | null;
   googleAdsId?: string | null;
   googleAdsConversionSendTo?: string | null;
+  googleTagManagerId?: string | null;
   microsoftClarityId?: string | null;
   headScripts?: string | null;
 };
@@ -38,14 +39,15 @@ export function normalizeClarityId(raw: string | null | undefined): string {
   return loose?.[1] ?? "";
 }
 
-/** Normaliza IDs Google (G-… / GT-… / AW-…). */
+/** Normaliza IDs Google (G-… / GT-… / AW-… / GTM-…). */
 export function normalizeGoogleId(
   raw: string | null | undefined,
-  allowed: ReadonlyArray<"G" | "GT" | "AW">,
+  allowed: ReadonlyArray<"G" | "GT" | "AW" | "GTM">,
 ): string {
   const t = (raw ?? "").trim().toUpperCase().replace(/\s+/g, "");
   if (!t) return "";
   for (const prefix of allowed) {
+    if (prefix === "GTM" && /^GTM-[A-Z0-9]+$/.test(t)) return t;
     if (prefix === "GT" && /^GT-[A-Z0-9]+$/.test(t)) return t;
     if (prefix === "G" && /^G-[A-Z0-9]+$/.test(t)) return t;
     if (prefix === "AW" && /^AW-[A-Z0-9]+$/.test(t)) return t;
@@ -66,6 +68,7 @@ export function normalizeTrackingSettings(raw: TrackingIdsInput): {
   googleAnalyticsId: string;
   googleAdsId: string;
   googleAdsConversionSendTo: string;
+  googleTagManagerId: string;
   microsoftClarityId: string;
   headScripts: string;
 } {
@@ -74,6 +77,7 @@ export function normalizeTrackingSettings(raw: TrackingIdsInput): {
     googleAnalyticsId: normalizeGoogleId(raw.googleAnalyticsId, ["G"]),
     googleAdsId: normalizeGoogleId(raw.googleAdsId, ["AW"]),
     googleAdsConversionSendTo: normalizeAdsSendTo(raw.googleAdsConversionSendTo),
+    googleTagManagerId: normalizeGoogleId(raw.googleTagManagerId, ["GTM"]),
     microsoftClarityId: normalizeClarityId(raw.microsoftClarityId),
     headScripts: typeof raw.headScripts === "string" ? raw.headScripts : "",
   };
@@ -101,6 +105,7 @@ export type TrackingActiveItem = {
 export function trackingActiveItems(t: TrackingIdsInput): TrackingActiveItem[] {
   const n = normalizeTrackingSettings(t);
   return [
+    { key: "gtm", label: "Google Tag Manager", active: Boolean(n.googleTagManagerId), value: n.googleTagManagerId || undefined },
     { key: "tag", label: "Google Tag", active: Boolean(n.googleTagId), value: n.googleTagId || undefined },
     { key: "ga", label: "Google Analytics (GA4)", active: Boolean(n.googleAnalyticsId), value: n.googleAnalyticsId || undefined },
     { key: "ads", label: "Google Ads", active: Boolean(n.googleAdsId), value: n.googleAdsId || undefined },

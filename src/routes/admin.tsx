@@ -3181,7 +3181,8 @@ function SettingsAdmin() {
         <p className="mb-4 text-sm text-muted-foreground">
           Configure os IDs usados apenas na vitrine pública (o painel admin não carrega estes
           scripts). Deixe em branco o que não for usar. Pageviews ficam automáticos — não é
-          necessário disparar eventos manuais.
+          necessário disparar eventos manuais. Tag Manager (GTM-…) não é o mesmo que Google Tag
+          (GT-…) nem Analytics (G-…).
         </p>
 
         <div className="mb-4 flex flex-wrap gap-2">
@@ -3204,6 +3205,23 @@ function SettingsAdmin() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
+          <label className="md:col-span-2">
+            <span className="text-xs uppercase text-muted-foreground">
+              Google Tag Manager (GTM-…)
+            </span>
+            <input
+              className={`${inp} mt-1 font-mono`}
+              placeholder="GTM-XXXXXXX"
+              value={s.tracking.googleTagManagerId ?? ""}
+              onChange={(e) =>
+                setS({ ...s, tracking: { ...s.tracking, googleTagManagerId: e.target.value } })
+              }
+            />
+            <span className="mt-1 block text-[11px] text-muted-foreground">
+              Container do Tag Manager. Injeta o script no head e o noscript no body. Se usar GTM
+              para Analytics e Ads, deixe os campos G- / GT- / AW- vazios para não duplicar hits.
+            </span>
+          </label>
           <label>
             <span className="text-xs uppercase text-muted-foreground">
               Google Tag (GT-… ou G-…)

@@ -11,7 +11,7 @@ import {
 const MARKER = "data-galvao-analytics";
 
 /**
- * Carrega gtag.js + Clarity apenas nas páginas públicas da vitrine.
+ * Carrega Tag Manager, gtag.js e Clarity apenas nas páginas públicas da vitrine.
  * IDs vêm de store_settings (admin) — nunca de env. Admin não recebe esses scripts.
  */
 export function HeadTrackingScripts() {
@@ -21,6 +21,7 @@ export function HeadTrackingScripts() {
   const tracking = settings?.tracking ? normalizeTrackingSettings(settings.tracking) : null;
   const trackingKey = tracking
     ? [
+        tracking.googleTagManagerId,
         tracking.googleTagId,
         tracking.googleAnalyticsId,
         tracking.googleAdsId,
@@ -33,21 +34,47 @@ export function HeadTrackingScripts() {
 
     const googleIds = uniqueGoogleConfigIds(tracking);
     const loaderId = firstGoogleLoaderId(tracking);
+    const gtmId = tracking.googleTagManagerId;
     const clarityId = tracking.microsoftClarityId;
 
     const added: HTMLElement[] = [];
 
-    const append = (el: HTMLElement) => {
+    const appendHead = (el: HTMLElement) => {
       el.setAttribute(MARKER, "1");
       document.head.appendChild(el);
       added.push(el);
     };
 
+    if (gtmId) {
+      const gtm = document.createElement("script");
+      gtm.textContent = [
+        "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':",
+        "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],",
+        "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=",
+        "'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);",
+        `})(window,document,'script','dataLayer',${escapeJsString(gtmId)});`,
+      ].join("");
+      appendHead(gtm);
+
+      const noscript = document.createElement("noscript");
+      noscript.setAttribute(MARKER, "1");
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.googletagmanager.com/ns.html?id=${encodeURIComponent(gtmId)}`;
+      iframe.height = "0";
+      iframe.width = "0";
+      iframe.style.display = "none";
+      iframe.style.visibility = "hidden";
+      iframe.title = "Google Tag Manager";
+      noscript.appendChild(iframe);
+      document.body.insertBefore(noscript, document.body.firstChild);
+      added.push(noscript);
+    }
+
     if (loaderId && googleIds.length > 0) {
       const external = document.createElement("script");
       external.async = true;
       external.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(loaderId)}`;
-      append(external);
+      appendHead(external);
 
       const boot = document.createElement("script");
       boot.textContent = [
@@ -57,7 +84,7 @@ export function HeadTrackingScripts() {
         "gtag('js',new Date());",
         ...googleIds.map((id) => `gtag('config',${escapeJsString(id)});`),
       ].join("");
-      append(boot);
+      appendHead(boot);
     }
 
     if (clarityId) {
@@ -70,7 +97,7 @@ export function HeadTrackingScripts() {
         "y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);",
         `})(window,document,"clarity","script",${escapeJsString(clarityId)});`,
       ].join("");
-      append(clarity);
+      appendHead(clarity);
     }
 
     return () => {
