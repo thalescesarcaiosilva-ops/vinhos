@@ -8,8 +8,8 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const BUCKET = "product-images";
-const SITE = "https://vinellevinhos.vercel.app";
-const SUPABASE_HOST = "https://zsfhnjrotkbzyikkxmnm.supabase.co";
+const SITE = "https://www.galvaovinhos.com.br";
+const SUPABASE_HOST = "https://aufvvgytbrstsrfomngm.supabase.co";
 
 function loadEnv() {
   const envPath = path.join(ROOT, ".env");
@@ -33,7 +33,7 @@ function resolveJwt() {
   const sk = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (sk?.startsWith("eyJ")) return sk;
   const keys = JSON.parse(
-    execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", {
+    execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", {
       encoding: "utf8",
       cwd: ROOT,
     }),

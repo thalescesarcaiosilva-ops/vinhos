@@ -1,7 +1,7 @@
 -- Corrige URLs de storage importadas de hosts legados.
 -- Rode no SQL Editor: https://supabase.com/dashboard/project/aufvvgytbrstsrfomngm/sql/new
 --
--- Substitui hosts antigos (domínio legado / Lovable / Supabase antigo) por:
+-- Substitui hosts antigos (Lovable / Supabase legado) por:
 --   https://aufvvgytbrstsrfomngm.supabase.co/storage/...
 
 DO $$
@@ -9,12 +9,7 @@ DECLARE
   new_host text := 'https://aufvvgytbrstsrfomngm.supabase.co';
   old_host text;
   old_hosts text[] := ARRAY[
-    'https://vinellevinhos.com.br',
-    'http://vinellevinhos.com.br',
-    'https://www.vinellevinhos.com.br',
-    'http://www.vinellevinhos.com.br',
-    'https://dymhoqxfamosdujzorrl.supabase.co',
-    'https://zsfhnjrotkbzyikkxmnm.supabase.co'
+    'https://dymhoqxfamosdujzorrl.supabase.co'
   ];
 BEGIN
   FOREACH old_host IN ARRAY old_hosts LOOP
@@ -58,41 +53,29 @@ BEGIN
     WHERE photos::text LIKE '%' || old_host || '%'
       AND jsonb_typeof(photos) = 'array';
 
-    -- store_settings: logo, selos de segurança, footer, brand, etc.
     UPDATE public.store_settings
     SET data = replace(data::text, old_host, new_host)::jsonb
     WHERE data::text LIKE '%' || old_host || '%';
   END LOOP;
 END $$;
 
--- Verificar se ainda restam URLs antigas:
+-- Verificar se ainda restam URLs do host Lovable:
 SELECT 'products.image_url' AS campo, count(*) AS qtd
-FROM public.products
-WHERE image_url LIKE '%vinellevinhos.com.br%'
-   OR image_url LIKE '%dymhoqxfamosdujzorrl%'
-   OR image_url LIKE '%zsfhnjrotkbzyikkxmnm%'
+FROM public.products WHERE image_url LIKE '%dymhoqxfamosdujzorrl%'
 UNION ALL
 SELECT 'products.gallery', count(*) FROM public.products
-WHERE gallery::text LIKE '%vinellevinhos.com.br%'
-   OR gallery::text LIKE '%dymhoqxfamosdujzorrl%'
-   OR gallery::text LIKE '%zsfhnjrotkbzyikkxmnm%'
+WHERE gallery::text LIKE '%dymhoqxfamosdujzorrl%'
 UNION ALL
 SELECT 'banners.image_url', count(*) FROM public.banners
-WHERE image_url LIKE '%vinellevinhos.com.br%'
-   OR image_url LIKE '%dymhoqxfamosdujzorrl%'
-   OR image_url LIKE '%zsfhnjrotkbzyikkxmnm%'
+WHERE image_url LIKE '%dymhoqxfamosdujzorrl%'
 UNION ALL
 SELECT 'categories.banner_image', count(*) FROM public.categories
-WHERE banner_image LIKE '%vinellevinhos.com.br%'
-   OR banner_image LIKE '%dymhoqxfamosdujzorrl%'
-   OR banner_image LIKE '%zsfhnjrotkbzyikkxmnm%'
+WHERE banner_image LIKE '%dymhoqxfamosdujzorrl%'
 UNION ALL
 SELECT 'store_settings.data', count(*) FROM public.store_settings
-WHERE data::text LIKE '%vinellevinhos.com.br%'
-   OR data::text LIKE '%dymhoqxfamosdujzorrl%'
-   OR data::text LIKE '%zsfhnjrotkbzyikkxmnm%';
+WHERE data::text LIKE '%dymhoqxfamosdujzorrl%';
 
--- Assets do CDN Lovable (/__l5e/...) não existem fora do Lovable — listar para re-upload manual:
+-- Assets do CDN Lovable (/__l5e/...) — listar para re-upload manual:
 SELECT id, slug, image_url AS url FROM public.products WHERE image_url LIKE '/__l5e/%'
 UNION ALL
 SELECT id, slug, video_url FROM public.products WHERE video_url LIKE '/__l5e/%';

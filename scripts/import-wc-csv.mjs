@@ -50,7 +50,7 @@ async function uploadFileRest(baseUrl, jwt, name, buf, contentType) {
 
 async function downloadImage(url) {
   const res = await fetch(url, {
-    headers: { "User-Agent": "VinelleImport/1.0" },
+    headers: { "User-Agent": "GalvaoImport/1.0" },
     signal: AbortSignal.timeout(60000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);

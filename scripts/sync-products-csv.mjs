@@ -2,7 +2,7 @@
  * Sincroniza catálogo com CSV exportado (fonte Lovable legado).
  * - Mantém ativos apenas produtos do CSV (por SKU)
  * - Normaliza image_url/gallery para /storage/v1/object/public/product-images/...
- * - Nunca grava hosts Lovable, vinellevinhos.com.br ou Supabase antigo
+ * - Nunca grava hosts Lovable absolutos no banco (só paths /storage/...)
  *
  * Uso: node scripts/sync-products-csv.mjs [caminho.csv]
  */
@@ -18,10 +18,10 @@ const CSV_PATH = process.argv[2] || "D:\\products-export-2026-06-23_13-52-21.csv
 const BUCKET = "product-images";
 
 const LEGACY_HOSTS = [
-  "https://vinellevinhos.com.br",
-  "http://vinellevinhos.com.br",
+  "https://www.galvaovinhos.com.br",
+  "http://www.galvaovinhos.com.br",
   "https://dymhoqxfamosdujzorrl.supabase.co",
-  "https://zsfhnjrotkbzyikkxmnm.supabase.co",
+  "https://aufvvgytbrstsrfomngm.supabase.co",
   "/__l5e/",
   "/src/assets/",
   "/imagens_produtos/",
@@ -51,7 +51,7 @@ function resolveJwt() {
   const sk = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (sk?.startsWith("eyJ")) return sk;
   try {
-    const raw = execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", {
+    const raw = execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", {
       encoding: "utf8",
       cwd: ROOT,
     });

@@ -1,7 +1,7 @@
 const urls = [
-  "https://vinellevinhos.vercel.app/storage/v1/object/public/product-images/VIN1165_1.png",
-  "https://vinellevinhos.vercel.app/storage/v1/render/image/public/product-images/VIN1165_1.png?width=400&format=webp&quality=75",
-  "https://vinellevinhos.vercel.app/storage/v1/render/image/public/product-images/VIN001_1.jpg?width=400&format=webp&quality=75",
+  "https://www.galvaovinhos.com.br/storage/v1/object/public/product-images/VIN1165_1.png",
+  "https://www.galvaovinhos.com.br/storage/v1/render/image/public/product-images/VIN1165_1.png?width=400&format=webp&quality=75",
+  "https://www.galvaovinhos.com.br/storage/v1/render/image/public/product-images/VIN001_1.jpg?width=400&format=webp&quality=75",
 ];
 
 for (const url of urls) {

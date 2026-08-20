@@ -5,7 +5,7 @@ import { execSync } from "node:child_process";
 import { createClient } from "@supabase/supabase-js";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const SITE = "https://vinellevinhos.vercel.app";
+const SITE = "https://www.galvaovinhos.com.br";
 
 function loadEnv() {
   for (const line of readFileSync(path.join(ROOT, ".env"), "utf8").split(/\r?\n/)) {
@@ -17,7 +17,7 @@ function loadEnv() {
 }
 loadEnv();
 const JWT = JSON.parse(
-  execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", { encoding: "utf8", cwd: ROOT }),
+  execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", { encoding: "utf8", cwd: ROOT }),
 ).find((k) => k.name === "service_role")?.api_key;
 const sb = createClient(process.env.SUPABASE_URL, JWT, { auth: { persistSession: false } });
 

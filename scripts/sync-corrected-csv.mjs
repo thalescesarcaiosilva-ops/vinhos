@@ -69,7 +69,7 @@ async function fetchAllProducts(url, jwt) {
 
 async function uploadImage(url, jwt, fname, remoteUrl) {
   const res = await fetch(remoteUrl, {
-    headers: { "User-Agent": "VinelleImport/1.0" },
+    headers: { "User-Agent": "GalvaoImport/1.0" },
     signal: AbortSignal.timeout(60000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);

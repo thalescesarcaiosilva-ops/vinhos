@@ -1,6 +1,6 @@
 /**
 
- * Sincroniza catálogo Vinelle com export Lovable:
+ * Sincroniza catálogo Galvao com export Lovable:
 
  * - Sobe imagens de bucket-product-images-files.zip → Storage product-images
 
@@ -110,7 +110,7 @@ function resolveJwt() {
 
   if (sk?.startsWith("eyJ")) return sk;
 
-  const raw = execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", {
+  const raw = execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", {
 
     encoding: "utf8",
 

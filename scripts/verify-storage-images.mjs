@@ -27,7 +27,7 @@ function loadEnv() {
 function resolveJwt() {
   const fromEnv = process.env.SUPABASE_LEGACY_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (fromEnv?.startsWith("eyJ")) return fromEnv;
-  const keys = JSON.parse(execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", { encoding: "utf8", cwd: ROOT }));
+  const keys = JSON.parse(execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", { encoding: "utf8", cwd: ROOT }));
   return keys.find((k) => k.name === "service_role")?.api_key;
 }
 

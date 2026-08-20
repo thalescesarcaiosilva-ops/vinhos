@@ -46,8 +46,8 @@ WHERE image_url IS NOT NULL
 -- Conferência
 SELECT
   count(*) FILTER (WHERE image_url LIKE '/storage/v1/object/public/product-images/%') AS urls_relativas,
-  count(*) FILTER (WHERE image_url LIKE 'https://%') AS urls_absolutas,
-  count(*) FILTER (WHERE image_url LIKE '%vinellevinhos%') AS urls_host_legado,
+  count(*) FILTER (WHERE image_url LIKE 'https://%' OR image_url LIKE 'http://%') AS urls_absolutas,
+  count(*) FILTER (WHERE image_url LIKE '%dymhoqxfamosdujzorrl%') AS urls_lovable,
   count(*) FILTER (WHERE image_url LIKE '%supabase.co%') AS urls_supabase
 FROM public.products
 WHERE image_url IS NOT NULL;

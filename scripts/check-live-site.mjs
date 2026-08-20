@@ -12,21 +12,21 @@ for (const line of readFileSync(path.join(ROOT, ".env"), "utf8").split(/\r?\n/))
   if (!process.env[m[1]]) process.env[m[1]] = v;
 }
 const JWT = JSON.parse(
-  execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", { encoding: "utf8", cwd: ROOT }),
+  execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", { encoding: "utf8", cwd: ROOT }),
 ).find((k) => k.name === "service_role")?.api_key;
 const sb = createClient(process.env.SUPABASE_URL, JWT, { auth: { persistSession: false } });
 
 const { data: sample } = await sb.from("products").select("slug,sku,image_url,name").limit(3);
 console.log("Sample products:", sample);
 
-const home = await fetch("https://vinellevinhos.vercel.app/");
+const home = await fetch("https://www.galvaovinhos.com.br/");
 console.log("Home status:", home.status);
 const homeHtml = await home.text();
 console.log("Home has product-images:", homeHtml.includes("product-images"));
 console.log("Home has storage/v1:", homeHtml.includes("/storage/v1/"));
 
 if (sample?.[0]) {
-  const url = `https://vinellevinhos.vercel.app/produto/${sample[0].slug}`;
+  const url = `https://www.galvaovinhos.com.br/produto/${sample[0].slug}`;
   const r = await fetch(url);
   const html = await r.text();
   console.log(`\nProduct ${sample[0].sku} (${url}):`, r.status);

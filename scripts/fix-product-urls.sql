@@ -22,7 +22,7 @@ SET gallery = (
   WHERE elem #>> '{}' ~* '\.(jpg|jpeg|png|webp)'
 )
 WHERE gallery IS NOT NULL
-  AND gallery::text ~* '(vinellevinhos|dymhoqxfamosdujzorrl|__l5e|imagens_produtos)';
+  AND gallery::text ~* '(galvaovinhos|dymhoqxfamosdujzorrl|__l5e|imagens_produtos)';
 
 -- Limpar image_url que não é imagem válida
 UPDATE public.products

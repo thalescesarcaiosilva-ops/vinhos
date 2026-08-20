@@ -6,7 +6,7 @@ import { mkdirSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { ROOT } from "./lib/env.mjs";
 
-const seed = path.join(ROOT, "exports", "vinelle-supabase-seed");
+const seed = path.join(ROOT, "exports", "galvao-supabase-seed");
 const out = path.join(seed, "json-batches");
 mkdirSync(out, { recursive: true });
 

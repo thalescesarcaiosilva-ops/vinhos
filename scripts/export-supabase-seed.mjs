@@ -1,9 +1,9 @@
 /**
- * Exporta pacote portátil para clonar o schema Vinelle + catálogo (produtos/categorias)
+ * Exporta pacote portátil para clonar o schema Galvao + catálogo (produtos/categorias)
  * em um NOVO projeto Supabase — sem alterar o projeto atual.
  *
  * Uso: node scripts/export-supabase-seed.mjs
- * Saída: exports/vinelle-supabase-seed/
+ * Saída: exports/galvao-supabase-seed/
  */
 import {
   copyFileSync,
@@ -19,7 +19,7 @@ import { pipeline } from "node:stream/promises";
 import { Readable } from "node:stream";
 import { ROOT, getSupabaseConfig } from "./lib/env.mjs";
 
-const OUT = path.join(ROOT, "exports", "vinelle-supabase-seed");
+const OUT = path.join(ROOT, "exports", "galvao-supabase-seed");
 const PAGE = 1000;
 const CONCURRENCY = 8;
 
@@ -155,7 +155,7 @@ function copyMigrations() {
 
 function writeStorageBootstrap() {
   const sql = `-- Buckets + policies (idempotente). Rode no SQL Editor do NOVO projeto se as migrations não criarem tudo.
--- Não execute no projeto Vinelle atual.
+-- Não execute no projeto Galvao atual.
 
 INSERT INTO storage.buckets (id, name, public)
 VALUES
@@ -194,7 +194,7 @@ CREATE POLICY "Admins delete banner images" ON storage.objects FOR DELETE TO aut
 }
 
 function writeReadme(meta) {
-  const md = `# Pacote de seed — Vinelle → novo Supabase
+  const md = `# Pacote de seed — Galvao → novo Supabase
 
 Exportado em **${meta.exported_at}** a partir do projeto \`${meta.source_project}\` (somente leitura).
 
@@ -216,14 +216,14 @@ Exportado em **${meta.exported_at}** a partir do projeto \`${meta.source_project
 ## Importação (quando tiver o novo projeto)
 
 1. Crie um projeto Supabase novo (Dashboard).
-2. Apunte MCP/\`.env\` / \`supabase link\` **para o novo** \`project_ref\` (não use o Vinelle).
+2. Apunte MCP/\`.env\` / \`supabase link\` **para o novo** \`project_ref\` (não use o Galvao).
 3. Aplique o schema:
    - Copie \`schema/migrations/*\` para \`supabase/migrations/\` do app (ou use esta pasta) e rode \`npx supabase db push --linked\`, **ou**
    - Rode as migrations em ordem no SQL Editor.
 4. Rode \`schema/00_storage_buckets.sql\` no novo projeto.
 5. Importe dados + imagens:
    \`\`\`bash
-   node scripts/import-supabase-seed.mjs --dir exports/vinelle-supabase-seed
+   node scripts/import-supabase-seed.mjs --dir exports/galvao-supabase-seed
    \`\`\`
    (O script de import só existe/rodará contra o projeto configurado no \`.env\` — confira a URL antes.)
 
@@ -239,7 +239,7 @@ Exportado em **${meta.exported_at}** a partir do projeto \`${meta.source_project
 
 ## Importante
 
-- Este pacote **não altera** o projeto Vinelle (\`zsfhnjrotkbzyikkxmnm\`).
+- Este pacote **não altera** o projeto Galvao (\`aufvvgytbrstsrfomngm\`).
 - URLs de imagem no JSON são relativas (\`/storage/v1/object/public/product-images/...\`). Após reupload no novo bucket com o mesmo path, continuam válidas.
 `;
   writeFileSync(path.join(OUT, "README.md"), md, "utf8");
@@ -299,7 +299,7 @@ async function main() {
 
   const meta = {
     exported_at: new Date().toISOString(),
-    source_project: "zsfhnjrotkbzyikkxmnm",
+    source_project: "aufvvgytbrstsrfomngm",
     source_url: url,
     migration_count: migrations.length,
     counts: {
@@ -319,7 +319,7 @@ async function main() {
   const importHint = path.join(OUT, "IMPORT.txt");
   writeFileSync(
     importHint,
-    "Quando o novo projeto existir, use: node scripts/import-supabase-seed.mjs --dir exports/vinelle-supabase-seed\nConfirme SUPABASE_URL no .env apontando para o NOVO projeto.\n",
+    "Quando o novo projeto existir, use: node scripts/import-supabase-seed.mjs --dir exports/galvao-supabase-seed\nConfirme SUPABASE_URL no .env apontando para o NOVO projeto.\n",
     "utf8",
   );
 

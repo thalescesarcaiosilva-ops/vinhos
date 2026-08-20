@@ -12,10 +12,10 @@ for (const line of readFileSync(path.join(ROOT, ".env"), "utf8").split(/\r?\n/))
   if (!process.env[m[1]]) process.env[m[1]] = v;
 }
 const JWT = JSON.parse(
-  execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", { encoding: "utf8", cwd: ROOT }),
+  execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", { encoding: "utf8", cwd: ROOT }),
 ).find((k) => k.name === "service_role")?.api_key;
 const sb = createClient(process.env.SUPABASE_URL, JWT, { auth: { persistSession: false } });
-const HOST = "https://zsfhnjrotkbzyikkxmnm.supabase.co";
+const HOST = "https://aufvvgytbrstsrfomngm.supabase.co";
 
 const products = [];
 for (let f = 0; ; f += 1000) {

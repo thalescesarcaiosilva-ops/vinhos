@@ -1,5 +1,5 @@
 /**
- * Importa catálogo Vinoteca Vinho Prosa → Supabase (Vinelle).
+ * Importa catálogo Vinoteca Vinho Prosa → Supabase (Galvao).
  *
  * Uso:
  *   node scripts/import-vinoprosa.mjs --all
@@ -53,7 +53,7 @@ function resolveJwt() {
   const sk = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (sk?.startsWith("eyJ")) return sk;
   const keys = JSON.parse(
-    execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", {
+    execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", {
       encoding: "utf8",
       cwd: ROOT,
     }),
@@ -339,7 +339,7 @@ function saveState(state) {
 
 async function downloadImage(url) {
   const res = await fetch(url, {
-    headers: { "User-Agent": "VinelleImport/1.0", Accept: "image/*" },
+    headers: { "User-Agent": "GalvaoImport/1.0", Accept: "image/*" },
     redirect: "follow",
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);

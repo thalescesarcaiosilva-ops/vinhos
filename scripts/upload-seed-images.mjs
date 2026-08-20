@@ -12,15 +12,15 @@ import { ROOT } from "./lib/env.mjs";
 
 const url = (process.env.SEED_SUPABASE_URL || "").replace(/\/$/, "");
 const key = process.env.SEED_SUPABASE_KEY || "";
-const dir = path.join(ROOT, "exports", "vinelle-supabase-seed", "storage", "product-images");
+const dir = path.join(ROOT, "exports", "galvao-supabase-seed", "storage", "product-images");
 const CONCURRENCY = 4;
 
 if (!url || !key) {
   console.error("Defina SEED_SUPABASE_URL e SEED_SUPABASE_KEY (somente do projeto novo).");
   process.exit(1);
 }
-if (url.includes("zsfhnjrotkbzyikkxmnm")) {
-  console.error("Recusado: URL aponta para o Vinelle antigo.");
+if (!url.includes("aufvvgytbrstsrfomngm")) {
+  console.error("Recusado: URL deve apontar para o projeto Galvao (aufvvgytbrstsrfomngm).");
   process.exit(1);
 }
 

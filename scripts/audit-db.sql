@@ -15,8 +15,7 @@ UNION ALL
 SELECT 'legacy_host_products', count(*)::int
 FROM public.products
 WHERE image_url LIKE '%dymhoqxfamosdujzorrl%'
-   OR image_url LIKE '%vinellevinhos.com.br/storage%'
-   OR image_url LIKE '%zsfhnjrotkbzyikkxmnm%'
+   OR image_url LIKE '%/__l5e/%'
 UNION ALL
 SELECT 'categories_no_banner', count(*)::int
 FROM public.categories WHERE banner_image IS NULL OR banner_image = ''

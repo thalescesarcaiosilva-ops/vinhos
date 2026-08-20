@@ -71,7 +71,7 @@ function resolveJwt() {
   if (fromEnv?.startsWith("eyJ")) return fromEnv;
   const sk = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (sk?.startsWith("eyJ")) return sk;
-  const raw = execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", {
+  const raw = execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", {
     encoding: "utf8",
     cwd: ROOT,
   });

@@ -11,13 +11,13 @@ for (const line of readFileSync(path.join(ROOT, ".env"), "utf8").split(/\r?\n/))
   if (!process.env[m[1]]) process.env[m[1]] = v;
 }
 const JWT = JSON.parse(
-  execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", { encoding: "utf8", cwd: ROOT }),
+  execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", { encoding: "utf8", cwd: ROOT }),
 ).find((k) => k.name === "service_role")?.api_key;
 
 const files = ["VIN001_1.jpg", "VIN009_3.jpg", "VIN1165_1.png", "VIN1305_1.jpg", "VIN950_1.png"];
 const hosts = [
-  "https://zsfhnjrotkbzyikkxmnm.supabase.co",
-  "https://vinellevinhos.vercel.app",
+  "https://aufvvgytbrstsrfomngm.supabase.co",
+  "https://www.galvaovinhos.com.br",
 ];
 
 for (const host of hosts) {
@@ -56,7 +56,7 @@ console.log("Last 5 names:", all.slice(-5));
 // Wrong mime files
 let bad = 0;
 for (const f of all.slice(0, 200)) {
-  const r = await fetch(`https://zsfhnjrotkbzyikkxmnm.supabase.co/storage/v1/object/public/product-images/${f}`, { method: "HEAD" });
+  const r = await fetch(`https://aufvvgytbrstsrfomngm.supabase.co/storage/v1/object/public/product-images/${f}`, { method: "HEAD" });
   const ct = r.headers.get("content-type") || "";
   if (!ct.startsWith("image/")) {
     bad++;

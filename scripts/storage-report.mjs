@@ -10,7 +10,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const BUCKET = "product-images";
-const SITE = "https://vinellevinhos.vercel.app";
+const SITE = "https://www.galvaovinhos.com.br";
 
 function loadEnv() {
   const envPath = path.join(ROOT, ".env");
@@ -30,7 +30,7 @@ function resolveJwt() {
   const sk = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (sk?.startsWith("eyJ")) return sk;
   return JSON.parse(
-    execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", { encoding: "utf8", cwd: ROOT }),
+    execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", { encoding: "utf8", cwd: ROOT }),
   ).find((k) => k.name === "service_role" && String(k.api_key || "").startsWith("eyJ"))?.api_key;
 }
 
@@ -68,7 +68,7 @@ const { data: sample } = await sb.from("products").select("sku,image_url,slug").
 const testUrl = sample ? `${SITE}${sample.image_url}` : null;
 
 console.log("═══════════════════════════════════════");
-console.log("  RELATÓRIO STORAGE — Vinelle");
+console.log("  RELATÓRIO STORAGE — Galvao");
 console.log("═══════════════════════════════════════");
 console.log(`Arquivos no bucket (API):  ${files.length}`);
 console.log(`Produtos no banco:         ${products}`);

@@ -25,7 +25,7 @@ const FAIL = [
 
 const url = (process.env.SEED_SUPABASE_URL || "").replace(/\/$/, "");
 const key = process.env.SEED_SUPABASE_KEY || "";
-const dir = path.join(ROOT, "exports", "vinelle-supabase-seed", "storage", "product-images");
+const dir = path.join(ROOT, "exports", "galvao-supabase-seed", "storage", "product-images");
 
 async function upload(rel) {
   const filePath = path.join(dir, rel);
@@ -53,7 +53,7 @@ async function upload(rel) {
 }
 
 async function main() {
-  if (!url || !key || url.includes("zsfhnjrotkbzyikkxmnm")) throw new Error("bad env");
+  if (!url || !key || !url.includes("aufvvgytbrstsrfomngm")) throw new Error("bad env");
   const results = [];
   for (const rel of FAIL) {
     results.push(await upload(rel));

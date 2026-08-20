@@ -14,17 +14,17 @@ BEGIN
     '00000000-0000-0000-0000-000000000000',
     new_user_id,
     'authenticated', 'authenticated',
-    'admin@vinellevinhos.com.br',
-    crypt('Vinelle@Admin2026', gen_salt('bf')),
+    'admin@galvaovinhos.com.br',
+    crypt('Galvao@Admin2026', gen_salt('bf')),
     now(), now(), now(),
     '{"provider":"email","providers":["email"]}'::jsonb,
-    '{"first_name":"Admin","last_name":"Vinelle"}'::jsonb,
+    '{"first_name":"Admin","last_name":"Galvao"}'::jsonb,
     false, '', '', '', ''
   );
 
   INSERT INTO auth.identities (id, user_id, identity_data, provider, provider_id, last_sign_in_at, created_at, updated_at)
   VALUES (gen_random_uuid(), new_user_id,
-    jsonb_build_object('sub', new_user_id::text, 'email', 'admin@vinellevinhos.com.br', 'email_verified', true),
+    jsonb_build_object('sub', new_user_id::text, 'email', 'admin@galvaovinhos.com.br', 'email_verified', true),
     'email', new_user_id::text, now(), now(), now());
 
   INSERT INTO public.user_roles (user_id, role) VALUES (new_user_id, 'admin');

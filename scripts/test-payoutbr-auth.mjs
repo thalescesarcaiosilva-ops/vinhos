@@ -54,8 +54,8 @@ await req("/transactions", {
     amount: 1000,
     paymentMethod: "pix",
     customer: {
-      name: "Teste Vinelle",
-      email: "teste@vinelle.com.br",
+      name: "Teste Galvao",
+      email: "teste@galvaovinhos.com.br",
       phone: "62999999999",
       document: { type: "cpf", number: "12345678909" },
       address: {
@@ -81,7 +81,7 @@ await req("/transactions", {
       },
     },
     items: [{ title: "Vinho Teste", unitPrice: 1000, quantity: 1, tangible: true }],
-    postbackUrl: "https://vinellevinhos.vercel.app/api/public/payoutbr-webhook",
+    postbackUrl: "https://www.galvaovinhos.com.br/api/public/payoutbr-webhook",
     metadata: "test-order",
     externalRef: "test-order",
     traceable: true,

@@ -12,14 +12,6 @@ export function getStorageHostPrefixes(): string[] {
     "http://galvaovinhos.com.br",
     "https://www.galvaovinhos.com.br",
     "http://www.galvaovinhos.com.br",
-    // Hosts legados (URLs antigas de imagem ainda no banco)
-    "https://vinellevinhos.com.br",
-    "http://vinellevinhos.com.br",
-    "https://www.vinellevinhos.com.br",
-    "http://www.vinellevinhos.com.br",
-    "https://vinellevinhos.com",
-    "http://vinellevinhos.com",
-    "https://zsfhnjrotkbzyikkxmnm.supabase.co",
     "https://aufvvgytbrstsrfomngm.supabase.co",
   ]);
 

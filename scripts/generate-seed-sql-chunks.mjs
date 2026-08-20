@@ -6,7 +6,7 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { ROOT } from "./lib/env.mjs";
 
-const dir = path.join(ROOT, "exports", "vinelle-supabase-seed");
+const dir = path.join(ROOT, "exports", "galvao-supabase-seed");
 const out = path.join(dir, "sql-chunks");
 mkdirSync(out, { recursive: true });
 

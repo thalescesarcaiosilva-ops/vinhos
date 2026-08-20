@@ -1,18 +1,18 @@
 /**
- * Importa o pacote exports/vinelle-supabase-seed no projeto apontado pelo .env.
+ * Importa o pacote exports/galvao-supabase-seed no projeto apontado pelo .env.
  *
- * ATENÇÃO: confira SUPABASE_URL — NÃO rode contra o Vinelle de produção por engano.
+ * ATENÇÃO: confira SUPABASE_URL — NÃO rode contra o Galvao de produção por engano.
  *
  * Uso:
- *   node scripts/import-supabase-seed.mjs --dir exports/vinelle-supabase-seed
- *   node scripts/import-supabase-seed.mjs --dir exports/vinelle-supabase-seed --skip-images
- *   node scripts/import-supabase-seed.mjs --dir exports/vinelle-supabase-seed --force
+ *   node scripts/import-supabase-seed.mjs --dir exports/galvao-supabase-seed
+ *   node scripts/import-supabase-seed.mjs --dir exports/galvao-supabase-seed --skip-images
+ *   node scripts/import-supabase-seed.mjs --dir exports/galvao-supabase-seed --force
  */
 import { createReadStream, existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { ROOT, getSupabaseConfig } from "./lib/env.mjs";
 
-const VINELLE_REF = "zsfhnjrotkbzyikkxmnm";
+const PRODUCTION_REF = "aufvvgytbrstsrfomngm";
 const CONCURRENCY = 6;
 
 function arg(name, fallback = null) {
@@ -91,7 +91,7 @@ async function mapPool(items, concurrency, fn) {
 }
 
 async function main() {
-  const dirRel = arg("--dir", "exports/vinelle-supabase-seed");
+  const dirRel = arg("--dir", "exports/galvao-supabase-seed");
   const skipImages = process.argv.includes("--skip-images");
   const force = process.argv.includes("--force");
   const dir = path.isAbsolute(dirRel) ? dirRel : path.join(ROOT, dirRel);
@@ -101,9 +101,9 @@ async function main() {
   }
 
   const { url, jwt } = getSupabaseConfig();
-  if (url.includes(VINELLE_REF) && !force) {
+  if (url.includes(PRODUCTION_REF) && !force) {
     throw new Error(
-      `SUPABASE_URL aponta para o Vinelle (${VINELLE_REF}). Troque o .env para o NOVO projeto, ou use --force se tiver certeza.`,
+      `SUPABASE_URL aponta para o Galvao em produção (${PRODUCTION_REF}). Use --force se tiver certeza.`,
     );
   }
 

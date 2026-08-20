@@ -10,14 +10,14 @@ import { ROOT } from "./lib/env.mjs";
 
 const url = (process.env.SEED_SUPABASE_URL || "").replace(/\/$/, "");
 const key = process.env.SEED_SUPABASE_KEY || "";
-const VINELLE = "zsfhnjrotkbzyikkxmnm";
+const PROJECT_REF = "aufvvgytbrstsrfomngm";
 
 if (!url || !key) {
   console.error("Defina SEED_SUPABASE_URL e SEED_SUPABASE_KEY (service_role JWT do NOVO projeto).");
   process.exit(1);
 }
-if (url.includes(VINELLE)) {
-  console.error("Recusado: URL do Vinelle antigo.");
+if (!url.includes(PROJECT_REF)) {
+  console.error(`Recusado: URL deve apontar para o projeto Galvao (${PROJECT_REF}).`);
   process.exit(1);
 }
 if (!key.startsWith("eyJ")) {
@@ -26,7 +26,7 @@ if (!key.startsWith("eyJ")) {
 }
 
 const SKIP = new Set(["rating", "vivino_rating"]);
-const seed = path.join(ROOT, "exports", "vinelle-supabase-seed", "data");
+const seed = path.join(ROOT, "exports", "galvao-supabase-seed", "data");
 const products = JSON.parse(readFileSync(path.join(seed, "products.json"), "utf8")).map((p) => {
   const o = { ...p, rating: null, vivino_rating: null };
   for (const k of SKIP) delete o[k];

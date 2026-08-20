@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const APPLY = process.argv.includes("--apply");
-const SITE = (process.env.PUBLIC_SITE_URL || "https://www.vinellevinhos.com.br").replace(/\/$/, "");
+const SITE = (process.env.PUBLIC_SITE_URL || "https://www.galvaovinhos.com.br").replace(/\/$/, "");
 const CONCURRENCY = 25;
 
 function loadEnv() {

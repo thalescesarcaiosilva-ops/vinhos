@@ -77,7 +77,7 @@ function resolveStorageJwt() {
   if (fromEnv?.startsWith("eyJ")) return fromEnv;
   if (SERVICE_KEY?.startsWith("eyJ")) return SERVICE_KEY;
   try {
-    const raw = execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", {
+    const raw = execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", {
       encoding: "utf8",
       cwd: ROOT,
     });

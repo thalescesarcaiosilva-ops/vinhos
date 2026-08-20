@@ -14,9 +14,9 @@ for (const line of readFileSync(path.join(ROOT, ".env"), "utf8").split(/\r?\n/))
   let v = m[2].trim().replace(/^['"]|['"]$/g, "");
   if (!process.env[m[1]]) process.env[m[1]] = v;
 }
-const JWT = JSON.parse(execSync("supabase projects api-keys --project-ref zsfhnjrotkbzyikkxmnm -o json", { encoding: "utf8", cwd: ROOT })).find((k) => k.name === "service_role")?.api_key;
+const JWT = JSON.parse(execSync("supabase projects api-keys --project-ref aufvvgytbrstsrfomngm -o json", { encoding: "utf8", cwd: ROOT })).find((k) => k.name === "service_role")?.api_key;
 const sb = createClient(process.env.SUPABASE_URL, JWT);
-const HOST = "https://zsfhnjrotkbzyikkxmnm.supabase.co";
+const HOST = "https://aufvvgytbrstsrfomngm.supabase.co";
 
 for (const sku of skus) {
   const { data } = await sb.from("products").select("sku,image_url,gallery").eq("sku", sku).single();
