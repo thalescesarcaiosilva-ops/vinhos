@@ -1,6 +1,6 @@
 -- Limpa catálogo e dados transacionais para reimportação limpa.
 -- Mantém: categories, store_settings, users/roles, taxonomia (brands/grapes/regions/collections).
--- Projeto: zsfhnjrotkbzyikkxmnm
+-- Projeto: aufvvgytbrstsrfomngm (Galvao Vinhos)
 
 BEGIN;
 

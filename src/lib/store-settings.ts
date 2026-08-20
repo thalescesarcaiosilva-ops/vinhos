@@ -180,7 +180,7 @@ export const DEFAULT_SETTINGS: StoreSettingsData = {
     email: STORE.email,
     instagramUrl: "",
     facebookUrl: "",
-    copyrightText: `© {year} ${STORE.name} · Todos os direitos reservados`,
+    copyrightText: `© {year} ${STORE.legalName} · CNPJ: ${STORE.cnpj} · Todos os direitos reservados · APRECIE COM MODERAÇÃO · Venda proibida para menores de 18 anos`,
     categoriesTitle: "Categorias",
     categories: [],
     institutionalTitle: "Institucional",

@@ -19,7 +19,7 @@ export function getSupabaseProjectUrl(): string {
 
   if (SITE_HOST_RE.test(raw) && !raw.includes("supabase.co")) {
     throw new Error(
-      "VITE_SUPABASE_URL está com o domínio da loja. Configure https://aufvvgytbrstsrfomngm.supabase.co (não galvaovinhos.com / vinellevinhos.com nem PUBLIC_SITE_URL).",
+      "VITE_SUPABASE_URL está com o domínio da loja. Configure https://aufvvgytbrstsrfomngm.supabase.co (não o domínio do site nem PUBLIC_SITE_URL).",
     );
   }
 

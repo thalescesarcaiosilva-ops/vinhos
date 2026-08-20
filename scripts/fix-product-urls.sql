@@ -1,4 +1,4 @@
--- Normaliza URLs de imagem legadas (Lovable / vinellevinhos / Supabase antigo)
+-- Normaliza URLs de imagem legadas (hosts antigos / Lovable / Supabase antigo)
 -- para caminhos do projeto atual: /storage/v1/object/public/product-images/{arquivo}
 
 -- image_url: extrai só o nome do arquivo

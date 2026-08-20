@@ -1,6 +1,6 @@
 -- Normaliza image_url e gallery para caminhos relativos do site.
 -- Formato canônico: /storage/v1/object/public/product-images/{arquivo}
--- O domínio (vinellevinhos.com.br, Vercel, etc.) é resolvido em runtime pelo app.
+-- O domínio (galvaovinhos.com.br, Vercel, etc.) é resolvido em runtime pelo app.
 
 -- image_url
 UPDATE public.products
@@ -47,7 +47,7 @@ WHERE image_url IS NOT NULL
 SELECT
   count(*) FILTER (WHERE image_url LIKE '/storage/v1/object/public/product-images/%') AS urls_relativas,
   count(*) FILTER (WHERE image_url LIKE 'https://%') AS urls_absolutas,
-  count(*) FILTER (WHERE image_url LIKE '%vinellevinhos%') AS urls_vinelle,
+  count(*) FILTER (WHERE image_url LIKE '%vinellevinhos%') AS urls_host_legado,
   count(*) FILTER (WHERE image_url LIKE '%supabase.co%') AS urls_supabase
 FROM public.products
 WHERE image_url IS NOT NULL;

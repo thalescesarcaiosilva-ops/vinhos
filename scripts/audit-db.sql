@@ -1,4 +1,4 @@
--- Auditoria rápida do banco Vinelle (zsfhnjrotkbzyikkxmnm)
+-- Auditoria rápida do banco Galvao Vinhos (aufvvgytbrstsrfomngm)
 SELECT 'products' AS t, count(*)::int AS n FROM public.products
 UNION ALL SELECT 'categories', count(*)::int FROM public.categories
 UNION ALL SELECT 'banners', count(*)::int FROM public.banners
@@ -14,7 +14,9 @@ FROM public.products WHERE image_url LIKE '/__l5e/%' OR video_url LIKE '/__l5e/%
 UNION ALL
 SELECT 'legacy_host_products', count(*)::int
 FROM public.products
-WHERE image_url LIKE '%dymhoqxfamosdujzorrl%' OR image_url LIKE '%vinellevinhos.com.br/storage%'
+WHERE image_url LIKE '%dymhoqxfamosdujzorrl%'
+   OR image_url LIKE '%vinellevinhos.com.br/storage%'
+   OR image_url LIKE '%zsfhnjrotkbzyikkxmnm%'
 UNION ALL
 SELECT 'categories_no_banner', count(*)::int
 FROM public.categories WHERE banner_image IS NULL OR banner_image = ''
