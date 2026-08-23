@@ -31,6 +31,7 @@ import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthConfirmRouteImport } from './routes/auth.confirm'
 import { Route as ColecaoSlugRouteImport } from './routes/colecao.$slug'
 import { Route as PaginaSlugRouteImport } from './routes/pagina.$slug'
+import { Route as PoliticasSlugRouteImport } from './routes/politicas.$slug'
 import { Route as ProdutoSlugRouteImport } from './routes/produto.$slug'
 import { Route as ApiPublicPayoutbrWebhookRouteImport } from './routes/api/public/payoutbr-webhook'
 import { Route as ApiPublicUploadImagesRouteImport } from './routes/api/public/upload-images'
@@ -148,6 +149,11 @@ const PaginaSlugRoute = PaginaSlugRouteImport.update({
   path: '/pagina/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PoliticasSlugRoute = PoliticasSlugRouteImport.update({
+  id: '/politicas/$slug',
+  path: '/politicas/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdutoSlugRoute = ProdutoSlugRouteImport.update({
   id: '/produto/$slug',
   path: '/produto/$slug',
@@ -205,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/auth/confirm': typeof AuthConfirmRoute
   '/colecao/$slug': typeof ColecaoSlugRoute
   '/pagina/$slug': typeof PaginaSlugRoute
+  '/politicas/$slug': typeof PoliticasSlugRoute
   '/produto/$slug': typeof ProdutoSlugRoute
   '/api/public/payoutbr-webhook': typeof ApiPublicPayoutbrWebhookRoute
   '/api/public/upload-images': typeof ApiPublicUploadImagesRoute
@@ -235,6 +242,7 @@ export interface FileRoutesByTo {
   '/auth/confirm': typeof AuthConfirmRoute
   '/colecao/$slug': typeof ColecaoSlugRoute
   '/pagina/$slug': typeof PaginaSlugRoute
+  '/politicas/$slug': typeof PoliticasSlugRoute
   '/produto/$slug': typeof ProdutoSlugRoute
   '/api/public/payoutbr-webhook': typeof ApiPublicPayoutbrWebhookRoute
   '/api/public/upload-images': typeof ApiPublicUploadImagesRoute
@@ -266,6 +274,7 @@ export interface FileRoutesById {
   '/auth/confirm': typeof AuthConfirmRoute
   '/colecao/$slug': typeof ColecaoSlugRoute
   '/pagina/$slug': typeof PaginaSlugRoute
+  '/politicas/$slug': typeof PoliticasSlugRoute
   '/produto/$slug': typeof ProdutoSlugRoute
   '/api/public/payoutbr-webhook': typeof ApiPublicPayoutbrWebhookRoute
   '/api/public/upload-images': typeof ApiPublicUploadImagesRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/auth/confirm'
     | '/colecao/$slug'
     | '/pagina/$slug'
+    | '/politicas/$slug'
     | '/produto/$slug'
     | '/api/public/payoutbr-webhook'
     | '/api/public/upload-images'
@@ -328,6 +338,7 @@ export interface FileRouteTypes {
     | '/auth/confirm'
     | '/colecao/$slug'
     | '/pagina/$slug'
+    | '/politicas/$slug'
     | '/produto/$slug'
     | '/api/public/payoutbr-webhook'
     | '/api/public/upload-images'
@@ -358,6 +369,7 @@ export interface FileRouteTypes {
     | '/auth/confirm'
     | '/colecao/$slug'
     | '/pagina/$slug'
+    | '/politicas/$slug'
     | '/produto/$slug'
     | '/api/public/payoutbr-webhook'
     | '/api/public/upload-images'
@@ -389,6 +401,7 @@ export interface RootRouteChildren {
   AuthConfirmRoute: typeof AuthConfirmRoute
   ColecaoSlugRoute: typeof ColecaoSlugRoute
   PaginaSlugRoute: typeof PaginaSlugRoute
+  PoliticasSlugRoute: typeof PoliticasSlugRoute
   ProdutoSlugRoute: typeof ProdutoSlugRoute
   ApiPublicPayoutbrWebhookRoute: typeof ApiPublicPayoutbrWebhookRoute
   ApiPublicUploadImagesRoute: typeof ApiPublicUploadImagesRoute
@@ -553,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaginaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/politicas/$slug': {
+      id: '/politicas/$slug'
+      path: '/politicas/$slug'
+      fullPath: '/politicas/$slug'
+      preLoaderRoute: typeof PoliticasSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produto/$slug': {
       id: '/produto/$slug'
       path: '/produto/$slug'
@@ -621,6 +641,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthConfirmRoute: AuthConfirmRoute,
   ColecaoSlugRoute: ColecaoSlugRoute,
   PaginaSlugRoute: PaginaSlugRoute,
+  PoliticasSlugRoute: PoliticasSlugRoute,
   ProdutoSlugRoute: ProdutoSlugRoute,
   ApiPublicPayoutbrWebhookRoute: ApiPublicPayoutbrWebhookRoute,
   ApiPublicUploadImagesRoute: ApiPublicUploadImagesRoute,

@@ -3415,7 +3415,7 @@ function FooterAdmin() {
         <p className="mb-6 text-sm text-muted-foreground">
           Edite todos os textos, links e a logo do rodapé. Adicione quantas páginas institucionais
           quiser — elas ficam disponíveis em{" "}
-          <code className="rounded bg-muted px-1">/pagina/&lt;slug&gt;</code>.
+          <code className="rounded bg-muted px-1">/politicas/&lt;slug&gt;</code>.
         </p>
       </div>
 
@@ -3654,7 +3654,7 @@ function FooterAdmin() {
               </label>
               <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
                 <span>
-                  URL: <code className="rounded bg-muted px-1">/pagina/{p.slug}</code>
+                  URL: <code className="rounded bg-muted px-1">/politicas/{p.slug}</code>
                 </span>
                 <button
                   onClick={() => removePage(i)}

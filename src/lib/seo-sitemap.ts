@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { countries } from "@/lib/countries";
 import { getSiteUrl } from "@/lib/site-url";
+import { PRICE_RANGES } from "@/lib/collection-products";
 
 /** Cliente server-side com chave anon (leitura pública — não exige service_role na Vercel). */
 function getPublicSupabase() {
@@ -20,27 +21,12 @@ function getPublicSupabase() {
   });
 }
 
-/** Coleções virtuais definidas em colecao.$slug.tsx (sem linha no banco). */
-const VIRTUAL_COLLECTION_SLUGS = [
-  "todos",
-  "outlet",
-  "sobremesa",
-  "fortificados",
-  "sem-alcool",
-  "destilados",
-  "cervejas",
-  "sucos",
-  "acessorios",
-  "tacas",
-  "saca-rolhas",
-  "decantadores",
-  "azeites",
-  "conservas",
-  "chocolates",
-  "queijos",
-] as const;
+/** Rótulos alternativos no banco → rótulo canônico em countries.ts */
+const COUNTRY_DB_ALIASES: Record<string, string> = {
+  EUA: "Estados Unidos",
+};
 
-const PRICE_RANGE_SLUGS = ["ate-100", "100-200", "200-300", "acima-300"] as const;
+const labelToCountrySlug = new Map(countries.map((c) => [c.label, c.slug]));
 
 export type SitemapUrl = {
   loc: string;
@@ -103,16 +89,83 @@ export function getStaticSitemapUrls(): SitemapUrl[] {
   add("/fale-conosco", { changefreq: "monthly", priority: 0.5 });
   add("/quem-somos", { changefreq: "monthly", priority: 0.5 });
   add("/rastreio", { changefreq: "monthly", priority: 0.4 });
-  for (const slug of VIRTUAL_COLLECTION_SLUGS) {
-    add(`/colecao/${slug}`, { changefreq: "weekly", priority: 0.6 });
-  }
-  for (const slug of PRICE_RANGE_SLUGS) {
-    add(`/colecao/${slug}`, { changefreq: "weekly", priority: 0.6 });
-  }
-  for (const country of countries) {
-    add(`/colecao/${country.slug}`, { changefreq: "weekly", priority: 0.6 });
-  }
   return urls;
+}
+
+async function countrySlugsWithProducts(supabase: ReturnType<typeof getPublicSupabase>): Promise<string[]> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("country")
+    .eq("is_active", true)
+    .not("country", "is", null);
+  if (error) throw error;
+
+  const slugs = new Set<string>();
+  for (const row of data ?? []) {
+    const raw = row.country?.trim();
+    if (!raw) continue;
+    const label = COUNTRY_DB_ALIASES[raw] ?? raw;
+    const slug = labelToCountrySlug.get(label);
+    if (slug) slugs.add(slug);
+  }
+  return [...slugs].sort();
+}
+
+async function categorySlugsWithProducts(
+  supabase: ReturnType<typeof getPublicSupabase>,
+): Promise<Array<{ slug: string; updated_at: string | null }>> {
+  const { data, error } = await supabase
+    .from("product_categories")
+    .select("categories!inner(slug, updated_at, is_active), products!inner(is_active)")
+    .eq("categories.is_active", true)
+    .eq("products.is_active", true);
+  if (error) throw error;
+
+  const bySlug = new Map<string, string | null>();
+  for (const row of data ?? []) {
+    const cat = row.categories as { slug: string; updated_at: string | null } | null;
+    if (cat?.slug && !bySlug.has(cat.slug)) bySlug.set(cat.slug, cat.updated_at ?? null);
+  }
+  return [...bySlug.entries()]
+    .map(([slug, updated_at]) => ({ slug, updated_at }))
+    .sort((a, b) => a.slug.localeCompare(b.slug));
+}
+
+async function priceRangeSlugsWithProducts(
+  supabase: ReturnType<typeof getPublicSupabase>,
+): Promise<string[]> {
+  const slugs: string[] = [];
+  for (const [slug, range] of Object.entries(PRICE_RANGES)) {
+    let q = supabase.from("products").select("id", { count: "exact", head: true }).eq("is_active", true);
+    if (range.min != null) q = q.gte("price", range.min);
+    if (range.max != null) q = q.lte("price", range.max);
+    const { count, error } = await q;
+    if (error) throw error;
+    if ((count ?? 0) > 0) slugs.push(slug);
+  }
+  return slugs;
+}
+
+async function virtualSlugsWithProducts(
+  supabase: ReturnType<typeof getPublicSupabase>,
+): Promise<string[]> {
+  const slugs: string[] = [];
+  const { count: todosCount, error: todosErr } = await supabase
+    .from("products")
+    .select("id", { count: "exact", head: true })
+    .eq("is_active", true);
+  if (todosErr) throw todosErr;
+  if ((todosCount ?? 0) > 0) slugs.push("todos");
+
+  const { count: outletCount, error: outletErr } = await supabase
+    .from("products")
+    .select("id", { count: "exact", head: true })
+    .eq("is_active", true)
+    .not("compare_at_price", "is", null);
+  if (outletErr) throw outletErr;
+  if ((outletCount ?? 0) > 0) slugs.push("outlet");
+
+  return slugs;
 }
 
 export async function collectSitemapUrls(): Promise<SitemapUrl[]> {
@@ -146,12 +199,23 @@ export async function collectSitemapUrls(): Promise<SitemapUrl[]> {
     }
   }
 
-  const { data: categories, error: categoriesError } = await supabase
-    .from("categories")
-    .select("slug, updated_at")
-    .eq("is_active", true);
-  if (categoriesError) throw categoriesError;
-  for (const category of categories ?? []) {
+  const [countrySlugs, categoryRows, priceSlugs, virtualSlugs] = await Promise.all([
+    countrySlugsWithProducts(supabase),
+    categorySlugsWithProducts(supabase),
+    priceRangeSlugsWithProducts(supabase),
+    virtualSlugsWithProducts(supabase),
+  ]);
+
+  for (const slug of countrySlugs) {
+    add(`/colecao/${slug}`, { changefreq: "weekly", priority: 0.6 });
+  }
+  for (const slug of virtualSlugs) {
+    add(`/colecao/${slug}`, { changefreq: "weekly", priority: 0.6 });
+  }
+  for (const slug of priceSlugs) {
+    add(`/colecao/${slug}`, { changefreq: "weekly", priority: 0.6 });
+  }
+  for (const category of categoryRows) {
     add(`/colecao/${category.slug}`, {
       lastmod: formatLastmod(category.updated_at),
       changefreq: "weekly",
@@ -171,8 +235,8 @@ export async function collectSitemapUrls(): Promise<SitemapUrl[]> {
   )?.footer?.institutional;
   if (Array.isArray(institutional)) {
     for (const page of institutional) {
-      if (page?.slug) {
-        add(`/pagina/${page.slug}`, { changefreq: "monthly", priority: 0.4 });
+      if (page?.slug && page.slug !== "quem-somos") {
+        add(`/politicas/${page.slug}`, { changefreq: "monthly", priority: 0.4 });
       }
     }
   }

@@ -18,7 +18,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Heart,
-  ShieldCheck,
   Truck,
   Star,
   Share2,
@@ -317,6 +316,10 @@ function ProductPage() {
   const compare = p.compare_at_price ? Number(p.compare_at_price) : 0;
   const discount = compare > price ? Math.round(((compare - price) / compare) * 100) : 0;
   const pay = settings?.payments ?? DEFAULT_SETTINGS.payments;
+  const paymentMethodsImage = settings?.footer?.securityBadges?.find(
+    (b) =>
+      /pagamento/i.test(b.alt ?? "") || /formas-de-pagamento/i.test(b.href ?? ""),
+  )?.imageUrl;
   const showPix = pay.pixEnabled;
   const pixDiscountPct = pay.pixDiscount || 0;
   const hasPixDiscount = showPix && pixDiscountPct > 0;
@@ -696,6 +699,17 @@ function ProductPage() {
                     >
                       Ver todas as parcelas e formas de pagamento
                     </button>
+                    {paymentMethodsImage && (
+                      <img
+                        src={toSiteImageUrl(paymentMethodsImage)}
+                        alt="Bandeiras e formas de pagamento aceitas"
+                        width={280}
+                        height={30}
+                        loading="lazy"
+                        decoding="async"
+                        className="mt-2 h-8 w-auto max-w-full object-contain object-left"
+                      />
+                    )}
                   </div>
                 </div>
               )}
@@ -746,13 +760,6 @@ function ProductPage() {
             </div>
 
             <SuggestedProducts productId={p.id} />
-
-            <div className="flex items-center gap-2 border-t border-border/70 pt-4 text-sm">
-              <ShieldCheck className="h-5 w-5 shrink-0 text-primary" />
-              <div>
-                <strong>Garantia:</strong> 7 Dias de Garantia
-              </div>
-            </div>
 
             <section className="border-t border-border/70 pt-5" aria-labelledby="shipping-title">
               <div className="flex items-center gap-2">

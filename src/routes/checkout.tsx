@@ -14,6 +14,7 @@ import { createCheckoutPix, createCheckoutCard, getPayoutStatus } from "@/lib/pa
 import { PayoutCardForm, type PayoutCardHandle } from "@/components/store/PayoutCardForm";
 import { GoogleAdsConversion } from "@/components/store/GoogleAdsConversion";
 import { PixReceiptUpload } from "@/components/store/PixReceiptUpload";
+import { CheckoutLegalConsent, CheckoutPolicyLinks } from "@/components/store/CheckoutLegalConsent";
 import QRCode from "qrcode";
 import { toSiteImageUrl } from "@/lib/image-url";
 import { STORE } from "@/lib/settings";
@@ -93,6 +94,7 @@ function Checkout() {
   const [couponInput, setCouponInput] = useState("");
   const [coupon, setCoupon] = useState<{ code: string; discount: number } | null>(null);
   const [couponLoading, setCouponLoading] = useState(false);
+  const [legalConsent, setLegalConsent] = useState(false);
 
   const payments = settings?.payments;
   const pixEnabled = payments?.pixEnabled ?? true;
@@ -343,6 +345,10 @@ function Checkout() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!legalConsent) {
+      toast.error("Marque que concorda com as políticas da loja para continuar");
+      return;
+    }
     if (!form.doc || form.doc.replace(/\D/g, "").length < 11) {
       toast.error("CPF é obrigatório para o pagamento");
       return;
@@ -449,6 +455,7 @@ function Checkout() {
           if (s === 2 && step1Valid) setStep(2);
           if (s === 3 && step2Valid) setStep(3);
         }} step1Valid={step1Valid} step2Valid={step2Valid} />
+        <CheckoutPolicyLinks />
         <form onSubmit={submit} className="grid gap-6 lg:grid-cols-[1fr_400px]">
           <div className="space-y-5">
             {/* STEP 1 — Identificação */}
@@ -619,9 +626,10 @@ function Checkout() {
                             onValidChange={setCardValid}
                             registerHandle={(h) => { cardHandleRef.current = h; }}
                           />
+                          <CheckoutLegalConsent checked={legalConsent} onChange={setLegalConsent} />
                           <button
                             type="submit"
-                            disabled={loading || !cardReady || !cardValid}
+                            disabled={loading || !cardReady || !cardValid || !legalConsent}
                             className={btnPrimary}
                           >
                             {loading ? "Processando pagamento..." : `Pagar ${brl(cardPrice)}`}
@@ -662,9 +670,10 @@ function Checkout() {
                           <Field label="CPF/CNPJ">
                             <input required value={form.doc} onChange={e => setForm(f => ({ ...f, doc: maskCPF(e.target.value) }))} placeholder="000.000.000-00" className={inp} />
                           </Field>
+                          <CheckoutLegalConsent checked={legalConsent} onChange={setLegalConsent} />
                           <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || !legalConsent}
                             className={btnPrimary}
                           >
                             {loading ? "Gerando Pix..." : `Pagar ${brl(total)}`}

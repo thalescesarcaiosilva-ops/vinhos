@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/pagina/:slug",
+      "destination": "/politicas/:slug",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/rest/v1/:path*",

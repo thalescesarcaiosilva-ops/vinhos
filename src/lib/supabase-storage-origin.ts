@@ -13,6 +13,9 @@ export function getStorageHostPrefixes(): string[] {
     "https://www.galvaovinhos.com.br",
     "http://www.galvaovinhos.com.br",
     "https://aufvvgytbrstsrfomngm.supabase.co",
+    // Projetos Supabase legados — só para reescrever URLs antigas no banco até migrar
+    "https://zsfhnjrotkbzyikkxmnm.supabase.co",
+    "https://dymhoqxfamosdujzorrl.supabase.co",
   ]);
 
   try {

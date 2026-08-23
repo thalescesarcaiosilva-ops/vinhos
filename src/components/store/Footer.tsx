@@ -116,7 +116,7 @@ export function Footer() {
                 .filter((p) => p.slug !== "quem-somos")
                 .map((p) => (
                   <li key={p.id}>
-                    <Link to="/pagina/$slug" params={{ slug: p.slug }} className="hover:text-white">
+                    <Link to="/politicas/$slug" params={{ slug: p.slug }} className="hover:text-white">
                       {p.label}
                     </Link>
                   </li>
