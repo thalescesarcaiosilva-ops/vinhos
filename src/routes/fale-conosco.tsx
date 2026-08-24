@@ -163,7 +163,8 @@ function ContactPage() {
               Canais de atendimento
             </h2>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Fale diretamente com nossa equipe pelos canais oficiais.
+              Fale diretamente com nossa equipe pelos canais oficiais. Normalmente
+              respondemos em até 24 horas úteis.
             </p>
 
             <div className="mt-8 divide-y divide-border border-y border-border">
@@ -225,6 +226,9 @@ function ContactPage() {
                     Segunda a Sexta-feira: 08:00h às 18:00h
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">Exceto feriados</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Prazo de resposta: normalmente em até 24 horas úteis.
+                  </p>
                 </div>
               </div>
             </div>

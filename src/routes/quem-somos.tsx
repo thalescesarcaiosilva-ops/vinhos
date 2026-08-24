@@ -122,6 +122,22 @@ function QuemSomosPage() {
       </section>
 
       <StoreContainer className="py-12 md:py-16">
+        <figure className="mb-12 overflow-hidden border border-border/70 bg-muted/30 md:mb-16">
+          <img
+            src="/assets/loja-galvao-vinhos.png"
+            alt="Interior da Galvao Vinhos em Salvador, com prateleiras de vinhos selecionados"
+            width={1600}
+            height={1067}
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+            className="h-auto w-full object-cover"
+          />
+          <figcaption className="border-t border-border/70 px-4 py-3 text-xs text-muted-foreground sm:px-6">
+            Espaço físico da Galvao Vinhos — Salvador, BA
+          </figcaption>
+        </figure>
+
         <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
           <section>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">

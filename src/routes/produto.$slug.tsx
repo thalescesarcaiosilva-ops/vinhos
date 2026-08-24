@@ -25,6 +25,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { toast } from "sonner";
+import { POLICY_SLUGS } from "@/lib/policy-links";
 import {
   Accordion,
   AccordionItem,
@@ -769,7 +770,22 @@ function ProductPage() {
                     Calcule o frete
                   </h2>
                   <p className="text-xs text-muted-foreground">
-                    Consulte prazo e valor para seu CEP
+                    Consulte prazo e valor para seu CEP ·{" "}
+                    <Link
+                      to="/politicas/$slug"
+                      params={{ slug: POLICY_SLUGS.shipping }}
+                      className="font-medium text-primary hover:underline"
+                    >
+                      Política de frete
+                    </Link>
+                    {" · "}
+                    <Link
+                      to="/politicas/$slug"
+                      params={{ slug: POLICY_SLUGS.returns }}
+                      className="font-medium text-primary hover:underline"
+                    >
+                      Trocas e devoluções
+                    </Link>
                   </p>
                 </div>
               </div>

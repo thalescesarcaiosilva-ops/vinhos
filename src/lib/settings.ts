@@ -14,7 +14,7 @@ export const STORE = {
   addressRegion: "BA",
   postalCode: "40285-001",
   description:
-    "A Galvao Vinhos é uma loja especializada em vinhos e espumantes selecionados, com curadoria cuidadosa, compra segura e atendimento próximo.",
+    "A Galvao Vinhos é uma loja especializada em vinhos e espumantes selecionados, com curadoria cuidadosa, compra segura e atendimento próximo em Salvador — BA.",
   get url() {
     return getSiteUrl();
   },

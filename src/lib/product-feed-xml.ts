@@ -20,8 +20,64 @@ type FeedProduct = {
   image_url: string | null;
   gallery: string[] | null;
   gtin: string | null;
+  product_type: Database["public"]["Enums"]["product_type_enum"] | null;
+  is_zero_alcohol: boolean | null;
   product_categories: Array<{ categories: { name: string } | null }> | null;
 };
+
+/**
+ * IDs oficiais da taxonomia Google (en-US):
+ * https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt
+ * Não usar g:adult para álcool — a documentação do Merchant proíbe.
+ */
+const GPC = {
+  alcoholicBeverages: "499676",
+  wine: "421",
+  beer: "414",
+  liquor: "417",
+  juice: "2887",
+  barware: "649",
+  stemware: "2712",
+  corkscrews: "2976",
+  decanters: "650",
+  cookingOils: "2126",
+  candy: "4748",
+  olives: "5760",
+  foodItems: "422",
+} as const;
+
+function googleProductCategoryId(p: FeedProduct): string {
+  const name = (p.name ?? "").toLowerCase();
+  const type = p.product_type;
+
+  if (p.is_zero_alcohol) return GPC.juice;
+
+  if (type === "suco") return GPC.juice;
+  if (type === "cerveja") return GPC.beer;
+  if (type === "destilado") return GPC.liquor;
+  if (type === "vinho" || type === "espumante" || type === "sangria") return GPC.wine;
+  if (type === "kit") return GPC.alcoholicBeverages;
+
+  if (type === "acessorio") {
+    if (/ta[cç]a|stemware|copo/.test(name)) return GPC.stemware;
+    if (/saca.?rolha|corkscrew|abridor/.test(name)) return GPC.corkscrews;
+    if (/decantador|decanter/.test(name)) return GPC.decanters;
+    return GPC.barware;
+  }
+
+  if (type === "gourmet") {
+    if (/azeite|olive oil/.test(name)) return GPC.cookingOils;
+    if (/chocolate/.test(name)) return GPC.candy;
+    if (/azeitona|conserva|pickle/.test(name)) return GPC.olives;
+    return GPC.foodItems;
+  }
+
+  // Fallback: catálogo majoritariamente de bebidas alcoólicas
+  if (/cerveja|beer|ipa|lager|pilsen/.test(name)) return GPC.beer;
+  if (/whisky|whiskey|vodka|gin|rum|tequila|cacha[cç]a|conhaque|cognac/.test(name)) return GPC.liquor;
+  if (/suco|juice/.test(name)) return GPC.juice;
+  return GPC.wine;
+}
 
 function getPublicSupabase() {
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
@@ -90,6 +146,7 @@ function feedItemXml(p: FeedProduct): string {
   const brand = resolveProductBrandName(p.name, p.brand, p.country);
   const desc = productDescription(p);
   const type = productType(p);
+  const gpc = googleProductCategoryId(p);
 
   const lines = [
     "<item>",
@@ -98,6 +155,7 @@ function feedItemXml(p: FeedProduct): string {
     ` <g:description>${escapeXml(desc)}</g:description>`,
     ` <g:link>${escapeXml(link)}</g:link>`,
     ` <g:product_type>${cdata(type)}</g:product_type>`,
+    ` <g:google_product_category>${gpc}</g:google_product_category>`,
   ];
 
   if (image) lines.push(` <g:image_link>${escapeXml(image)}</g:image_link>`);
@@ -150,7 +208,7 @@ export async function buildProductFeedXml(): Promise<string> {
     const { data, error } = await supabase
       .from("products")
       .select(
-        "id, sku, slug, name, description, short_description, price, stock, brand, country, wine_type, image_url, gallery, gtin, product_categories(categories(name))",
+        "id, sku, slug, name, description, short_description, price, stock, brand, country, wine_type, image_url, gallery, gtin, product_type, is_zero_alcohol, product_categories(categories(name))",
       )
       .eq("is_active", true)
       .order("name")

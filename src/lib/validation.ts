@@ -31,6 +31,28 @@ export function maskCEP(v: string): string {
   return v.replace(/\D/g, "").slice(0, 8).replace(/(\d{5})(\d)/, "$1-$2");
 }
 
+/** Idade em anos completos a partir de YYYY-MM-DD (fuso local). */
+export function ageFromBirthDate(isoDate: string): number | null {
+  const raw = isoDate.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) return null;
+  const [y, m, d] = raw.split("-").map(Number);
+  const birth = new Date(y, m - 1, d);
+  if (Number.isNaN(birth.getTime())) return null;
+  if (birth.getFullYear() !== y || birth.getMonth() !== m - 1 || birth.getDate() !== d) return null;
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const beforeBirthday =
+    today.getMonth() < birth.getMonth() ||
+    (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate());
+  if (beforeBirthday) age -= 1;
+  return age;
+}
+
+export function isAdultBirthDate(isoDate: string, minAge = 18): boolean {
+  const age = ageFromBirthDate(isoDate);
+  return age !== null && age >= minAge;
+}
+
 export async function fetchAddressByCEP(cep: string) {
   const clean = cep.replace(/\D/g, "");
   if (clean.length !== 8) return null;

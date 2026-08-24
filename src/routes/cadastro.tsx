@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { isValidCPF, maskCPF, maskPhone } from "@/lib/validation";
+import { isValidCPF, maskCPF, maskPhone, isAdultBirthDate } from "@/lib/validation";
 import { pageMeta } from "@/lib/seo";
 import { STORE } from "@/lib/settings";
 
@@ -32,6 +32,9 @@ function SignupPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!isValidCPF(form.cpf)) return toast.error("CPF inválido");
+    if (!isAdultBirthDate(form.birth_date)) {
+      return toast.error("A venda de bebidas alcoólicas é proibida para menores de 18 anos");
+    }
     if (form.password.length < 8) return toast.error("Senha deve ter ao menos 8 caracteres");
 
     setLoading(true);
@@ -67,7 +70,7 @@ function SignupPage() {
         </div>
         <div><Label>CPF</Label><Input required value={form.cpf} onChange={(e) => update("cpf", maskCPF(e.target.value))} placeholder="000.000.000-00" /></div>
         <div className="grid grid-cols-2 gap-4">
-          <div><Label>Data de nascimento</Label><Input type="date" required value={form.birth_date} onChange={(e) => update("birth_date", e.target.value)} /></div>
+          <div><Label>Data de nascimento</Label><Input type="date" required value={form.birth_date} onChange={(e) => update("birth_date", e.target.value)} max={new Date().toISOString().slice(0, 10)} /></div>
           <div><Label>Telefone</Label><Input required value={form.phone} onChange={(e) => update("phone", maskPhone(e.target.value))} placeholder="(11) 99999-9999" /></div>
         </div>
         <div><Label>E-mail</Label><Input type="email" required value={form.email} onChange={(e) => update("email", e.target.value)} /></div>

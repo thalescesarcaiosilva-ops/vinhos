@@ -5,7 +5,7 @@ import { brl } from "@/lib/format";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { CheckCircle2, Tag, X, Copy, Loader2, CreditCard, QrCode, Pencil, Check, ShieldCheck, ArrowLeft } from "lucide-react";
-import { maskCEP, maskPhone, maskCPF, fetchAddressByCEP } from "@/lib/validation";
+import { maskCEP, maskPhone, maskCPF, fetchAddressByCEP, isAdultBirthDate } from "@/lib/validation";
 import { calcShipping, type ShippingQuote } from "@/lib/shipping";
 import { validateCoupon } from "@/lib/coupon";
 import { useStoreSettings, installmentPlan } from "@/lib/store-settings";
@@ -72,7 +72,7 @@ function Checkout() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
   const [form, setForm] = useState({
-    name: "", email: "", phone: "", doc: "",
+    name: "", email: "", phone: "", birthDate: "", doc: "",
     zip: "", street: "", number: "", complement: "", neighborhood: "", city: "", state: "",
     notes: "",
   });
@@ -80,13 +80,17 @@ function Checkout() {
   const [shippingIdx, setShippingIdx] = useState(0);
   const [cepLoading, setCepLoading] = useState(false);
 
-  // Prefill e-mail/nome da conta logada (ajuda a vincular o pedido em Meus Pedidos)
+  // Prefill e-mail/nome/nascimento da conta logada (ajuda a vincular o pedido em Meus Pedidos)
   useEffect(() => {
     if (!user) return;
     setForm((f) => ({
       ...f,
       email: f.email || user.email || "",
       name: f.name || (user.user_metadata?.full_name as string | undefined) || (user.user_metadata?.name as string | undefined) || "",
+      birthDate:
+        f.birthDate ||
+        (typeof user.user_metadata?.birth_date === "string" ? user.user_metadata.birth_date : "") ||
+        "",
     }));
   }, [user]);
 
@@ -331,11 +335,26 @@ function Checkout() {
   }
 
   // Step gates
-  const step1Valid = !!(form.name && /\S+@\S+/.test(form.email) && form.phone.replace(/\D/g, "").length >= 10);
+  const isAdult = isAdultBirthDate(form.birthDate);
+  const step1Valid = !!(
+    form.name &&
+    /\S+@\S+/.test(form.email) &&
+    form.phone.replace(/\D/g, "").length >= 10 &&
+    form.birthDate &&
+    isAdult
+  );
   const step2Valid = step1Valid && !!(form.zip && form.street && form.number && form.neighborhood && form.city && form.state && quotes.length > 0);
 
   const goStep2 = () => {
-    if (!step1Valid) { toast.error("Preencha nome, e-mail e telefone"); return; }
+    if (!form.birthDate) {
+      toast.error("Informe a data de nascimento");
+      return;
+    }
+    if (!isAdultBirthDate(form.birthDate)) {
+      toast.error("A venda de bebidas alcoólicas é proibida para menores de 18 anos");
+      return;
+    }
+    if (!step1Valid) { toast.error("Preencha nome, e-mail, telefone e data de nascimento"); return; }
     setStep(2);
   };
   const goStep3 = () => {
@@ -345,6 +364,11 @@ function Checkout() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAdultBirthDate(form.birthDate)) {
+      toast.error("A venda de bebidas alcoólicas é proibida para menores de 18 anos");
+      setStep(1);
+      return;
+    }
     if (!legalConsent) {
       toast.error("Marque que concorda com as políticas da loja para continuar");
       return;
@@ -498,6 +522,26 @@ function Checkout() {
                         className="w-full bg-transparent py-2.5 text-sm focus:outline-none"
                       />
                     </div>
+                  </Field>
+
+                  <Field label="Data de nascimento">
+                    <input
+                      required
+                      type="date"
+                      value={form.birthDate}
+                      onChange={upd("birthDate")}
+                      max={new Date().toISOString().slice(0, 10)}
+                      className={inp}
+                      autoComplete="bday"
+                    />
+                    <p className="mt-1.5 text-xs text-muted-foreground">
+                      Venda proibida para menores de 18 anos. Ao continuar, você declara ser maior de idade.
+                    </p>
+                    {form.birthDate && !isAdultBirthDate(form.birthDate) && (
+                      <p className="mt-1.5 text-xs font-medium text-destructive">
+                        Não é possível concluir a compra: é necessário ter 18 anos ou mais.
+                      </p>
+                    )}
                   </Field>
 
                   {pixEnabled && (payments?.pixDiscount ?? 0) > 0 && (
