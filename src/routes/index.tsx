@@ -16,6 +16,8 @@ import { countries } from "@/lib/countries";
 import { flagImgUrl } from "@/lib/country-flags";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
 import { HeroBanner, HomeHeroBanner } from "@/components/store/HeroBanner";
+import { useActiveCollections } from "@/lib/active-collections";
+import { PRICE_RANGES } from "@/lib/collection-products";
 
 const HOME_BANNER_POSITIONS = [
   "home_hero",
@@ -264,8 +266,10 @@ function DiscoveryCarousel({ items, ariaLabel }: { items: DiscoveryTile[]; ariaL
 
 function DiscoverySection({
   categories,
+  priceSlugs,
 }: {
   categories: { slug: string; label: string; img: string }[];
+  priceSlugs: Set<string>;
 }) {
   const categoryItems = categories.map((category) => ({
     slug: category.slug,
@@ -273,6 +277,12 @@ function DiscoverySection({
     image: category.img,
     imageClassName: "object-contain p-3",
   }));
+  const priceLinks = Object.entries(PRICE_RANGES)
+    .filter(([slug]) => priceSlugs.has(slug))
+    .map(([slug, range]) => ({ slug, label: range.label }));
+
+  if (categoryItems.length === 0 && priceLinks.length === 0) return null;
+
   return (
     <section className="border-y border-border/60 bg-cream/40 py-10 lg:py-12">
       <StoreContainer>
@@ -297,26 +307,23 @@ function DiscoverySection({
           </div>
         )}
 
-        <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border/60 pt-5">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Escolha por preço
-          </span>
-          {[
-            { slug: "ate-100", label: "Até R$ 100" },
-            { slug: "100-200", label: "R$ 100 a R$ 200" },
-            { slug: "200-300", label: "R$ 200 a R$ 300" },
-            { slug: "acima-300", label: "Acima de R$ 300" },
-          ].map((range) => (
-            <Link
-              key={range.slug}
-              to="/colecao/$slug"
-              params={{ slug: range.slug }}
-              className="border-b border-primary/40 pb-0.5 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
-            >
-              {range.label}
-            </Link>
-          ))}
-        </div>
+        {priceLinks.length > 0 && (
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border/60 pt-5">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Escolha por preço
+            </span>
+            {priceLinks.map((range) => (
+              <Link
+                key={range.slug}
+                to="/colecao/$slug"
+                params={{ slug: range.slug }}
+                className="border-b border-primary/40 pb-0.5 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
+              >
+                {range.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </StoreContainer>
     </section>
   );
@@ -382,6 +389,7 @@ function Home() {
   const espumantes = useProducts({ categorySlug: "so-espumantes", limit: 4 });
   const kits = useProducts({ categorySlug: "combos", limit: 4 });
   const activeCountries = useActiveCountries();
+  const activeCollections = useActiveCollections();
   const categoryTiles = useCategoryTiles();
   const visibleCountries = activeCountries.data
     ? countries.filter((c) => activeCountries.data!.has(c.label))
@@ -429,7 +437,12 @@ function Home() {
           </StoreContainer>
         </section>
       )}
-      {!categoryTiles.isLoading && <DiscoverySection categories={categoryTiles.data ?? []} />}
+      {!categoryTiles.isLoading && (
+        <DiscoverySection
+          categories={categoryTiles.data ?? []}
+          priceSlugs={activeCollections.data?.priceSlugs ?? new Set()}
+        />
+      )}
 
       {tintos.isLoading ? (
         <ShowcaseSkeleton title="Tintos" subtitle="Encorpados, elegantes, marcantes" />

@@ -13,7 +13,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
 import { useStoreSettings } from "@/lib/store-settings";
@@ -21,7 +20,7 @@ import { STORE } from "@/lib/settings";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
 import { flagImgUrl } from "@/lib/country-flags";
 import { useFavoritesList } from "@/lib/favorites";
-import { supabase } from "@/integrations/supabase/client";
+import { useActiveCollections } from "@/lib/active-collections";
 import { StoreContainer } from "@/components/store/StoreContainer";
 
 type Country = { slug: string; label: string; cc: string };
@@ -124,26 +123,13 @@ const combosGroups: Group[] = [
   },
 ];
 
-function useMenuCountries() {
-  return useQuery({
-    queryKey: ["header-active-countries"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("country")
-        .eq("is_active", true)
-        .not("country", "is", null);
-      if (error) throw error;
-      const set = new Set(
-        (data ?? []).map((r: { country: string | null }) => r.country).filter(Boolean) as string[],
-      );
-      // Normaliza EUA legado
-      if (set.has("EUA")) set.add("Estados Unidos");
-      if (set.has("Estados Unidos")) set.add("EUA");
-      return set;
-    },
-    staleTime: 5 * 60_000,
-  });
+function filterMenuGroups(groups: Group[], allowedSlugs: Set<string>): Group[] {
+  return groups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => allowedSlugs.has(item.to.replace("/colecao/", ""))),
+    }))
+    .filter((group) => group.items.length > 0);
 }
 
 function normCountryLabel(s: string): string {
@@ -176,11 +162,33 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileTab, setMobileTab] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement>(null);
-  const activeCountries = useMenuCountries();
+  const activeCollections = useActiveCollections();
+
+  const visiblePriceGroups = useMemo(
+    () =>
+      activeCollections.data
+        ? filterMenuGroups(priceGroups, activeCollections.data.priceSlugs)
+        : [],
+    [activeCollections.data],
+  );
+  const visibleTipoGroups = useMemo(
+    () =>
+      activeCollections.data
+        ? filterMenuGroups(tipoGroups, activeCollections.data.categorySlugs)
+        : [],
+    [activeCollections.data],
+  );
+  const visibleCombosGroups = useMemo(
+    () =>
+      activeCollections.data
+        ? filterMenuGroups(combosGroups, activeCollections.data.categorySlugs)
+        : [],
+    [activeCollections.data],
+  );
+
   const countries = useMemo(() => {
-    if (!activeCountries.data) return [];
-    const active = new Set([...activeCountries.data].map(normCountryLabel));
-    // Aliases para casar label do menu com country do produto
+    if (!activeCollections.data) return [];
+    const active = new Set([...activeCollections.data.countryLabels].map(normCountryLabel));
     if (active.has("eua") || active.has("usa") || active.has("estados unidos")) {
       active.add("estados unidos");
       active.add("eua");
@@ -189,7 +197,7 @@ export function Header() {
       active.add("macedonia do norte");
     }
     return ALL_MENU_COUNTRIES.filter((c) => active.has(normCountryLabel(c.label)));
-  }, [activeCountries.data]);
+  }, [activeCollections.data]);
 
   useEffect(() => {
     if (!open && !searchOpen && !desktopMenu) return;
@@ -274,58 +282,68 @@ export function Header() {
             />
 
             <nav className="hidden items-center xl:flex" aria-label="Categorias de produtos">
-              <DesktopNavMenu
-                id="precos"
-                label="Preços"
-                open={desktopMenu === "precos"}
-                onToggle={() => {
-                  setDesktopMenu(desktopMenu === "precos" ? null : "precos");
-                  setSearchOpen(false);
-                }}
-                onNavigate={() => setDesktopMenu(null)}
-                groups={priceGroups}
-              />
-              <DesktopCountriesMenu
-                open={desktopMenu === "paises"}
-                onToggle={() => {
-                  setDesktopMenu(desktopMenu === "paises" ? null : "paises");
-                  setSearchOpen(false);
-                }}
-                onNavigate={() => setDesktopMenu(null)}
-                countries={countries}
-              />
-              <DesktopNavMenu
-                id="tipos"
-                label="Tipos"
-                open={desktopMenu === "tipos"}
-                onToggle={() => {
-                  setDesktopMenu(desktopMenu === "tipos" ? null : "tipos");
-                  setSearchOpen(false);
-                }}
-                onNavigate={() => setDesktopMenu(null)}
-                groups={tipoGroups}
-                wide
-              />
-              <DesktopNavMenu
-                id="combos"
-                label="Combos"
-                open={desktopMenu === "combos"}
-                onToggle={() => {
-                  setDesktopMenu(desktopMenu === "combos" ? null : "combos");
-                  setSearchOpen(false);
-                }}
-                onNavigate={() => setDesktopMenu(null)}
-                groups={combosGroups}
-                wide
-              />
-              <Link
-                to="/colecao/$slug"
-                params={{ slug: "todos" }}
-                onClick={() => setDesktopMenu(null)}
-                className="whitespace-nowrap px-2.5 py-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-primary transition-colors hover:text-foreground"
-              >
-                Todos os produtos
-              </Link>
+              {visiblePriceGroups.length > 0 && (
+                <DesktopNavMenu
+                  id="precos"
+                  label="Preços"
+                  open={desktopMenu === "precos"}
+                  onToggle={() => {
+                    setDesktopMenu(desktopMenu === "precos" ? null : "precos");
+                    setSearchOpen(false);
+                  }}
+                  onNavigate={() => setDesktopMenu(null)}
+                  groups={visiblePriceGroups}
+                />
+              )}
+              {countries.length > 0 && (
+                <DesktopCountriesMenu
+                  open={desktopMenu === "paises"}
+                  onToggle={() => {
+                    setDesktopMenu(desktopMenu === "paises" ? null : "paises");
+                    setSearchOpen(false);
+                  }}
+                  onNavigate={() => setDesktopMenu(null)}
+                  countries={countries}
+                />
+              )}
+              {visibleTipoGroups.length > 0 && (
+                <DesktopNavMenu
+                  id="tipos"
+                  label="Tipos"
+                  open={desktopMenu === "tipos"}
+                  onToggle={() => {
+                    setDesktopMenu(desktopMenu === "tipos" ? null : "tipos");
+                    setSearchOpen(false);
+                  }}
+                  onNavigate={() => setDesktopMenu(null)}
+                  groups={visibleTipoGroups}
+                  wide
+                />
+              )}
+              {visibleCombosGroups.length > 0 && (
+                <DesktopNavMenu
+                  id="combos"
+                  label="Combos"
+                  open={desktopMenu === "combos"}
+                  onToggle={() => {
+                    setDesktopMenu(desktopMenu === "combos" ? null : "combos");
+                    setSearchOpen(false);
+                  }}
+                  onNavigate={() => setDesktopMenu(null)}
+                  groups={visibleCombosGroups}
+                  wide
+                />
+              )}
+              {activeCollections.data?.virtualSlugs.has("todos") && (
+                <Link
+                  to="/colecao/$slug"
+                  params={{ slug: "todos" }}
+                  onClick={() => setDesktopMenu(null)}
+                  className="whitespace-nowrap px-2.5 py-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-primary transition-colors hover:text-foreground"
+                >
+                  Todos os produtos
+                </Link>
+              )}
             </nav>
           </div>
 
@@ -434,84 +452,96 @@ export function Header() {
             </div>
 
             <div className="p-5">
-              <Link
-                to="/colecao/$slug"
-                params={{ slug: "todos" }}
-                onClick={() => setOpen(false)}
-                className="mb-3 flex items-center justify-between border-b border-border/60 px-1 py-3 text-sm font-semibold text-primary"
-              >
-                Todos os produtos
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+              {activeCollections.data?.virtualSlugs.has("todos") && (
+                <Link
+                  to="/colecao/$slug"
+                  params={{ slug: "todos" }}
+                  onClick={() => setOpen(false)}
+                  className="mb-3 flex items-center justify-between border-b border-border/60 px-1 py-3 text-sm font-semibold text-primary"
+                >
+                  Todos os produtos
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
 
-              <MobileSection
-                label="Comprar por preço"
-                id="precos"
-                open={mobileTab === "precos"}
-                onToggle={() => setMobileTab(mobileTab === "precos" ? null : "precos")}
-              >
-                {priceGroups[0].items.map((i) => (
-                  <MobileLink key={i.to} to={i.to} onClick={() => setOpen(false)}>
-                    {i.label}
-                  </MobileLink>
-                ))}
-              </MobileSection>
-
-              <MobileSection
-                label="Tipos de bebida"
-                id="tipos"
-                open={mobileTab === "tipos"}
-                onToggle={() => setMobileTab(mobileTab === "tipos" ? null : "tipos")}
-              >
-                {tipoGroups.map((group) => (
-                  <div key={group.label} className="mb-3 last:mb-0">
-                    <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-primary/70">
-                      {group.label}
-                    </p>
-                    {group.items.map((i) => (
+              {visiblePriceGroups.length > 0 && (
+                <MobileSection
+                  label="Comprar por preço"
+                  id="precos"
+                  open={mobileTab === "precos"}
+                  onToggle={() => setMobileTab(mobileTab === "precos" ? null : "precos")}
+                >
+                  {visiblePriceGroups.flatMap((group) =>
+                    group.items.map((i) => (
                       <MobileLink key={i.to} to={i.to} onClick={() => setOpen(false)}>
                         {i.label}
                       </MobileLink>
+                    )),
+                  )}
+                </MobileSection>
+              )}
+
+              {visibleTipoGroups.length > 0 && (
+                <MobileSection
+                  label="Tipos de bebida"
+                  id="tipos"
+                  open={mobileTab === "tipos"}
+                  onToggle={() => setMobileTab(mobileTab === "tipos" ? null : "tipos")}
+                >
+                  {visibleTipoGroups.map((group) => (
+                    <div key={group.label} className="mb-3 last:mb-0">
+                      <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-primary/70">
+                        {group.label}
+                      </p>
+                      {group.items.map((i) => (
+                        <MobileLink key={i.to} to={i.to} onClick={() => setOpen(false)}>
+                          {i.label}
+                        </MobileLink>
+                      ))}
+                    </div>
+                  ))}
+                </MobileSection>
+              )}
+
+              {visibleCombosGroups.length > 0 && (
+                <MobileSection
+                  label="Combos"
+                  id="combos"
+                  open={mobileTab === "combos"}
+                  onToggle={() => setMobileTab(mobileTab === "combos" ? null : "combos")}
+                >
+                  {visibleCombosGroups.flatMap((group) =>
+                    group.items.map((i) => (
+                      <MobileLink key={i.to} to={i.to} onClick={() => setOpen(false)}>
+                        {i.label}
+                      </MobileLink>
+                    )),
+                  )}
+                </MobileSection>
+              )}
+
+              {countries.length > 0 && (
+                <MobileSection
+                  label="Países"
+                  id="paises"
+                  open={mobileTab === "paises"}
+                  onToggle={() => setMobileTab(mobileTab === "paises" ? null : "paises")}
+                >
+                  <div className="grid grid-cols-2 gap-1">
+                    {countries.map((c) => (
+                      <Link
+                        key={c.slug}
+                        to="/colecao/$slug"
+                        params={{ slug: c.slug }}
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-2 px-2 py-2 text-xs transition-colors hover:text-primary"
+                      >
+                        <Flag cc={c.cc} alt={c.label} className="h-4 w-6" /> {c.label}
+                      </Link>
                     ))}
                   </div>
-                ))}
-              </MobileSection>
-
-              <MobileSection
-                label="Combos"
-                id="combos"
-                open={mobileTab === "combos"}
-                onToggle={() => setMobileTab(mobileTab === "combos" ? null : "combos")}
-              >
-                {combosGroups.flatMap((group) =>
-                  group.items.map((i) => (
-                    <MobileLink key={i.to} to={i.to} onClick={() => setOpen(false)}>
-                      {i.label}
-                    </MobileLink>
-                  )),
-                )}
-              </MobileSection>
-
-              <MobileSection
-                label="Países"
-                id="paises"
-                open={mobileTab === "paises"}
-                onToggle={() => setMobileTab(mobileTab === "paises" ? null : "paises")}
-              >
-                <div className="grid grid-cols-2 gap-1">
-                  {countries.map((c) => (
-                    <Link
-                      key={c.slug}
-                      to="/colecao/$slug"
-                      params={{ slug: c.slug }}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-2 px-2 py-2 text-xs transition-colors hover:text-primary"
-                    >
-                      <Flag cc={c.cc} alt={c.label} className="h-4 w-6" /> {c.label}
-                    </Link>
-                  ))}
-                </div>
-              </MobileSection>
+                </MobileSection>
+              )}
 
               <div className="mt-5 grid gap-2 border-t border-border pt-5">
                 <DrawerAction
