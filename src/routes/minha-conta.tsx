@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useStoreSettings } from "@/lib/store-settings";
+import { telHref } from "@/lib/contact-links";
 import { PixReceiptUpload } from "@/components/store/PixReceiptUpload";
 import { TrackOrderPanel } from "@/components/store/TrackOrderPanel";
 import { pageMeta } from "@/lib/seo";
@@ -640,9 +641,8 @@ function SecurityTab({ email }: { email: string }) {
 function SupportTab() {
   const { data: settings } = useStoreSettings();
   const phoneDisplay = settings?.footer?.phone?.trim() ?? "";
-  const phoneDigits = phoneDisplay.replace(/\D/g, "");
   const email = settings?.footer?.email ?? "";
-  const phoneHref = phoneDigits ? `tel:+55${phoneDigits}` : undefined;
+  const phoneHref = telHref(phoneDisplay);
 
   return (
     <div className="max-w-xl space-y-4">

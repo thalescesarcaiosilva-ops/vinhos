@@ -220,7 +220,16 @@ type DiscoveryTile = {
   imageClassName?: string;
 };
 
-function DiscoveryCarousel({ items, ariaLabel }: { items: DiscoveryTile[]; ariaLabel: string }) {
+function DiscoveryCarousel({
+  items,
+  ariaLabel,
+  compact,
+}: {
+  items: DiscoveryTile[];
+  ariaLabel: string;
+  /** Bandeiras / tiles menores no mobile (ex.: países). */
+  compact?: boolean;
+}) {
   return (
     <Carousel opts={{ align: "start", loop: items.length > 6 }} aria-label={ariaLabel}>
       <CarouselContent>
@@ -234,7 +243,13 @@ function DiscoveryCarousel({ items, ariaLabel }: { items: DiscoveryTile[]; ariaL
               params={{ slug: item.slug }}
               className="group flex flex-col items-center gap-3 text-center"
             >
-              <span className="relative aspect-square w-full max-w-36 overflow-hidden rounded-full bg-cream ring-1 ring-border/60 transition-colors group-hover:ring-primary">
+              <span
+                className={
+                  compact
+                    ? "relative aspect-square w-full max-w-[4.5rem] overflow-hidden rounded-full bg-cream ring-1 ring-border/60 transition-colors group-hover:ring-primary sm:max-w-28 md:max-w-36"
+                    : "relative aspect-square w-full max-w-36 overflow-hidden rounded-full bg-cream ring-1 ring-border/60 transition-colors group-hover:ring-primary"
+                }
+              >
                 <img
                   src={item.image}
                   alt=""
@@ -342,7 +357,7 @@ function CountryDiscoverySection({
             Compre por país
           </h2>
         </div>
-        <DiscoveryCarousel items={countryItems} ariaLabel="Países de origem" />
+        <DiscoveryCarousel items={countryItems} ariaLabel="Países de origem" compact />
       </StoreContainer>
     </section>
   );
@@ -464,11 +479,11 @@ function Home() {
       ) : null}
 
       {espumantes.isLoading ? (
-        <ShowcaseSkeleton title="Espumantes" subtitle="Para brindar momentos especiais" />
+        <ShowcaseSkeleton title="Espumantes" subtitle="Espumantes selecionados" />
       ) : espumantes.data && espumantes.data.length > 0 ? (
         <ProductCarouselSection
           title="Espumantes"
-          subtitle="Para brindar momentos especiais"
+          subtitle="Espumantes selecionados"
           collectionSlug="so-espumantes"
           products={espumantes.data}
         />
@@ -481,7 +496,7 @@ function Home() {
             <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7">
               {Array.from({ length: 7 }).map((_, i) => (
                 <div key={i} className="flex flex-col items-center gap-3">
-                  <div className="aspect-square w-full max-w-36 animate-pulse rounded-full bg-muted" />
+                  <div className="aspect-square w-full max-w-[4.5rem] animate-pulse rounded-full bg-muted sm:max-w-28 md:max-w-36" />
                   <div className="h-3 w-20 animate-pulse rounded bg-muted" />
                 </div>
               ))}

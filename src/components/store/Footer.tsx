@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin, Instagram, Facebook } from "lucide-react";
 
 import { useStoreSettings } from "@/lib/store-settings";
 import { STORE } from "@/lib/settings";
+import { mailtoHref, telHref } from "@/lib/contact-links";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
 import { NewsletterForm } from "@/components/store/NewsletterForm";
 import { StoreContainer } from "@/components/store/StoreContainer";
@@ -158,17 +159,26 @@ export function Footer() {
                   <span className="min-w-0 text-pretty">{f.address}</span>
                 </li>
               )}
-              {f.phone && (
-                <li className="flex items-start gap-3">
-                  <Phone className="mt-1 h-4 w-4 shrink-0 text-[#d6b36a]" />
-                  <span className="whitespace-nowrap">{f.phone}</span>
-                </li>
-              )}
+              {f.phone && (() => {
+                const href = telHref(f.phone);
+                return (
+                  <li className="flex items-start gap-3">
+                    <Phone className="mt-1 h-4 w-4 shrink-0 text-[#d6b36a]" />
+                    {href ? (
+                      <a href={href} className="whitespace-nowrap hover:text-white">
+                        {f.phone}
+                      </a>
+                    ) : (
+                      <span className="whitespace-nowrap">{f.phone}</span>
+                    )}
+                  </li>
+                );
+              })()}
               {f.email && (
                 <li className="flex items-start gap-3">
                   <Mail className="mt-1 h-4 w-4 shrink-0 text-[#d6b36a]" />
                   <a
-                    href={`mailto:${f.email}`}
+                    href={mailtoHref(f.email) ?? `mailto:${f.email}`}
                     className="min-w-0 break-words [overflow-wrap:anywhere] hover:text-white"
                   >
                     {f.email}

@@ -143,7 +143,8 @@ function buildOrderEmailHtml(order: OrderEmailPayload): string {
         <tr>
           <td style="padding:18px 32px;background:#faf7f3;font-size:12px;color:#888;text-align:center;line-height:1.5;">
             Dúvidas? Fale conosco em
-            <a href="mailto:${STORE.email}" style="color:#5a1a1f;">${STORE.email}</a><br/>
+            <a href="mailto:${STORE.email}" style="color:#5a1a1f;">${STORE.email}</a>
+            · <a href="tel:+55${STORE.phoneDigits}" style="color:#5a1a1f;">${STORE.phone}</a><br/>
             © ${new Date().getFullYear()} ${STORE.name} · Aprecie com moderação
           </td>
         </tr>

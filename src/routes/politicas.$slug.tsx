@@ -2,6 +2,8 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { fetchStoreSettings } from "@/lib/store-settings";
 import { STORE } from "@/lib/settings";
 import { descriptionFromContent, pageMeta } from "@/lib/seo";
+import { linkifyContactHtml } from "@/lib/contact-links";
+import { sanitizeProductHtml } from "@/lib/html-content";
 
 export const Route = createFileRoute("/politicas/$slug")({
   loader: async ({ params }) => {
@@ -49,12 +51,14 @@ export const Route = createFileRoute("/politicas/$slug")({
 
 function PolicyPage() {
   const { page } = Route.useLoaderData();
+  const html = sanitizeProductHtml(linkifyContactHtml(page.content));
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
       <h1 className="font-serif text-3xl font-bold text-primary">{page.label}</h1>
-      <div className="prose prose-sm mt-6 max-w-none whitespace-pre-wrap text-foreground">
-        {page.content}
-      </div>
+      <div
+        className="prose prose-sm mt-6 max-w-none whitespace-pre-wrap text-foreground [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:opacity-80"
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     </div>
   );
 }

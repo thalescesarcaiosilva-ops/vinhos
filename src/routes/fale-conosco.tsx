@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useStoreSettings } from "@/lib/store-settings";
 import { STORE } from "@/lib/settings";
+import { mailtoHref, telHref } from "@/lib/contact-links";
 import { pageMeta } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -83,6 +84,8 @@ function ContactPage() {
   const address = footer?.address || "";
   const phone = footer?.phone || "";
   const email = footer?.email || "";
+  const phoneLink = telHref(phone);
+  const emailLink = mailtoHref(email);
   const instagram = footer?.instagramUrl || "";
   const facebook = footer?.facebookUrl || "";
 
@@ -179,7 +182,16 @@ function ContactPage() {
                   <Phone className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
                   <div>
                     <h3 className="text-sm font-semibold text-foreground">Telefone</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{phone}</p>
+                    {phoneLink ? (
+                      <a
+                        href={phoneLink}
+                        className="mt-1 inline-block text-sm text-muted-foreground hover:text-primary hover:underline"
+                      >
+                        {phone}
+                      </a>
+                    ) : (
+                      <p className="mt-1 text-sm text-muted-foreground">{phone}</p>
+                    )}
                   </div>
                 </div>
               )}
@@ -189,7 +201,16 @@ function ContactPage() {
                   <Mail className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
                   <div>
                     <h3 className="text-sm font-semibold text-foreground">E-mail</h3>
-                    <p className="mt-1 break-all text-sm text-muted-foreground">{email}</p>
+                    {emailLink ? (
+                      <a
+                        href={emailLink}
+                        className="mt-1 inline-block break-all text-sm text-muted-foreground hover:text-primary hover:underline"
+                      >
+                        {email}
+                      </a>
+                    ) : (
+                      <p className="mt-1 break-all text-sm text-muted-foreground">{email}</p>
+                    )}
                   </div>
                 </div>
               )}

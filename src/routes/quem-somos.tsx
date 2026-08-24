@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import type { ReactNode } from "react";
 import { StoreContainer } from "@/components/store/StoreContainer";
 import { STORE } from "@/lib/settings";
+import { mailtoHref, telHref } from "@/lib/contact-links";
 import { absoluteSiteUrl, getSiteUrl } from "@/lib/site-url";
 import { pageMeta, buildStoreSchema } from "@/lib/seo";
 
@@ -49,13 +51,33 @@ function QuemSomosPage() {
   const siteHost = getSiteUrl()
     .replace(/^https?:\/\//i, "")
     .replace(/\/+$/, "");
+  const emailHref = mailtoHref(STORE.email);
+  const phoneHref = telHref(STORE.phone);
 
-  const infoRows = [
+  const infoRows: { label: string; value: ReactNode }[] = [
     { label: "Razão social", value: STORE.legalName },
     { label: "CNPJ", value: STORE.cnpj },
-    { label: "E-mail", value: STORE.email },
+    {
+      label: "E-mail",
+      value: emailHref ? (
+        <a href={emailHref} className="text-primary hover:underline">
+          {STORE.email}
+        </a>
+      ) : (
+        STORE.email
+      ),
+    },
     { label: "Site", value: siteHost },
-    { label: "Telefone", value: STORE.phone },
+    {
+      label: "Telefone",
+      value: phoneHref ? (
+        <a href={phoneHref} className="text-primary hover:underline">
+          {STORE.phone}
+        </a>
+      ) : (
+        STORE.phone
+      ),
+    },
     { label: "Endereço", value: STORE.address },
   ];
 
@@ -78,13 +100,13 @@ function QuemSomosPage() {
             <p>
               Somos especializados em vinhos e espumantes selecionados, com atenção à origem, ao
               estilo e ao equilíbrio entre qualidade e preço. Cada rótulo entra no catálogo após
-              avaliação criteriosa, para que você encontre opções que façam sentido no dia a dia e
-              também em ocasiões especiais.
+              avaliação criteriosa, para que você encontre opções adequadas ao dia a dia e também a
+              ocasiões específicas.
             </p>
             <p>
-              Acreditamos que beber bem é também viver bem — com moderação, descoberta e prazer. Por
-              isso reunimos em um só lugar tintos, brancos, rosés, espumantes e combos pensados para
-              diferentes paladares, com informações úteis para facilitar sua decisão.
+              Nosso catálogo reúne tintos, brancos, rosés, espumantes e combos para diferentes
+              paladares, com informações claras de origem, estilo e características para facilitar
+              sua escolha.
             </p>
             <p>
               Trabalhamos para que a navegação, o pagamento e a entrega sejam transparentes e
@@ -92,9 +114,8 @@ function QuemSomosPage() {
               ágil, objetivo e próximo.
             </p>
             <p>
-              Mais do que vender garrafas, queremos acompanhar sua rotina de descobertas: da
-              primeira taça ao próximo pedido. A Galvao Vinhos é o seu espaço de confiança para
-              escolher vinhos com praticidade e qualidade.
+              Nosso foco é oferecer um catálogo confiável e um atendimento próximo, para que você
+              escolha vinhos com praticidade e qualidade — da primeira compra ao próximo pedido.
             </p>
           </div>
         </StoreContainer>
@@ -107,7 +128,7 @@ function QuemSomosPage() {
               Nossa loja
             </p>
             <h2 className="mt-2 font-serif text-2xl font-bold text-foreground md:text-3xl">
-              Um espaço pensado para a sua experiência com o vinho.
+              Compra online com suporte especializado.
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
               Operamos em Salvador com atendimento online e suporte em horário comercial. Se
@@ -191,14 +212,25 @@ function QuemSomosPage() {
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
                 <p className="text-muted-foreground">{STORE.address}</p>
               </div>
-              <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                <p className="text-muted-foreground">{STORE.phone}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                <p className="break-all text-muted-foreground">{STORE.email}</p>
-              </div>
+              {phoneHref && (
+                <div className="flex items-center gap-3">
+                  <Phone className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+                  <a href={phoneHref} className="text-muted-foreground hover:text-primary hover:underline">
+                    {STORE.phone}
+                  </a>
+                </div>
+              )}
+              {emailHref && (
+                <div className="flex items-center gap-3">
+                  <Mail className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+                  <a
+                    href={emailHref}
+                    className="break-all text-muted-foreground hover:text-primary hover:underline"
+                  >
+                    {STORE.email}
+                  </a>
+                </div>
+              )}
             </div>
           </section>
         </div>

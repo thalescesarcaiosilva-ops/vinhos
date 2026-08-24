@@ -215,16 +215,35 @@ export function Header() {
       ref={headerRef}
       className="sticky top-0 z-40 bg-background shadow-[0_3px_14px_rgba(34,16,18,0.06)]"
     >
-      {/* Topbar intencionalmente simples em todos os tamanhos. */}
+      {/* Topbar: links institucionais à esquerda, frete grátis ao centro. */}
       <div className="min-h-8 bg-primary text-primary-foreground">
-        <StoreContainer className="flex min-h-8 items-center justify-center text-center text-[10px] font-semibold uppercase tracking-[0.14em] sm:text-[11px]">
-          {typeof freeFrom === "number" && freeFrom > 0 ? (
-            <>Frete grátis acima de R$ {freeFrom.toFixed(2).replace(".", ",")}</>
-          ) : (
-            <span className="opacity-0" aria-hidden>
-              Frete grátis
-            </span>
-          )}
+        <StoreContainer className="grid min-h-8 grid-cols-[1fr_auto_1fr] items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] sm:text-[11px] sm:tracking-[0.14em]">
+          <nav className="flex min-w-0 items-center gap-2.5 sm:gap-4" aria-label="Atalhos da loja">
+            <Link
+              to="/politicas/$slug"
+              params={{ slug: "formas-de-pagamento" }}
+              className="truncate text-primary-foreground/90 transition-colors hover:text-primary-foreground"
+            >
+              <span className="sm:hidden">Pagamento</span>
+              <span className="hidden sm:inline">Formas de pagamento</span>
+            </Link>
+            <Link
+              to="/quem-somos"
+              className="truncate text-primary-foreground/90 transition-colors hover:text-primary-foreground"
+            >
+              Quem somos
+            </Link>
+          </nav>
+          <p className="text-center whitespace-nowrap">
+            {typeof freeFrom === "number" && freeFrom > 0 ? (
+              <>Frete grátis acima de R$ {freeFrom.toFixed(2).replace(".", ",")}</>
+            ) : (
+              <span className="opacity-0" aria-hidden>
+                Frete grátis
+              </span>
+            )}
+          </p>
+          <span className="block" aria-hidden />
         </StoreContainer>
       </div>
 
