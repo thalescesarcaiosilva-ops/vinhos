@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { getCountry } from "@/lib/countries";
+import { countryDbValuesForLabel } from "@/lib/country-aliases";
 import type { Product } from "@/components/store/ProductCard";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -119,7 +120,8 @@ export async function fetchCollectionProducts(
 
   let q = createCollectionProductQuery(client);
   if (country) {
-    q = q.eq("country", country.label);
+    const values = countryDbValuesForLabel(country.label);
+    q = values.length === 1 ? q.eq("country", values[0]) : q.in("country", values);
   } else if (isVirtual) {
     if (priceRange?.min != null) q = q.gte("price", priceRange.min);
     if (priceRange?.max != null) q = q.lte("price", priceRange.max);

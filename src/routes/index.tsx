@@ -27,6 +27,7 @@ import { absoluteSiteUrl, toAbsoluteImageUrl } from "@/lib/site-url";
 import { pageMeta, SEO } from "@/lib/seo";
 import { STORE } from "@/lib/settings";
 import { resolveProductBrandName } from "@/lib/product-seo";
+import { canonicalCountryLabel } from "@/lib/country-aliases";
 import catTintos from "@/assets/cat-tintos.webp";
 import catBrancos from "@/assets/cat-brancos.webp";
 import catRoses from "@/assets/cat-roses.webp";
@@ -53,11 +54,6 @@ const HOME_CATEGORY_SLUGS = [
   "combos",
   "vinhos-zero-alcool",
 ] as const;
-
-const COUNTRY_ALIASES: Record<string, string> = {
-  EUA: "Estados Unidos",
-  USA: "Estados Unidos",
-};
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -365,8 +361,7 @@ function useActiveCountries() {
       const set = new Set<string>();
       for (const r of (data ?? []) as { country: string | null }[]) {
         if (!r.country) continue;
-        const raw = r.country.trim();
-        set.add(COUNTRY_ALIASES[raw] ?? raw);
+        set.add(canonicalCountryLabel(r.country));
       }
       return set;
     },

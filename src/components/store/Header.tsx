@@ -23,6 +23,7 @@ import { flagImgUrl } from "@/lib/country-flags";
 import { useFavoritesList } from "@/lib/favorites";
 import { supabase } from "@/integrations/supabase/client";
 import { StoreContainer } from "@/components/store/StoreContainer";
+import { canonicalCountryLabel } from "@/lib/country-aliases";
 
 type Country = { slug: string; label: string; cc: string };
 type Group = { label: string; items: Array<{ to: string; label: string }> };
@@ -134,12 +135,12 @@ function useMenuCountries() {
         .eq("is_active", true)
         .not("country", "is", null);
       if (error) throw error;
-      const set = new Set(
-        (data ?? []).map((r: { country: string | null }) => r.country).filter(Boolean) as string[],
-      );
-      // Normaliza EUA legado
-      if (set.has("EUA")) set.add("Estados Unidos");
-      if (set.has("Estados Unidos")) set.add("EUA");
+      // Só labels canônicos — evita mostrar coleção vazia (ex.: alias EUA ≠ filtro da página)
+      const set = new Set<string>();
+      for (const r of data ?? []) {
+        if (!r.country) continue;
+        set.add(canonicalCountryLabel(r.country));
+      }
       return set;
     },
     staleTime: 5 * 60_000,
@@ -180,14 +181,6 @@ export function Header() {
   const countries = useMemo(() => {
     if (!activeCountries.data) return [];
     const active = new Set([...activeCountries.data].map(normCountryLabel));
-    // Aliases para casar label do menu com country do produto
-    if (active.has("eua") || active.has("usa") || active.has("estados unidos")) {
-      active.add("estados unidos");
-      active.add("eua");
-    }
-    if (active.has("macedonia do norte") || active.has("macedonia")) {
-      active.add("macedonia do norte");
-    }
     return ALL_MENU_COUNTRIES.filter((c) => active.has(normCountryLabel(c.label)));
   }, [activeCountries.data]);
 

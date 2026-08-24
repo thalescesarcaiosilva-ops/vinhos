@@ -3,6 +3,7 @@ import type { Database } from "@/integrations/supabase/types";
 import { countries } from "@/lib/countries";
 import { getSiteUrl } from "@/lib/site-url";
 import { PRICE_RANGES } from "@/lib/collection-products";
+import { canonicalCountryLabel } from "@/lib/country-aliases";
 
 /** Cliente server-side com chave anon (leitura pública — não exige service_role na Vercel). */
 function getPublicSupabase() {
@@ -21,11 +22,7 @@ function getPublicSupabase() {
   });
 }
 
-/** Rótulos alternativos no banco → rótulo canônico em countries.ts */
-const COUNTRY_DB_ALIASES: Record<string, string> = {
-  EUA: "Estados Unidos",
-};
-
+/** Rótulos do banco → slug em countries.ts (via label canônico). */
 const labelToCountrySlug = new Map(countries.map((c) => [c.label, c.slug]));
 
 export type SitemapUrl = {
@@ -104,7 +101,7 @@ async function countrySlugsWithProducts(supabase: ReturnType<typeof getPublicSup
   for (const row of data ?? []) {
     const raw = row.country?.trim();
     if (!raw) continue;
-    const label = COUNTRY_DB_ALIASES[raw] ?? raw;
+    const label = canonicalCountryLabel(raw);
     const slug = labelToCountrySlug.get(label);
     if (slug) slugs.add(slug);
   }
