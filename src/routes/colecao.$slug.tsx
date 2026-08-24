@@ -38,15 +38,13 @@ export const Route = createFileRoute("/colecao/$slug")({
   },
   component: Collection,
   validateSearch: zodValidator(searchSchema),
-  head: ({ params, loaderData }) => {
+  head: ({ params }) => {
     const urlPath = `/colecao/${params.slug}`;
     const label = params.slug.replace(/-/g, " ");
     const pretty = label.charAt(0).toUpperCase() + label.slice(1);
     const title = `${pretty} — ${STORE.name}`;
     const description = `Explore a seleção de ${label} da ${STORE.name}. Vinhos e espumantes com frete para todo o Brasil.`;
-    const empty = (loaderData?.products?.length ?? 0) === 0;
-    const seo = pageMeta({ title, description, path: urlPath, noindex: empty });
-    if (empty) return seo;
+    const seo = pageMeta({ title, description, path: urlPath });
     return {
       ...seo,
       scripts: [
@@ -197,7 +195,7 @@ function Collection() {
         <StoreContainer as="section" className="pt-4">
           <div className="relative w-full overflow-hidden rounded-md bg-muted">
             <img
-              src={cacheBustedImage(adminBanner, cat.data?.updated_at)}
+              src={cacheBustedImage(adminBanner, cat.data.updated_at)}
               alt={cat.data?.name ?? ""}
               className="block h-auto w-full object-contain lg:h-72 lg:object-cover lg:object-center"
               loading="eager"
