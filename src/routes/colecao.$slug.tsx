@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ProductCard } from "@/components/store/ProductCard";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -54,10 +54,15 @@ export const Route = createFileRoute("/colecao/$slug")({
     const min = deps.min;
     const max = deps.max;
     const priceOpts = min != null || max != null ? { min, max } : undefined;
+    const isVirtual = !!VIRTUAL_FILTERS[params.slug] || !!PRICE_RANGES[params.slug];
     const [products, category] = await Promise.all([
       fetchCollectionProducts(params.slug, sort, undefined, priceOpts),
       fetchCategoryBySlug(params.slug),
     ]);
+    // Slugs inventados / países sem coleção no Supabase (ex.: hungria) → 404
+    if (!isVirtual && (!category || !category.is_active)) {
+      throw notFound();
+    }
     context.queryClient.setQueryData(
       ["cat-products", params.slug, sort, min ?? null, max ?? null],
       products,
