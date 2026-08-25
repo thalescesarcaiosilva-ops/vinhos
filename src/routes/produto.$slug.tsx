@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
@@ -129,9 +129,8 @@ export const Route = createFileRoute("/produto/$slug")({
   component: ProductPage,
   loader: async ({ params, context }) => {
     const product = await fetchProductBySlug(params.slug);
-    if (product) {
-      context.queryClient.setQueryData(["product", params.slug], product);
-    }
+    if (!product) throw notFound();
+    context.queryClient.setQueryData(["product", params.slug], product);
     return { product };
   },
   head: ({ params, loaderData }) => {
