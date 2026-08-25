@@ -1,6 +1,4 @@
 import { supabase } from "@/integrations/supabase/client";
-import { getCountry } from "@/lib/countries";
-import { countryDbValuesForLabel } from "@/lib/country-aliases";
 import type { Product } from "@/components/store/ProductCard";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -112,17 +110,14 @@ export async function fetchCollectionProducts(
   slug: string,
   sort: CollectionSort = "best_seller",
   client: typeof supabase = supabase,
+  priceOpts?: { min?: number; max?: number },
 ): Promise<CollectionProduct[]> {
-  const country = getCountry(slug);
   const priceRange = PRICE_RANGES[slug];
   const vFilter = VIRTUAL_FILTERS[slug];
   const isVirtual = !!priceRange || !!vFilter;
 
-  let q = createCollectionProductQuery(client);
-  if (country) {
-    const values = countryDbValuesForLabel(country.label);
-    q = values.length === 1 ? q.eq("country", values[0]) : q.in("country", values);
-  } else if (isVirtual) {
+  let q: any = createCollectionProductQuery(client);
+  if (isVirtual) {
     if (priceRange?.min != null) q = q.gte("price", priceRange.min);
     if (priceRange?.max != null) q = q.lte("price", priceRange.max);
     if (vFilter) q = vFilter.apply(q);
@@ -136,6 +131,9 @@ export async function fetchCollectionProducts(
       .eq("is_active", true)
       .eq("product_categories.categories.slug", slug);
   }
+
+  if (priceOpts?.min != null) q = q.gte("price", priceOpts.min);
+  if (priceOpts?.max != null) q = q.lte("price", priceOpts.max);
 
   if (sort === "price_asc") q = q.order("price", { ascending: true });
   else if (sort === "price_desc") q = q.order("price", { ascending: false });

@@ -1,9 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import { countries } from "@/lib/countries";
 import { getSiteUrl } from "@/lib/site-url";
-import { PRICE_RANGES } from "@/lib/collection-products";
-import { canonicalCountryLabel } from "@/lib/country-aliases";
 
 /** Cliente server-side com chave anon (leitura pública — não exige service_role na Vercel). */
 function getPublicSupabase() {
@@ -21,9 +18,6 @@ function getPublicSupabase() {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
-
-/** Rótulos do banco → slug em countries.ts (via label canônico). */
-const labelToCountrySlug = new Map(countries.map((c) => [c.label, c.slug]));
 
 export type SitemapUrl = {
   loc: string;
@@ -89,26 +83,8 @@ export function getStaticSitemapUrls(): SitemapUrl[] {
   return urls;
 }
 
-async function countrySlugsWithProducts(supabase: ReturnType<typeof getPublicSupabase>): Promise<string[]> {
-  const { data, error } = await supabase
-    .from("products")
-    .select("country")
-    .eq("is_active", true)
-    .not("country", "is", null);
-  if (error) throw error;
-
-  const slugs = new Set<string>();
-  for (const row of data ?? []) {
-    const raw = row.country?.trim();
-    if (!raw) continue;
-    const label = canonicalCountryLabel(raw);
-    const slug = labelToCountrySlug.get(label);
-    if (slug) slugs.add(slug);
-  }
-  return [...slugs].sort();
-}
-
-async function categorySlugsWithProducts(
+/** Coleções reais do Supabase com ≥1 produto ativo (+ /colecao/todos). */
+async function collectionSlugsWithProducts(
   supabase: ReturnType<typeof getPublicSupabase>,
 ): Promise<Array<{ slug: string; updated_at: string | null }>> {
   const { data, error } = await supabase
@@ -123,46 +99,17 @@ async function categorySlugsWithProducts(
     const cat = row.categories as { slug: string; updated_at: string | null } | null;
     if (cat?.slug && !bySlug.has(cat.slug)) bySlug.set(cat.slug, cat.updated_at ?? null);
   }
-  return [...bySlug.entries()]
-    .map(([slug, updated_at]) => ({ slug, updated_at }))
-    .sort((a, b) => a.slug.localeCompare(b.slug));
-}
 
-async function priceRangeSlugsWithProducts(
-  supabase: ReturnType<typeof getPublicSupabase>,
-): Promise<string[]> {
-  const slugs: string[] = [];
-  for (const [slug, range] of Object.entries(PRICE_RANGES)) {
-    let q = supabase.from("products").select("id", { count: "exact", head: true }).eq("is_active", true);
-    if (range.min != null) q = q.gte("price", range.min);
-    if (range.max != null) q = q.lte("price", range.max);
-    const { count, error } = await q;
-    if (error) throw error;
-    if ((count ?? 0) > 0) slugs.push(slug);
-  }
-  return slugs;
-}
-
-async function virtualSlugsWithProducts(
-  supabase: ReturnType<typeof getPublicSupabase>,
-): Promise<string[]> {
-  const slugs: string[] = [];
-  const { count: todosCount, error: todosErr } = await supabase
+  const { count, error: todosErr } = await supabase
     .from("products")
     .select("id", { count: "exact", head: true })
     .eq("is_active", true);
   if (todosErr) throw todosErr;
-  if ((todosCount ?? 0) > 0) slugs.push("todos");
+  if ((count ?? 0) > 0) bySlug.set("todos", null);
 
-  const { count: outletCount, error: outletErr } = await supabase
-    .from("products")
-    .select("id", { count: "exact", head: true })
-    .eq("is_active", true)
-    .not("compare_at_price", "is", null);
-  if (outletErr) throw outletErr;
-  if ((outletCount ?? 0) > 0) slugs.push("outlet");
-
-  return slugs;
+  return [...bySlug.entries()]
+    .map(([slug, updated_at]) => ({ slug, updated_at }))
+    .sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
 export async function collectSitemapUrls(): Promise<SitemapUrl[]> {
@@ -196,27 +143,12 @@ export async function collectSitemapUrls(): Promise<SitemapUrl[]> {
     }
   }
 
-  const [countrySlugs, categoryRows, priceSlugs, virtualSlugs] = await Promise.all([
-    countrySlugsWithProducts(supabase),
-    categorySlugsWithProducts(supabase),
-    priceRangeSlugsWithProducts(supabase),
-    virtualSlugsWithProducts(supabase),
-  ]);
-
-  for (const slug of countrySlugs) {
-    add(`/colecao/${slug}`, { changefreq: "weekly", priority: 0.6 });
-  }
-  for (const slug of virtualSlugs) {
-    add(`/colecao/${slug}`, { changefreq: "weekly", priority: 0.6 });
-  }
-  for (const slug of priceSlugs) {
-    add(`/colecao/${slug}`, { changefreq: "weekly", priority: 0.6 });
-  }
-  for (const category of categoryRows) {
+  const collections = await collectionSlugsWithProducts(supabase);
+  for (const category of collections) {
     add(`/colecao/${category.slug}`, {
       lastmod: formatLastmod(category.updated_at),
       changefreq: "weekly",
-      priority: 0.7,
+      priority: category.slug === "todos" ? 0.6 : 0.7,
     });
   }
 

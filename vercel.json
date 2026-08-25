@@ -4,6 +4,26 @@
       "source": "/pagina/:slug",
       "destination": "/politicas/:slug",
       "permanent": true
+    },
+    {
+      "source": "/colecao/ate-100",
+      "destination": "/colecao/todos?max=100",
+      "permanent": true
+    },
+    {
+      "source": "/colecao/100-200",
+      "destination": "/colecao/todos?min=100&max=200",
+      "permanent": true
+    },
+    {
+      "source": "/colecao/200-300",
+      "destination": "/colecao/todos?min=200&max=300",
+      "permanent": true
+    },
+    {
+      "source": "/colecao/acima-300",
+      "destination": "/colecao/todos?min=300",
+      "permanent": true
     }
   ],
   "rewrites": [

@@ -12,8 +12,6 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { BenefitsBar } from "@/components/store/BenefitsBar";
-import { countries } from "@/lib/countries";
-import { flagImgUrl } from "@/lib/country-flags";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
 import { HeroBanner, HomeHeroBanner } from "@/components/store/HeroBanner";
 
@@ -27,7 +25,12 @@ import { absoluteSiteUrl, toAbsoluteImageUrl } from "@/lib/site-url";
 import { pageMeta, SEO } from "@/lib/seo";
 import { STORE } from "@/lib/settings";
 import { resolveProductBrandName } from "@/lib/product-seo";
-import { canonicalCountryLabel } from "@/lib/country-aliases";
+import {
+  countryFlagForCategory,
+  PRICE_FILTERS,
+  priceFilterToSearch,
+  useStoreCategories,
+} from "@/lib/store-collections";
 import catTintos from "@/assets/cat-tintos.webp";
 import catBrancos from "@/assets/cat-brancos.webp";
 import catRoses from "@/assets/cat-roses.webp";
@@ -96,7 +99,7 @@ function useCategoryTiles() {
         .eq("is_active", true)
         .eq("product_categories.products.is_active", true);
       if (error) throw error;
-      const order = new Map(HOME_CATEGORY_SLUGS.map((slug, i) => [slug, i]));
+      const order = new Map<string, number>(HOME_CATEGORY_SLUGS.map((slug, i) => [slug, i]));
       return (data ?? [])
         .filter((category) => (category.product_categories?.length ?? 0) > 0)
         .sort((a, b) => (order.get(a.slug) ?? 99) - (order.get(b.slug) ?? 99))
@@ -312,16 +315,12 @@ function DiscoverySection({
           <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Escolha por preço
           </span>
-          {[
-            { slug: "ate-100", label: "Até R$ 100" },
-            { slug: "100-200", label: "R$ 100 a R$ 200" },
-            { slug: "200-300", label: "R$ 200 a R$ 300" },
-            { slug: "acima-300", label: "Acima de R$ 300" },
-          ].map((range) => (
+          {PRICE_FILTERS.map((range) => (
             <Link
-              key={range.slug}
+              key={range.legacySlug}
               to="/colecao/$slug"
-              params={{ slug: range.slug }}
+              params={{ slug: "todos" }}
+              search={{ page: 1, ...priceFilterToSearch(range.min, range.max) }}
               className="border-b border-primary/40 pb-0.5 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
             >
               {range.label}
@@ -333,18 +332,17 @@ function DiscoverySection({
   );
 }
 
-function CountryDiscoverySection({
-  visibleCountries,
-}: {
-  visibleCountries: (typeof countries)[number][];
-}) {
-  if (visibleCountries.length === 0) return null;
+function CountryDiscoverySection() {
+  const storeCats = useStoreCategories();
+  const visibleCountries = (storeCats.data ?? [])
+    .filter((c) => c.kind === "country")
+    .map((c) => {
+      const image = countryFlagForCategory(c, 160);
+      return image ? { slug: c.slug, label: c.name, image } : null;
+    })
+    .filter(Boolean) as { slug: string; label: string; image: string }[];
 
-  const countryItems = visibleCountries.map((country) => ({
-    slug: country.slug,
-    label: country.label,
-    image: flagImgUrl(country.cc, 160),
-  }));
+  if (storeCats.isLoading || visibleCountries.length === 0) return null;
 
   return (
     <section className="border-y border-border/60 bg-cream/40 py-10 lg:py-12">
@@ -357,31 +355,10 @@ function CountryDiscoverySection({
             Compre por país
           </h2>
         </div>
-        <DiscoveryCarousel items={countryItems} ariaLabel="Países de origem" compact />
+        <DiscoveryCarousel items={visibleCountries} ariaLabel="Países de origem" compact />
       </StoreContainer>
     </section>
   );
-}
-
-function useActiveCountries() {
-  return useQuery({
-    queryKey: ["active-countries"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("country")
-        .eq("is_active", true)
-        .not("country", "is", null);
-      if (error) throw error;
-      const set = new Set<string>();
-      for (const r of (data ?? []) as { country: string | null }[]) {
-        if (!r.country) continue;
-        set.add(canonicalCountryLabel(r.country));
-      }
-      return set;
-    },
-    staleTime: 5 * 60_000,
-  });
 }
 
 function Home() {
@@ -391,11 +368,7 @@ function Home() {
   const brancos = useProducts({ categorySlug: "brancos", limit: 4 });
   const espumantes = useProducts({ categorySlug: "so-espumantes", limit: 4 });
   const kits = useProducts({ categorySlug: "combos", limit: 4 });
-  const activeCountries = useActiveCountries();
   const categoryTiles = useCategoryTiles();
-  const visibleCountries = activeCountries.data
-    ? countries.filter((c) => activeCountries.data!.has(c.label))
-    : [];
 
   const { desktop: heroDesktop, mobile: heroMobile } = resolveHomeHero(banners.data ?? []);
   const stripBanner = pickBanner(banners.data ?? [], "home_strip");
@@ -489,23 +462,7 @@ function Home() {
         />
       ) : null}
 
-      {activeCountries.isLoading ? (
-        <section className="border-y border-border/60 bg-cream/40 py-10 lg:py-12" aria-busy>
-          <StoreContainer>
-            <div className="h-8 w-56 animate-pulse rounded bg-muted" />
-            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7">
-              {Array.from({ length: 7 }).map((_, i) => (
-                <div key={i} className="flex flex-col items-center gap-3">
-                  <div className="aspect-square w-full max-w-[4.5rem] animate-pulse rounded-full bg-muted sm:max-w-28 md:max-w-36" />
-                  <div className="h-3 w-20 animate-pulse rounded bg-muted" />
-                </div>
-              ))}
-            </div>
-          </StoreContainer>
-        </section>
-      ) : (
-        <CountryDiscoverySection visibleCountries={visibleCountries} />
-      )}
+      <CountryDiscoverySection />
 
       {kits.isLoading ? (
         <ShowcaseSkeleton title="Kits & Combos" subtitle="Presentes especiais selecionados" />

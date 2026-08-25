@@ -1,9 +1,8 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ProductCard } from "@/components/store/ProductCard";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
-import { getCountry } from "@/lib/countries";
 import { STORE } from "@/lib/settings";
 import { absoluteSiteUrl } from "@/lib/site-url";
 import { pageMeta } from "@/lib/seo";
@@ -23,21 +22,50 @@ import {
 const PER_PAGE = 12;
 const searchSchema = z.object({
   page: fallback(z.number().int().min(1), 1).default(1),
+  min: z.number().nonnegative().optional(),
+  max: z.number().positive().optional(),
 });
 
+const PRICE_SLUG_REDIRECTS: Record<string, { min?: number; max?: number }> = {
+  "ate-100": { max: 100 },
+  "100-200": { min: 100, max: 200 },
+  "200-300": { min: 200, max: 300 },
+  "acima-300": { min: 300 },
+};
+
 export const Route = createFileRoute("/colecao/$slug")({
-  loader: async ({ params, context }) => {
+  validateSearch: zodValidator(searchSchema),
+  beforeLoad: ({ params }) => {
+    const priceRedirect = PRICE_SLUG_REDIRECTS[params.slug];
+    if (priceRedirect) {
+      throw redirect({
+        to: "/colecao/$slug",
+        params: { slug: "todos" },
+        search: { page: 1, ...priceRedirect },
+      });
+    }
+  },
+  loaderDeps: ({ search }) => ({
+    min: search.min as number | undefined,
+    max: search.max as number | undefined,
+  }),
+  loader: async ({ params, context, deps }) => {
     const sort: CollectionSort = "best_seller";
+    const min = deps.min;
+    const max = deps.max;
+    const priceOpts = min != null || max != null ? { min, max } : undefined;
     const [products, category] = await Promise.all([
-      fetchCollectionProducts(params.slug, sort),
+      fetchCollectionProducts(params.slug, sort, undefined, priceOpts),
       fetchCategoryBySlug(params.slug),
     ]);
-    context.queryClient.setQueryData(["cat-products", params.slug, sort], products);
+    context.queryClient.setQueryData(
+      ["cat-products", params.slug, sort, min ?? null, max ?? null],
+      products,
+    );
     context.queryClient.setQueryData(["cat", params.slug], category);
-    return { products, category, sort };
+    return { products, category, sort, min, max };
   },
   component: Collection,
-  validateSearch: zodValidator(searchSchema),
   head: ({ params }) => {
     const urlPath = `/colecao/${params.slug}`;
     const label = params.slug.replace(/-/g, " ");
@@ -93,23 +121,36 @@ function cacheBustedImage(url: string, version?: string | null) {
 
 function Collection() {
   const { slug } = Route.useParams();
-  const { page } = Route.useSearch();
+  const { page, min: searchMin, max: searchMax } = Route.useSearch();
   const loaderData = Route.useLoaderData();
   const navigate = useNavigate({ from: "/colecao/$slug" });
-  const country = getCountry(slug);
-  const priceRange = PRICE_RANGES[slug];
   const vFilter = VIRTUAL_FILTERS[slug];
-  const isVirtual = !!priceRange || !!vFilter;
+  const isVirtual = !!vFilter || !!PRICE_RANGES[slug];
+  const isCountryCollection = loaderData.category?.kind === "country";
   const gridTopRef = useRef<HTMLDivElement>(null);
 
   const [sort, setSort] = useState<Sort>("best_seller");
-  const [priceMin, setPriceMin] = useState<number>(priceRange?.min ?? 0);
-  const [priceMax, setPriceMax] = useState<number>(priceRange?.max ?? 5000);
+  const [priceMin, setPriceMin] = useState<number>(searchMin ?? 0);
+  const [priceMax, setPriceMax] = useState<number>(searchMax ?? 5000);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
 
+  useEffect(() => {
+    setPriceMin(searchMin ?? 0);
+    setPriceMax(searchMax ?? 5000);
+  }, [searchMin, searchMax, slug]);
+
+  const searchState = useMemo(
+    () => ({
+      page,
+      ...(searchMin != null ? { min: searchMin } : {}),
+      ...(searchMax != null ? { max: searchMax } : {}),
+    }),
+    [page, searchMin, searchMax],
+  );
+
   const goToPage = (p: number) => {
-    navigate({ params: { slug }, search: { page: p } });
+    navigate({ params: { slug }, search: { ...searchState, page: p } });
     requestAnimationFrame(() => {
       const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
         ? "auto"
@@ -126,12 +167,20 @@ function Collection() {
   });
 
   const products = useQuery({
-    queryKey: ["cat-products", slug, sort],
-    queryFn: () => fetchCollectionProducts(slug, sort),
-    initialData: sort === loaderData.sort ? loaderData.products : undefined,
+    queryKey: ["cat-products", slug, sort, searchMin ?? null, searchMax ?? null],
+    queryFn: () =>
+      fetchCollectionProducts(slug, sort, undefined, {
+        min: searchMin,
+        max: searchMax,
+      }),
+    initialData:
+      sort === loaderData.sort &&
+      searchMin === loaderData.min &&
+      searchMax === loaderData.max
+        ? loaderData.products
+        : undefined,
   });
 
-  // Filter facets from results
   const facets = useMemo(() => {
     const types = new Map<string, number>();
     const countries = new Map<string, number>();
@@ -166,14 +215,14 @@ function Collection() {
     [filtered, currentPage],
   );
 
-  // Reset to page 1 when filters/sort change and current page is out of range
   useEffect(() => {
-    if (page > totalPages) navigate({ params: { slug }, search: { page: 1 }, replace: true });
-  }, [totalPages, page, navigate, slug]);
+    if (page > totalPages)
+      navigate({ params: { slug }, search: { ...searchState, page: 1 }, replace: true });
+  }, [totalPages, page, navigate, slug, searchState]);
 
   const clearFilters = () => {
-    setPriceMin(priceRange?.min ?? 0);
-    setPriceMax(priceRange?.max ?? 5000);
+    setPriceMin(0);
+    setPriceMax(5000);
     setSelectedTypes([]);
     setSelectedCountries([]);
     navigate({ params: { slug }, search: { page: 1 }, replace: true });
@@ -182,20 +231,19 @@ function Collection() {
   const toggle = (arr: string[], setArr: (v: string[]) => void, v: string) =>
     setArr(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
-  const virtualLabel = priceRange?.label ?? vFilter?.label;
-  const heading = country?.label ?? virtualLabel ?? cat.data?.name ?? slug;
+  const virtualLabel = vFilter?.label ?? PRICE_RANGES[slug]?.label;
+  const heading = virtualLabel ?? cat.data?.name ?? slug;
   const adminBanner =
     typeof cat.data?.banner_image === "string" ? cat.data.banner_image.trim() : "";
 
   return (
     <div>
       <BenefitsBar />
-      {/* Category banner: only the Admin-configured category banner is allowed here. */}
       {adminBanner && (
         <StoreContainer as="section" className="pt-4">
           <div className="relative w-full overflow-hidden rounded-md bg-muted">
             <img
-              src={cacheBustedImage(adminBanner, cat.data.updated_at)}
+              src={cacheBustedImage(adminBanner, cat.data?.updated_at)}
               alt={cat.data?.name ?? ""}
               className="block h-auto w-full object-contain lg:h-72 lg:object-cover lg:object-center"
               loading="eager"
@@ -204,29 +252,26 @@ function Collection() {
         </StoreContainer>
       )}
 
-      {/* Collection header */}
       <StoreContainer className="pt-8">
-        {!country && (
-          <nav className="mb-4 text-xs text-muted-foreground">
-            <Link to="/" className="hover:text-primary">
-              Início
-            </Link>
-            {cat.data?.parent && (
-              <>
-                {" / "}
-                <Link
-                  to="/colecao/$slug"
-                  params={{ slug: cat.data.parent.slug }}
-                  className="hover:text-primary"
-                >
-                  {cat.data.parent.name}
-                </Link>
-              </>
-            )}
-            {" / "}
-            <span className="text-foreground">{heading}</span>
-          </nav>
-        )}
+        <nav className="mb-4 text-xs text-muted-foreground">
+          <Link to="/" className="hover:text-primary">
+            Início
+          </Link>
+          {cat.data?.parent && (
+            <>
+              {" / "}
+              <Link
+                to="/colecao/$slug"
+                params={{ slug: cat.data.parent.slug }}
+                className="hover:text-primary"
+              >
+                {cat.data.parent.name}
+              </Link>
+            </>
+          )}
+          {" / "}
+          <span className="text-foreground">{heading}</span>
+        </nav>
 
         <div className="mb-6 border-b border-border pb-6">
           <h1 className="font-serif text-4xl font-bold text-[color:var(--product-name)] md:text-5xl">
@@ -238,12 +283,9 @@ function Collection() {
         </div>
       </StoreContainer>
 
-      {/* MAIN: Sidebar + Grid */}
       <StoreContainer className="pb-12">
         <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
-          {/* SIDEBAR */}
           <aside className="space-y-6">
-            {/* Active filters */}
             <div>
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="text-sm font-bold uppercase tracking-wide text-primary">
@@ -262,7 +304,6 @@ function Collection() {
               </button>
             </div>
 
-            {/* Price */}
             <FilterSection label="Busque por preço" defaultOpen>
               <div className="flex items-center gap-2">
                 <div className="flex flex-1 items-center rounded-sm border border-border bg-background px-2 py-1.5 text-xs">
@@ -307,7 +348,6 @@ function Collection() {
               </div>
             </FilterSection>
 
-            {/* Wine types */}
             {facets.types.length > 0 && (
               <FilterSection label="Tipo de Vinho" defaultOpen>
                 <ul className="space-y-1.5">
@@ -329,8 +369,7 @@ function Collection() {
               </FilterSection>
             )}
 
-            {/* Countries (only on non-country pages) */}
-            {!country && facets.countries.length > 0 && (
+            {!isCountryCollection && facets.countries.length > 0 && (
               <FilterSection label="País">
                 <ul className="space-y-1.5">
                   {facets.countries.map(([c, n]) => (
@@ -352,7 +391,6 @@ function Collection() {
             )}
           </aside>
 
-          {/* PRODUCT GRID */}
           <div ref={gridTopRef} className="scroll-mt-24">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
               <div className="text-sm text-muted-foreground">
@@ -362,7 +400,11 @@ function Collection() {
                 value={sort}
                 onChange={(e) => {
                   setSort(e.target.value as Sort);
-                  navigate({ params: { slug }, search: { page: 1 }, replace: true });
+                  navigate({
+                    params: { slug },
+                    search: { ...searchState, page: 1 },
+                    replace: true,
+                  });
                 }}
                 className="rounded-sm border border-border bg-card px-3 py-2 text-sm"
               >

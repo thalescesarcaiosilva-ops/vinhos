@@ -13,7 +13,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
 import { useStoreSettings } from "@/lib/store-settings";
@@ -21,37 +20,19 @@ import { STORE } from "@/lib/settings";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
 import { flagImgUrl } from "@/lib/country-flags";
 import { useFavoritesList } from "@/lib/favorites";
-import { supabase } from "@/integrations/supabase/client";
 import { StoreContainer } from "@/components/store/StoreContainer";
-import { canonicalCountryLabel } from "@/lib/country-aliases";
+import {
+  buildComboMenuGroups,
+  buildPriceMenuGroups,
+  buildTypeMenuGroups,
+  countryMenuItems,
+  useStoreCategories,
+  type MenuGroup,
+  type MenuLink,
+} from "@/lib/store-collections";
 
-type Country = { slug: string; label: string; cc: string };
-type Group = { label: string; items: Array<{ to: string; label: string }> };
 type HeaderStaticRoute =
   "/" | "/fale-conosco" | "/rastreio" | "/minha-conta" | "/login" | "/favoritos" | "/carrinho";
-
-/** Menu de países — só exibidos se houver produtos ativos com esse country no banco. */
-const ALL_MENU_COUNTRIES: Country[] = [
-  { slug: "argentina", label: "Argentina", cc: "ar" },
-  { slug: "brasil", label: "Brasil", cc: "br" },
-  { slug: "portugal", label: "Portugal", cc: "pt" },
-  { slug: "franca", label: "França", cc: "fr" },
-  { slug: "espanha", label: "Espanha", cc: "es" },
-  { slug: "chile", label: "Chile", cc: "cl" },
-  { slug: "alemanha", label: "Alemanha", cc: "de" },
-  { slug: "australia", label: "Austrália", cc: "au" },
-  { slug: "uruguai", label: "Uruguai", cc: "uy" },
-  { slug: "africa-do-sul", label: "África do Sul", cc: "za" },
-  { slug: "austria", label: "Áustria", cc: "at" },
-  { slug: "italia", label: "Itália", cc: "it" },
-  { slug: "israel", label: "Israel", cc: "il" },
-  { slug: "eua", label: "Estados Unidos", cc: "us" },
-  { slug: "macedonia-do-norte", label: "Macedônia do Norte", cc: "mk" },
-  { slug: "nova-zelandia", label: "Nova Zelândia", cc: "nz" },
-  { slug: "marrocos", label: "Marrocos", cc: "ma" },
-  { slug: "moldavia", label: "Moldávia", cc: "md" },
-  { slug: "bulgaria", label: "Bulgária", cc: "bg" },
-];
 
 function Flag({ cc, alt, className = "" }: { cc: string; alt: string; className?: string }) {
   const src = flagImgUrl(cc, 40);
@@ -66,93 +47,6 @@ function Flag({ cc, alt, className = "" }: { cc: string; alt: string; className?
       className={`inline-block h-6 w-8 rounded-sm object-cover shadow-sm ring-1 ring-border ${className}`}
     />
   );
-}
-
-const priceGroups: Group[] = [
-  {
-    label: "Por faixa de preço",
-    items: [
-      { to: "/colecao/ate-100", label: "Até R$ 100" },
-      { to: "/colecao/100-200", label: "R$ 100 a R$ 200" },
-      { to: "/colecao/200-300", label: "R$ 200 a R$ 300" },
-      { to: "/colecao/acima-300", label: "Acima de R$ 300" },
-    ],
-  },
-];
-
-const tipoGroups: Group[] = [
-  {
-    label: "Vinhos",
-    items: [
-      { to: "/colecao/so-vinhos", label: "Todos os Vinhos" },
-      { to: "/colecao/tintos", label: "Tintos" },
-      { to: "/colecao/brancos", label: "Brancos" },
-      { to: "/colecao/roses", label: "Rosés" },
-      { to: "/colecao/vinhos-zero-alcool", label: "Zero Álcool" },
-    ],
-  },
-  {
-    label: "Espumantes",
-    items: [
-      { to: "/colecao/so-espumantes", label: "Todos os Espumantes" },
-      { to: "/colecao/espumantes-brancos", label: "Brancos" },
-      { to: "/colecao/espumantes-roses", label: "Rosés" },
-      { to: "/colecao/espumantes-zero-alcool", label: "Zero Álcool" },
-    ],
-  },
-];
-
-const combosGroups: Group[] = [
-  {
-    label: "Só Vinhos",
-    items: [
-      { to: "/colecao/combos-vinhos-tintos", label: "Tintos" },
-      { to: "/colecao/combos-vinhos-brancos", label: "Brancos" },
-      { to: "/colecao/combos-vinhos-roses", label: "Rosés" },
-      { to: "/colecao/combos-vinhos-tintos-roses", label: "Tintos e Rosés" },
-      { to: "/colecao/combos-vinhos-brancos-roses", label: "Brancos e Rosés" },
-      { to: "/colecao/combos-vinhos-zero-alcool", label: "Zero Álcool" },
-    ],
-  },
-  {
-    label: "Só Espumantes",
-    items: [
-      { to: "/colecao/combos-espumantes-brancos", label: "Brancos" },
-      { to: "/colecao/combos-espumantes-roses", label: "Rosés" },
-      { to: "/colecao/combos-espumantes-brancos-roses", label: "Brancos e Rosés" },
-      { to: "/colecao/combos-espumantes-zero-alcool", label: "Zero Álcool" },
-    ],
-  },
-];
-
-function useMenuCountries() {
-  return useQuery({
-    queryKey: ["header-active-countries"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("country")
-        .eq("is_active", true)
-        .not("country", "is", null);
-      if (error) throw error;
-      // Só labels canônicos — evita mostrar coleção vazia (ex.: alias EUA ≠ filtro da página)
-      const set = new Set<string>();
-      for (const r of data ?? []) {
-        if (!r.country) continue;
-        set.add(canonicalCountryLabel(r.country));
-      }
-      return set;
-    },
-    staleTime: 5 * 60_000,
-  });
-}
-
-function normCountryLabel(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
 }
 
 export function Header() {
@@ -177,12 +71,20 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileTab, setMobileTab] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement>(null);
-  const activeCountries = useMenuCountries();
-  const countries = useMemo(() => {
-    if (!activeCountries.data) return [];
-    const active = new Set([...activeCountries.data].map(normCountryLabel));
-    return ALL_MENU_COUNTRIES.filter((c) => active.has(normCountryLabel(c.label)));
-  }, [activeCountries.data]);
+  const storeCats = useStoreCategories();
+  const priceGroups = useMemo(() => buildPriceMenuGroups(), []);
+  const tipoGroups = useMemo(
+    () => (storeCats.data ? buildTypeMenuGroups(storeCats.data) : []),
+    [storeCats.data],
+  );
+  const combosGroups = useMemo(
+    () => (storeCats.data ? buildComboMenuGroups(storeCats.data) : []),
+    [storeCats.data],
+  );
+  const countries = useMemo(
+    () => (storeCats.data ? countryMenuItems(storeCats.data) : []),
+    [storeCats.data],
+  );
 
   useEffect(() => {
     if (!open && !searchOpen && !desktopMenu) return;
@@ -462,8 +364,8 @@ export function Header() {
                 open={mobileTab === "precos"}
                 onToggle={() => setMobileTab(mobileTab === "precos" ? null : "precos")}
               >
-                {priceGroups[0].items.map((i) => (
-                  <MobileLink key={i.to} to={i.to} onClick={() => setOpen(false)}>
+                {priceGroups[0]?.items.map((i) => (
+                  <MobileLink key={`${i.slug}-${i.label}`} item={i} onClick={() => setOpen(false)}>
                     {i.label}
                   </MobileLink>
                 ))}
@@ -481,7 +383,7 @@ export function Header() {
                       {group.label}
                     </p>
                     {group.items.map((i) => (
-                      <MobileLink key={i.to} to={i.to} onClick={() => setOpen(false)}>
+                      <MobileLink key={i.slug} item={i} onClick={() => setOpen(false)}>
                         {i.label}
                       </MobileLink>
                     ))}
@@ -497,7 +399,7 @@ export function Header() {
               >
                 {combosGroups.flatMap((group) =>
                   group.items.map((i) => (
-                    <MobileLink key={i.to} to={i.to} onClick={() => setOpen(false)}>
+                    <MobileLink key={i.slug} item={i} onClick={() => setOpen(false)}>
                       {i.label}
                     </MobileLink>
                   )),
@@ -519,7 +421,7 @@ export function Header() {
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-2 px-2 py-2 text-xs transition-colors hover:text-primary"
                     >
-                      <Flag cc={c.cc} alt={c.label} className="h-4 w-6" /> {c.label}
+                      <Flag cc={c.cc} alt={c.name} className="h-4 w-6" /> {c.name}
                     </Link>
                   ))}
                 </div>
@@ -596,6 +498,11 @@ function HeaderSearchForm({
   );
 }
 
+function collectionSearch(item: MenuLink) {
+  if (!item.search) return undefined;
+  return { page: 1 as const, ...item.search };
+}
+
 function DesktopNavMenu({
   id,
   label,
@@ -610,7 +517,7 @@ function DesktopNavMenu({
   open: boolean;
   onToggle: () => void;
   onNavigate: () => void;
-  groups: Group[];
+  groups: MenuGroup[];
   wide?: boolean;
 }) {
   return (
@@ -642,10 +549,11 @@ function DesktopNavMenu({
                 </h2>
                 <ul className="space-y-0.5">
                   {group.items.map((item) => (
-                    <li key={item.to}>
+                    <li key={`${item.slug}-${item.label}`}>
                       <Link
                         to="/colecao/$slug"
-                        params={{ slug: item.to.replace("/colecao/", "") }}
+                        params={{ slug: item.slug }}
+                        search={collectionSearch(item)}
                         onClick={onNavigate}
                         className="block py-1.5 text-sm text-foreground transition-colors hover:text-primary"
                       >
@@ -672,7 +580,7 @@ function DesktopCountriesMenu({
   open: boolean;
   onToggle: () => void;
   onNavigate: () => void;
-  countries: Country[];
+  countries: Array<{ slug: string; name: string; cc: string }>;
 }) {
   return (
     <div className="relative">
@@ -706,8 +614,8 @@ function DesktopCountriesMenu({
                   onClick={onNavigate}
                   className="flex items-center gap-2 py-1.5 text-xs text-foreground transition-colors hover:text-primary"
                 >
-                  <Flag cc={country.cc} alt={country.label} className="h-4 w-6" />
-                  {country.label}
+                  <Flag cc={country.cc} alt={country.name} className="h-4 w-6" />
+                  {country.name}
                 </Link>
               ))}
             </div>
@@ -815,20 +723,19 @@ function MobileSection({
 }
 
 function MobileLink({
-  to,
+  item,
   onClick,
   children,
 }: {
-  to: string;
+  item: MenuLink;
   onClick: () => void;
   children: React.ReactNode;
 }) {
-  const slug = to.replace("/colecao/", "");
-
   return (
     <Link
       to="/colecao/$slug"
-      params={{ slug }}
+      params={{ slug: item.slug }}
+      search={collectionSearch(item)}
       onClick={onClick}
       className="block rounded-lg px-3 py-2 text-sm text-foreground transition hover:bg-cream hover:text-primary"
     >
