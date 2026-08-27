@@ -69,9 +69,32 @@ function SignupPage() {
           <div><Label>Sobrenome</Label><Input required value={form.last_name} onChange={(e) => update("last_name", e.target.value)} /></div>
         </div>
         <div><Label>CPF</Label><Input required value={form.cpf} onChange={(e) => update("cpf", maskCPF(e.target.value))} placeholder="000.000.000-00" /></div>
-        <div className="grid grid-cols-2 gap-4">
-          <div><Label>Data de nascimento</Label><Input type="date" required value={form.birth_date} onChange={(e) => update("birth_date", e.target.value)} max={new Date().toISOString().slice(0, 10)} /></div>
-          <div><Label>Telefone</Label><Input required value={form.phone} onChange={(e) => update("phone", maskPhone(e.target.value))} placeholder="(11) 99999-9999" /></div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="min-w-0">
+            <Label htmlFor="signup-birth">Data de nascimento</Label>
+            <Input
+              id="signup-birth"
+              type="date"
+              required
+              value={form.birth_date}
+              onChange={(e) => update("birth_date", e.target.value)}
+              max={new Date().toISOString().slice(0, 10)}
+              className="relative z-0 min-w-0 max-w-full"
+            />
+          </div>
+          <div className="min-w-0">
+            <Label htmlFor="signup-phone">Telefone</Label>
+            <Input
+              id="signup-phone"
+              required
+              value={form.phone}
+              onChange={(e) => update("phone", maskPhone(e.target.value))}
+              placeholder="(11) 99999-9999"
+              className="relative z-0 min-w-0"
+              inputMode="tel"
+              autoComplete="tel"
+            />
+          </div>
         </div>
         <div><Label>E-mail</Label><Input type="email" required value={form.email} onChange={(e) => update("email", e.target.value)} /></div>
         <div><Label>Senha</Label><Input type="password" required minLength={8} value={form.password} onChange={(e) => update("password", e.target.value)} placeholder="Mínimo 8 caracteres" /></div>

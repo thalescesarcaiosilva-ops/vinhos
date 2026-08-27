@@ -235,22 +235,26 @@ function DiscoveryCarousel({
 }) {
   return (
     <Carousel opts={{ align: "start", loop: items.length > 6 }} aria-label={ariaLabel}>
-      <CarouselContent>
+      <CarouselContent className="-ml-2 sm:-ml-4">
         {items.map((item) => (
           <CarouselItem
             key={item.slug}
-            className="basis-1/2 sm:basis-1/3 md:basis-1/5 lg:basis-1/7"
+            className={
+              compact
+                ? "basis-[28%] pl-2 sm:basis-1/3 sm:pl-4 md:basis-1/5 lg:basis-1/7"
+                : "basis-[30%] pl-2 sm:basis-1/3 sm:pl-4 md:basis-1/5 lg:basis-1/7"
+            }
           >
             <Link
               to="/colecao/$slug"
               params={{ slug: item.slug }}
-              className="group flex flex-col items-center gap-3 text-center"
+              className="group flex flex-col items-center gap-1.5 text-center sm:gap-3"
             >
               <span
                 className={
                   compact
-                    ? "relative aspect-square w-full max-w-[4.5rem] overflow-hidden rounded-full bg-cream ring-1 ring-border/60 transition-colors group-hover:ring-primary sm:max-w-28 md:max-w-36"
-                    : "relative aspect-square w-full max-w-36 overflow-hidden rounded-full bg-cream ring-1 ring-border/60 transition-colors group-hover:ring-primary"
+                    ? "relative aspect-square w-full max-w-[3.25rem] overflow-hidden rounded-full bg-cream ring-1 ring-border/60 transition-colors group-hover:ring-primary sm:max-w-28 md:max-w-36"
+                    : "relative aspect-square w-full max-w-[4rem] overflow-hidden rounded-full bg-cream ring-1 ring-border/60 transition-colors group-hover:ring-primary sm:max-w-28 md:max-w-36"
                 }
               >
                 <img
@@ -263,7 +267,7 @@ function DiscoveryCarousel({
                   className={`absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] ${item.imageClassName ?? ""}`}
                 />
               </span>
-              <span className="text-xs font-semibold uppercase tracking-wide text-foreground">
+              <span className="text-[10px] font-semibold uppercase leading-tight tracking-wide text-foreground sm:text-xs">
                 {item.label}
               </span>
             </Link>
@@ -288,7 +292,7 @@ function DiscoverySection({
     imageClassName: "object-contain p-3",
   }));
   return (
-    <section className="border-y border-border/60 bg-cream/40 py-10 lg:py-12">
+    <section className="border-y border-border/60 bg-cream/40 py-6 sm:py-10 lg:py-12">
       <StoreContainer>
         <div className="mb-8 max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
@@ -304,7 +308,7 @@ function DiscoverySection({
 
         {categoryItems.length > 0 && (
           <div>
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-foreground">
+            <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-foreground sm:mb-4">
               Categorias
             </h3>
             <DiscoveryCarousel items={categoryItems} ariaLabel="Categorias de produtos" />
@@ -345,9 +349,9 @@ function CountryDiscoverySection() {
   if (storeCats.isLoading || visibleCountries.length === 0) return null;
 
   return (
-    <section className="border-y border-border/60 bg-cream/40 py-10 lg:py-12">
+    <section className="border-y border-border/60 bg-cream/40 py-6 sm:py-10 lg:py-12">
       <StoreContainer>
-        <div className="mb-6">
+        <div className="mb-3 sm:mb-6">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
             Explore por origem
           </p>

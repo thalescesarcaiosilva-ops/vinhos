@@ -117,17 +117,19 @@ export function Header() {
       ref={headerRef}
       className="sticky top-0 z-40 bg-background shadow-[0_3px_14px_rgba(34,16,18,0.06)]"
     >
-      {/* Topbar: links institucionais à esquerda, frete grátis ao centro. */}
+      {/* Topbar: no mobile só frete; no desktop links + frete. */}
       <div className="min-h-8 bg-primary text-primary-foreground">
-        <StoreContainer className="grid min-h-8 grid-cols-[1fr_auto_1fr] items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] sm:text-[11px] sm:tracking-[0.14em]">
-          <nav className="flex min-w-0 items-center gap-2.5 sm:gap-4" aria-label="Atalhos da loja">
+        <StoreContainer className="flex min-h-8 items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] sm:grid sm:grid-cols-[1fr_auto_1fr] sm:text-[11px] sm:tracking-[0.14em]">
+          <nav
+            className="hidden min-w-0 items-center gap-4 sm:flex"
+            aria-label="Atalhos da loja"
+          >
             <Link
               to="/politicas/$slug"
               params={{ slug: "formas-de-pagamento" }}
               className="truncate text-primary-foreground/90 transition-colors hover:text-primary-foreground"
             >
-              <span className="sm:hidden">Pagamento</span>
-              <span className="hidden sm:inline">Formas de pagamento</span>
+              Formas de pagamento
             </Link>
             <Link
               to="/quem-somos"
@@ -139,13 +141,9 @@ export function Header() {
           <p className="text-center whitespace-nowrap">
             {typeof freeFrom === "number" && freeFrom > 0 ? (
               <>Frete grátis acima de R$ {freeFrom.toFixed(2).replace(".", ",")}</>
-            ) : (
-              <span className="opacity-0" aria-hidden>
-                Frete grátis
-              </span>
-            )}
+            ) : null}
           </p>
-          <span className="block" aria-hidden />
+          <span className="hidden sm:block" aria-hidden />
         </StoreContainer>
       </div>
 
