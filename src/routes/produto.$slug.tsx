@@ -20,7 +20,6 @@ import {
   Heart,
   Truck,
   Star,
-  Share2,
   MapPin,
   CreditCard,
 } from "lucide-react";
@@ -387,32 +386,9 @@ function ProductPage() {
     ["Decantação", p.decanting],
   ];
 
-  const productUrl = typeof window !== "undefined" ? window.location.href : "";
   const approvedReviewCount = reviewsCountQ.data ?? 0;
   const productRating = Number(p.rating ?? 0);
   const hasProductRating = productRating > 0;
-
-  async function handleShare() {
-    const shareData = {
-      title: p.name,
-      text: htmlToPlainText(p.short_description) || p.name,
-      url: productUrl,
-    };
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch {
-        return;
-      }
-    } else {
-      try {
-        await navigator.clipboard.writeText(productUrl);
-        toast.success("Link copiado!");
-      } catch {
-        toast.error("Não foi possível compartilhar");
-      }
-    }
-  }
 
   async function calcFreight() {
     const clean = cep.replace(/\D/g, "");
@@ -640,13 +616,6 @@ function ProductPage() {
                 );
               })()}
 
-              <button
-                type="button"
-                onClick={handleShare}
-                className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-              >
-                <Share2 className="h-4 w-4" /> Compartilhar
-              </button>
             </div>
           </section>
 

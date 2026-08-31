@@ -30,13 +30,9 @@ export function ccForCountry(country: string | null | undefined): string | null 
   return labelMap.get(key) ?? slugMap.get(country) ?? null;
 }
 
-/**
- * URL de bandeira para navegação (UI). Bandeiras não são imagens de produto.
- * Para hospedar no próprio domínio, adicione PNGs em public/flags/{cc}.png
- * e altere esta função para retornar `/flags/${cc}.png`.
- */
+/** URL same-origin da bandeira; o Vercel faz o proxy/cache do arquivo. */
 export function flagImgUrl(cc: string, size: 40 | 80 | 160 = 80): string {
-  return `https://flagcdn.com/w${size}/${cc}.png`;
+  return `/flags/w${size}/${cc}.png`;
 }
 
 /** @deprecated Use flagImgUrl — mantido para compatibilidade */

@@ -28,6 +28,10 @@
   ],
   "rewrites": [
     {
+      "source": "/flags/:path*",
+      "destination": "https://flagcdn.com/:path*"
+    },
+    {
       "source": "/rest/v1/:path*",
       "destination": "https://aufvvgytbrstsrfomngm.supabase.co/rest/v1/:path*"
     },
@@ -43,6 +47,12 @@
   "headers": [
     {
       "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/flags/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
