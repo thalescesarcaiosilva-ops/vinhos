@@ -63,7 +63,6 @@ import type { Product as CardProduct } from "@/components/store/ProductCard";
 import { ProductCarouselSection } from "@/components/store/ProductCarouselSection";
 import { StoreContainer } from "@/components/store/StoreContainer";
 import { ProductHtmlContent } from "@/components/store/ProductHtmlContent";
-import { htmlToPlainText } from "@/lib/html-content";
 import { PixDiscountBanner } from "@/components/store/PixDiscountBanner";
 import { BenefitsBar } from "@/components/store/BenefitsBar";
 
@@ -374,8 +373,6 @@ function ProductPage() {
   const tastingNotes = tastingNotesSource.filter(
     ([, value]) => value && String(value).trim().length > 0,
   );
-  const shortDescription = htmlToPlainText(p.short_description);
-
   const techRows: Array<[string, string | null | undefined]> = [
     ["Safra", p.vintage],
     ["Estilo", p.wine_style],
@@ -560,20 +557,6 @@ function ProductPage() {
                   )}
                 </span>
               </a>
-            )}
-
-            {shortDescription && (
-              <div>
-                <p className="line-clamp-3 text-sm leading-relaxed text-foreground/75">
-                  {shortDescription}
-                </p>
-                <a
-                  href="#descricao"
-                  className="mt-1 inline-block text-xs font-semibold text-primary transition-opacity hover:opacity-70"
-                >
-                  Ver descrição completa
-                </a>
-              </div>
             )}
 
             {primaryDetails.length > 0 && (
