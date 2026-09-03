@@ -92,10 +92,13 @@ type HomeHeroProps = {
   mobileLinkUrl?: string | null;
 };
 
+/** Proporção dos banners da loja (~1600×386). Caixa mais alta (ex. 1920/720) gera faixas vazias. */
+const HOME_HERO_ASPECT = "1600 / 386";
+
 /**
  * Hero da home com <picture>: um único <img> LCP (não baixa desktop+mobile juntos).
  * Bots veem a imagem no HTML; o media escolhe a arte certa no browser.
- * object-contain + aspect-ratio reservam espaço sem cortar a arte.
+ * object-cover + aspect da arte = full-bleed sem letterbox (bordas creme).
  */
 export function HomeHeroBanner({
   desktopSrc,
@@ -110,27 +113,27 @@ export function HomeHeroBanner({
   if (!desktop && !mobile) {
     return (
       <div
-        className="min-h-[12rem] w-full bg-muted"
-        style={{ aspectRatio: "1920 / 720" }}
+        className="min-h-[10rem] w-full bg-muted"
+        style={{ aspectRatio: HOME_HERO_ASPECT }}
         aria-hidden
       />
     );
   }
 
-  const desktopSrcSet = desktop ? buildSrcSet(desktop, [960, 1280, 1600, 1920, 2400], "contain") : "";
-  const mobileSrcSet = mobile ? buildSrcSet(mobile, [640, 960, 1280], "contain") : "";
+  const desktopSrcSet = desktop ? buildSrcSet(desktop, [960, 1280, 1600, 1920, 2400], "cover") : "";
+  const mobileSrcSet = mobile ? buildSrcSet(mobile, [640, 960, 1280], "cover") : "";
   const imgSrc =
     toTransformedImageUrl(mobile || desktop!, {
       width: 960,
       quality: 80,
       format: "webp",
-      resize: "contain",
+      resize: "cover",
     }) || toSiteImageUrl(mobile || desktop!);
 
   const href = (mobileLinkUrl ?? desktopLinkUrl)?.trim();
 
   const picture = (
-    <div className="w-full bg-muted" style={{ aspectRatio: "1920 / 720" }}>
+    <div className="relative w-full overflow-hidden bg-muted" style={{ aspectRatio: HOME_HERO_ASPECT }}>
       <picture>
         {desktop && (
           <source media="(min-width: 768px)" srcSet={desktopSrcSet || undefined} sizes="100vw" />
@@ -140,12 +143,12 @@ export function HomeHeroBanner({
           srcSet={mobileSrcSet || desktopSrcSet || undefined}
           sizes="100vw"
           alt={alt}
-          width={1920}
-          height={720}
+          width={1600}
+          height={386}
           fetchPriority="high"
           loading="eager"
           decoding="sync"
-          className="block h-full w-full object-contain object-center"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
       </picture>
     </div>
@@ -173,7 +176,7 @@ export function homeHeroLcpPreloadHref(
       width: 960,
       quality: 80,
       format: "webp",
-      resize: "contain",
+      resize: "cover",
     }) || toSiteImageUrl(src)
   );
 }
