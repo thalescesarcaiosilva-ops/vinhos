@@ -10,11 +10,6 @@ type Props = {
   aspectClassName?: string;
   /** contain = sem crop; cover = preenche a área (só em slots com aspect fixo). */
   fill?: "contain" | "cover";
-  /**
-   * Largura total da tela, altura pela proporção da imagem enviada
-   * (sem object-cover / sem crop nas laterais).
-   */
-  fullscreen?: boolean;
 };
 
 function buildSrcSet(src: string, widths: number[], resize: "contain" | "cover") {
@@ -33,8 +28,7 @@ function buildSrcSet(src: string, widths: number[], resize: "contain" | "cover")
 }
 
 /**
- * Banner WebP responsivo.
- * Em fullscreen: 100vw de largura e altura natural da arte (proporção enviada).
+ * Banner WebP responsivo com caixa de proporção fixa (CLS estável, sem crop forçado).
  */
 export function HeroBanner({
   src,
@@ -44,33 +38,18 @@ export function HeroBanner({
   priority = true,
   aspectClassName = "aspect-[1600/386]",
   fill = "contain",
-  fullscreen = false,
 }: Props) {
-  const resize = fullscreen ? "contain" : fill;
-  const widths = fullscreen ? [640, 960, 1280, 1600, 1920, 2400] : [800, 1280, 1600];
-  const srcSet = buildSrcSet(src, widths, resize);
+  const widths = [800, 1280, 1600];
+  const srcSet = buildSrcSet(src, widths, fill);
   const fallback =
     toTransformedImageUrl(src, {
-      width: fullscreen ? 1920 : 1280,
+      width: 1280,
       quality: 80,
       format: "webp",
-      resize,
+      resize: fill,
     }) || toSiteImageUrl(src);
 
-  const img = fullscreen ? (
-    <img
-      src={fallback}
-      srcSet={srcSet || undefined}
-      sizes="100vw"
-      alt={alt}
-      width={1920}
-      height={720}
-      fetchPriority={priority ? "high" : "auto"}
-      loading={priority ? "eager" : "lazy"}
-      decoding="async"
-      className={className ?? "block h-auto w-full"}
-    />
-  ) : (
+  const img = (
     <img
       src={fallback}
       srcSet={srcSet || undefined}
@@ -90,9 +69,7 @@ export function HeroBanner({
     />
   );
 
-  const box = fullscreen ? (
-    <div className="w-full bg-muted">{img}</div>
-  ) : (
+  const box = (
     <div className={`relative w-full overflow-hidden bg-muted ${aspectClassName}`}>{img}</div>
   );
 
@@ -115,7 +92,11 @@ type HomeHeroProps = {
   mobileLinkUrl?: string | null;
 };
 
-/** Hero da home: desktop e mobile na proporção original do arquivo enviado. */
+/**
+ * Hero da home com <picture>: um único <img> LCP (não baixa desktop+mobile juntos).
+ * Bots veem a imagem no HTML; o media escolhe a arte certa no browser.
+ * object-contain + aspect-ratio reservam espaço sem cortar a arte.
+ */
 export function HomeHeroBanner({
   desktopSrc,
   mobileSrc,
@@ -127,27 +108,72 @@ export function HomeHeroBanner({
   const mobile = mobileSrc?.trim() || desktop;
 
   if (!desktop && !mobile) {
-    return <div className="min-h-[12rem] w-full bg-muted" aria-hidden />;
+    return (
+      <div
+        className="min-h-[12rem] w-full bg-muted"
+        style={{ aspectRatio: "1920 / 720" }}
+        aria-hidden
+      />
+    );
   }
 
+  const desktopSrcSet = desktop ? buildSrcSet(desktop, [960, 1280, 1600, 1920, 2400], "contain") : "";
+  const mobileSrcSet = mobile ? buildSrcSet(mobile, [640, 960, 1280], "contain") : "";
+  const imgSrc =
+    toTransformedImageUrl(mobile || desktop!, {
+      width: 960,
+      quality: 80,
+      format: "webp",
+      resize: "contain",
+    }) || toSiteImageUrl(mobile || desktop!);
+
+  const href = (mobileLinkUrl ?? desktopLinkUrl)?.trim();
+
+  const picture = (
+    <div className="w-full bg-muted" style={{ aspectRatio: "1920 / 720" }}>
+      <picture>
+        {desktop && (
+          <source media="(min-width: 768px)" srcSet={desktopSrcSet || undefined} sizes="100vw" />
+        )}
+        <img
+          src={imgSrc}
+          srcSet={mobileSrcSet || desktopSrcSet || undefined}
+          sizes="100vw"
+          alt={alt}
+          width={1920}
+          height={720}
+          fetchPriority="high"
+          loading="eager"
+          decoding="sync"
+          className="block h-full w-full object-contain object-center"
+        />
+      </picture>
+    </div>
+  );
+
+  if (href) {
+    return (
+      <a href={href} className="block w-full">
+        {picture}
+      </a>
+    );
+  }
+  return picture;
+}
+
+/** URL para preload do LCP no <head> da home. */
+export function homeHeroLcpPreloadHref(
+  mobileSrc?: string | null,
+  desktopSrc?: string | null,
+): string | null {
+  const src = (mobileSrc || desktopSrc)?.trim();
+  if (!src) return null;
   return (
-    <>
-      {desktop && (
-        <div className="hidden md:block">
-          <HeroBanner src={desktop} alt={alt} linkUrl={desktopLinkUrl} fill="contain" fullscreen />
-        </div>
-      )}
-      {mobile && (
-        <div className={desktop ? "md:hidden" : ""}>
-          <HeroBanner
-            src={mobile}
-            alt={alt}
-            linkUrl={mobileLinkUrl ?? desktopLinkUrl}
-            fill="contain"
-            fullscreen
-          />
-        </div>
-      )}
-    </>
+    toTransformedImageUrl(src, {
+      width: 960,
+      quality: 80,
+      format: "webp",
+      resize: "contain",
+    }) || toSiteImageUrl(src)
   );
 }

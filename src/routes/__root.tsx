@@ -90,12 +90,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/assets/favicon.png" },
       { rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
       { rel: "stylesheet", href: appCss },
+      // Fonte: display=optional reduz CLS; preconnect só se a stylesheet pedir gstatic em seguida.
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;0,700;1,400&display=optional",
+      },
     ],
     scripts: [
-      {
-        // Jost non-blocking (única família do site — pesos 400–700)
-        children: `(function(){var p=document.createElement('link');p.rel='preconnect';p.href='https://fonts.gstatic.com';p.crossOrigin='anonymous';document.head.appendChild(p);var l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap';l.media='print';l.onload=function(){this.media='all'};document.head.appendChild(l);})();`,
-      },
       {
         type: "application/ld+json",
         children: JSON.stringify(buildStoreSchema()),

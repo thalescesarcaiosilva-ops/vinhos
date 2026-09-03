@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import { BenefitsBar } from "@/components/store/BenefitsBar";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
-import { HeroBanner, HomeHeroBanner } from "@/components/store/HeroBanner";
+import { HeroBanner, HomeHeroBanner, homeHeroLcpPreloadHref } from "@/components/store/HeroBanner";
 
 const HOME_BANNER_POSITIONS = [
   "home_hero",
@@ -27,9 +27,11 @@ import { STORE } from "@/lib/settings";
 import { resolveProductBrandName } from "@/lib/product-seo";
 import {
   countryFlagForCategory,
+  fetchStoreCategoriesWithProducts,
   PRICE_FILTERS,
   priceFilterToSearch,
   useStoreCategories,
+  type StoreCategory,
 } from "@/lib/store-collections";
 import catTintos from "@/assets/cat-tintos.webp";
 import catBrancos from "@/assets/cat-brancos.webp";
@@ -58,96 +60,6 @@ const HOME_CATEGORY_SLUGS = [
   "vinhos-zero-alcool",
 ] as const;
 
-export const Route = createFileRoute("/")({
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData({
-      queryKey: ["banners-home"],
-      queryFn: async () => {
-        const { data, error } = await supabase
-          .from("banners")
-          .select("*")
-          .eq("is_active", true)
-          .in("position", [...HOME_BANNER_POSITIONS])
-          .order("sort_order");
-        if (error) throw error;
-        return data ?? [];
-      },
-      staleTime: 5 * 60_000,
-    });
-  },
-  head: () => {
-    const seo = pageMeta({
-      title: SEO.homeTitle,
-      description: SEO.homeDescription,
-      path: "/",
-    });
-    return seo;
-  },
-  component: Home,
-});
-
-function useCategoryTiles() {
-  return useQuery({
-    queryKey: ["home-category-tiles", HOME_CATEGORY_SLUGS],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("categories")
-        .select(
-          "slug, name, banner_image, product_categories(product_id, products!inner(is_active))",
-        )
-        .in("slug", [...HOME_CATEGORY_SLUGS])
-        .eq("is_active", true)
-        .eq("product_categories.products.is_active", true);
-      if (error) throw error;
-      const order = new Map<string, number>(HOME_CATEGORY_SLUGS.map((slug, i) => [slug, i]));
-      return (data ?? [])
-        .filter((category) => (category.product_categories?.length ?? 0) > 0)
-        .sort((a, b) => (order.get(a.slug) ?? 99) - (order.get(b.slug) ?? 99))
-        .map((category) => {
-          const img = category.banner_image
-            ? toTransformedImageUrl(category.banner_image, {
-                width: 180,
-                quality: 70,
-                format: "webp",
-              })
-            : LOCAL_CATEGORY_IMAGES[category.slug];
-          if (!img) return null;
-          return { slug: category.slug, label: category.name, img };
-        })
-        .filter(Boolean) as { slug: string; label: string; img: string }[];
-    },
-    staleTime: 10 * 60_000,
-  });
-}
-
-function useProducts(filter?: {
-  featured?: boolean;
-  bestSeller?: boolean;
-  categorySlug?: string;
-  limit?: number;
-}) {
-  return useQuery({
-    queryKey: ["products", filter],
-    queryFn: async () => {
-      const baseCols =
-        "id, name, slug, price, compare_at_price, image_url, country, grape, rating, category_id, featured, best_seller";
-      let q = filter?.categorySlug
-        ? supabase
-            .from("products")
-            .select(baseCols + ", product_categories!inner(category_id, categories!inner(slug))")
-            .eq("is_active", true)
-            .eq("product_categories.categories.slug", filter.categorySlug)
-        : supabase.from("products").select(baseCols).eq("is_active", true);
-      if (filter?.featured) q = q.eq("featured", true);
-      if (filter?.bestSeller) q = q.eq("best_seller", true);
-      q = q.limit(filter?.limit ?? 8);
-      const { data, error } = await q;
-      if (error) throw error;
-      return (data ?? []) as unknown as Product[];
-    },
-  });
-}
-
 type HomeBanner = {
   id: string;
   title: string | null;
@@ -157,21 +69,66 @@ type HomeBanner = {
   sort_order: number;
 };
 
-function useHomeBanners() {
-  return useQuery({
-    queryKey: ["banners-home"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("banners")
-        .select("*")
+type CategoryTile = { slug: string; label: string; img: string };
+
+async function fetchHomeBanners(): Promise<HomeBanner[]> {
+  const { data, error } = await supabase
+    .from("banners")
+    .select("*")
+    .eq("is_active", true)
+    .in("position", [...HOME_BANNER_POSITIONS])
+    .order("sort_order");
+  if (error) throw error;
+  return (data ?? []) as HomeBanner[];
+}
+
+async function fetchCategoryTiles(): Promise<CategoryTile[]> {
+  const { data, error } = await supabase
+    .from("categories")
+    .select(
+      "slug, name, banner_image, product_categories(product_id, products!inner(is_active))",
+    )
+    .in("slug", [...HOME_CATEGORY_SLUGS])
+    .eq("is_active", true)
+    .eq("product_categories.products.is_active", true);
+  if (error) throw error;
+  const order = new Map<string, number>(HOME_CATEGORY_SLUGS.map((slug, i) => [slug, i]));
+  return (data ?? [])
+    .filter((category) => (category.product_categories?.length ?? 0) > 0)
+    .sort((a, b) => (order.get(a.slug) ?? 99) - (order.get(b.slug) ?? 99))
+    .map((category) => {
+      const img = category.banner_image
+        ? toTransformedImageUrl(category.banner_image, {
+            width: 180,
+            quality: 70,
+            format: "webp",
+          })
+        : LOCAL_CATEGORY_IMAGES[category.slug];
+      if (!img) return null;
+      return { slug: category.slug, label: category.name, img };
+    })
+    .filter(Boolean) as CategoryTile[];
+}
+
+async function fetchHomeProducts(filter?: {
+  bestSeller?: boolean;
+  categorySlug?: string;
+  limit?: number;
+}): Promise<Product[]> {
+  const baseCols =
+    "id, name, slug, price, compare_at_price, image_url, country, grape, rating, category_id, featured, best_seller";
+  let q = filter?.categorySlug
+    ? supabase
+        .from("products")
+        .select(baseCols + ", product_categories!inner(category_id, categories!inner(slug))")
         .eq("is_active", true)
-        .in("position", [...HOME_BANNER_POSITIONS])
-        .order("sort_order");
-      if (error) throw error;
-      return (data ?? []) as HomeBanner[];
-    },
-    staleTime: 5 * 60_000,
-  });
+        .eq("product_categories.categories.slug", filter.categorySlug)
+    : supabase.from("products").select(baseCols).eq("is_active", true);
+  if (filter?.bestSeller) q = q.eq("best_seller", true);
+  q = q.limit(filter?.limit ?? 8);
+  const { data, error } = await q;
+  if (error) throw error;
+  return (data ?? []) as unknown as Product[];
 }
 
 function pickBanner(banners: HomeBanner[], position: string) {
@@ -183,6 +140,131 @@ function resolveHomeHero(banners: HomeBanner[]) {
   const desktop = pickBanner(banners, "home_hero_desktop") ?? legacy;
   const mobile = pickBanner(banners, "home_hero_mobile") ?? desktop ?? legacy;
   return { desktop, mobile };
+}
+
+function countryTilesFromStore(cats: StoreCategory[]) {
+  return cats
+    .filter((c) => c.kind === "country")
+    .map((c) => {
+      const image = countryFlagForCategory(c, 160);
+      return image ? { slug: c.slug, label: c.name, image } : null;
+    })
+    .filter(Boolean) as { slug: string; label: string; image: string }[];
+}
+
+export const Route = createFileRoute("/")({
+  loader: async ({ context }) => {
+    const [banners, categoryTiles, storeCategories, bestSellers] = await Promise.all([
+      context.queryClient.ensureQueryData({
+        queryKey: ["banners-home"],
+        queryFn: fetchHomeBanners,
+        staleTime: 5 * 60_000,
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["home-category-tiles", HOME_CATEGORY_SLUGS],
+        queryFn: fetchCategoryTiles,
+        staleTime: 10 * 60_000,
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["store-categories-with-products"],
+        queryFn: fetchStoreCategoriesWithProducts,
+        staleTime: 5 * 60_000,
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["products", { bestSeller: true, limit: 8 }],
+        queryFn: () => fetchHomeProducts({ bestSeller: true, limit: 8 }),
+        staleTime: 60_000,
+      }),
+    ]);
+    // Prefetch seções abaixo (HTML com produtos reais para o bot; não bloqueia se falhar parcial)
+    const [tintos, brancos, espumantes, kits] = await Promise.all([
+      context.queryClient.ensureQueryData({
+        queryKey: ["products", { categorySlug: "tintos", limit: 4 }],
+        queryFn: () => fetchHomeProducts({ categorySlug: "tintos", limit: 4 }),
+        staleTime: 60_000,
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["products", { categorySlug: "brancos", limit: 4 }],
+        queryFn: () => fetchHomeProducts({ categorySlug: "brancos", limit: 4 }),
+        staleTime: 60_000,
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["products", { categorySlug: "so-espumantes", limit: 4 }],
+        queryFn: () => fetchHomeProducts({ categorySlug: "so-espumantes", limit: 4 }),
+        staleTime: 60_000,
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["products", { categorySlug: "combos", limit: 4 }],
+        queryFn: () => fetchHomeProducts({ categorySlug: "combos", limit: 4 }),
+        staleTime: 60_000,
+      }),
+    ]);
+    return {
+      banners,
+      categoryTiles,
+      storeCategories,
+      bestSellers,
+      tintos,
+      brancos,
+      espumantes,
+      kits,
+    };
+  },
+  head: ({ loaderData }) => {
+    const seo = pageMeta({
+      title: SEO.homeTitle,
+      description: SEO.homeDescription,
+      path: "/",
+    });
+    const { desktop, mobile } = resolveHomeHero(loaderData?.banners ?? []);
+    const lcpHref = homeHeroLcpPreloadHref(mobile?.image_url, desktop?.image_url);
+    const seoLinks = Array.isArray(seo.links) ? seo.links : [];
+    return {
+      ...seo,
+      links: [
+        ...seoLinks,
+        ...(lcpHref
+          ? [{ rel: "preload" as const, as: "image" as const, href: lcpHref, type: "image/webp" }]
+          : []),
+      ],
+    };
+  },
+  component: Home,
+});
+
+function useCategoryTiles(initialData?: CategoryTile[]) {
+  return useQuery({
+    queryKey: ["home-category-tiles", HOME_CATEGORY_SLUGS],
+    queryFn: fetchCategoryTiles,
+    initialData,
+    staleTime: 10 * 60_000,
+  });
+}
+
+function useProducts(
+  filter?: {
+    featured?: boolean;
+    bestSeller?: boolean;
+    categorySlug?: string;
+    limit?: number;
+  },
+  initialData?: Product[],
+) {
+  return useQuery({
+    queryKey: ["products", filter],
+    queryFn: (): Promise<Product[]> => fetchHomeProducts(filter),
+    initialData,
+    staleTime: 60_000,
+  });
+}
+
+function useHomeBanners(initialData?: HomeBanner[]) {
+  return useQuery({
+    queryKey: ["banners-home"],
+    queryFn: fetchHomeBanners,
+    initialData,
+    staleTime: 5 * 60_000,
+  });
 }
 
 function ShowcaseSkeleton({ title, subtitle }: { title: string; subtitle?: string }) {
@@ -291,6 +373,7 @@ function DiscoverySection({
     image: category.img,
     imageClassName: "object-contain p-3",
   }));
+  // Seção sempre no HTML (títulos + preços + categorias SSR) — bot e CLS.
   return (
     <section className="border-y border-border/60 bg-cream/40 py-6 sm:py-10 lg:py-12">
       <StoreContainer>
@@ -307,7 +390,7 @@ function DiscoverySection({
         </div>
 
         {categoryItems.length > 0 && (
-          <div>
+          <div className="min-h-[7.5rem] sm:min-h-[9rem]">
             <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-foreground sm:mb-4">
               Categorias
             </h3>
@@ -336,17 +419,13 @@ function DiscoverySection({
   );
 }
 
-function CountryDiscoverySection() {
-  const storeCats = useStoreCategories();
-  const visibleCountries = (storeCats.data ?? [])
-    .filter((c) => c.kind === "country")
-    .map((c) => {
-      const image = countryFlagForCategory(c, 160);
-      return image ? { slug: c.slug, label: c.name, image } : null;
-    })
-    .filter(Boolean) as { slug: string; label: string; image: string }[];
-
-  if (storeCats.isLoading || visibleCountries.length === 0) return null;
+function CountryDiscoverySection({
+  countries,
+}: {
+  countries: { slug: string; label: string; image: string }[];
+}) {
+  // Sempre renderiza a seção no HTML quando há países (SSR) — evita CLS e buraco para o bot.
+  if (countries.length === 0) return null;
 
   return (
     <section className="border-y border-border/60 bg-cream/40 py-6 sm:py-10 lg:py-12">
@@ -359,20 +438,43 @@ function CountryDiscoverySection() {
             Compre por país
           </h2>
         </div>
-        <DiscoveryCarousel items={visibleCountries} ariaLabel="Países de origem" compact />
+        <DiscoveryCarousel items={countries} ariaLabel="Países de origem" compact />
       </StoreContainer>
     </section>
   );
 }
 
+function productsOrFallback(
+  queryData: Product[] | undefined,
+  fallback: Product[],
+): Product[] {
+  return queryData ?? fallback;
+}
+
 function Home() {
-  const banners = useHomeBanners();
-  const bestSellers = useProducts({ bestSeller: true, limit: 8 });
-  const tintos = useProducts({ categorySlug: "tintos", limit: 4 });
-  const brancos = useProducts({ categorySlug: "brancos", limit: 4 });
-  const espumantes = useProducts({ categorySlug: "so-espumantes", limit: 4 });
-  const kits = useProducts({ categorySlug: "combos", limit: 4 });
-  const categoryTiles = useCategoryTiles();
+  const loaderData = Route.useLoaderData();
+  const banners = useHomeBanners(loaderData.banners);
+  const bestSellersQ = useProducts(
+    { bestSeller: true, limit: 8 },
+    loaderData.bestSellers,
+  );
+  const tintosQ = useProducts({ categorySlug: "tintos", limit: 4 }, loaderData.tintos);
+  const brancosQ = useProducts({ categorySlug: "brancos", limit: 4 }, loaderData.brancos);
+  const espumantesQ = useProducts(
+    { categorySlug: "so-espumantes", limit: 4 },
+    loaderData.espumantes,
+  );
+  const kitsQ = useProducts({ categorySlug: "combos", limit: 4 }, loaderData.kits);
+  const categoryTiles = useCategoryTiles(loaderData.categoryTiles);
+  const storeCats = useStoreCategories(loaderData.storeCategories);
+  const countries = countryTilesFromStore(storeCats.data ?? loaderData.storeCategories);
+
+  // SSR/loader first: Googlebot sees real products in HTML (not empty shells waiting on client).
+  const bestSellers = productsOrFallback(bestSellersQ.data, loaderData.bestSellers);
+  const tintos = productsOrFallback(tintosQ.data, loaderData.tintos);
+  const brancos = productsOrFallback(brancosQ.data, loaderData.brancos);
+  const espumantes = productsOrFallback(espumantesQ.data, loaderData.espumantes);
+  const kits = productsOrFallback(kitsQ.data, loaderData.kits);
 
   const { desktop: heroDesktop, mobile: heroMobile } = resolveHomeHero(banners.data ?? []);
   const stripBanner = pickBanner(banners.data ?? [], "home_strip");
@@ -391,42 +493,27 @@ function Home() {
         />
       </section>
 
-      {bestSellers.isLoading ? (
-        <ShowcaseSkeleton title="Mais Vendidos" subtitle="Os preferidos dos nossos clientes" />
-      ) : bestSellers.data && bestSellers.data.length > 0 ? (
+      {bestSellers.length > 0 ? (
         <ProductCarouselSection
           title="Mais Vendidos"
           subtitle="Os preferidos dos nossos clientes"
-          products={bestSellers.data}
+          products={bestSellers}
         />
+      ) : bestSellersQ.isLoading ? (
+        <ShowcaseSkeleton title="Mais Vendidos" subtitle="Os preferidos dos nossos clientes" />
       ) : null}
 
-      {categoryTiles.isLoading && (
-        <section className="border-y border-border/60 bg-cream/40 py-10 lg:py-12" aria-busy>
-          <StoreContainer>
-            <div className="h-8 w-72 animate-pulse rounded bg-muted" />
-            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7">
-              {Array.from({ length: 7 }).map((_, i) => (
-                <div key={i} className="flex flex-col items-center gap-3">
-                  <div className="aspect-square w-full max-w-36 animate-pulse rounded-full bg-muted" />
-                  <div className="h-3 w-20 animate-pulse rounded bg-muted" />
-                </div>
-              ))}
-            </div>
-          </StoreContainer>
-        </section>
-      )}
-      {!categoryTiles.isLoading && <DiscoverySection categories={categoryTiles.data ?? []} />}
+      <DiscoverySection categories={categoryTiles.data ?? loaderData.categoryTiles} />
 
-      {tintos.isLoading ? (
-        <ShowcaseSkeleton title="Tintos" subtitle="Encorpados, elegantes, marcantes" />
-      ) : tintos.data && tintos.data.length > 0 ? (
+      {tintos.length > 0 ? (
         <ProductCarouselSection
           title="Tintos"
           subtitle="Encorpados, elegantes, marcantes"
           collectionSlug="tintos"
-          products={tintos.data}
+          products={tintos}
         />
+      ) : tintosQ.isLoading ? (
+        <ShowcaseSkeleton title="Tintos" subtitle="Encorpados, elegantes, marcantes" />
       ) : null}
 
       {/* Banner secundário — aspect reservado */}
@@ -444,53 +531,53 @@ function Home() {
         </section>
       )}
 
-      {brancos.isLoading ? (
-        <ShowcaseSkeleton title="Brancos" subtitle="Frescor, mineralidade e elegância" />
-      ) : brancos.data && brancos.data.length > 0 ? (
+      {brancos.length > 0 ? (
         <ProductCarouselSection
           title="Brancos"
           subtitle="Frescor, mineralidade e elegância"
           collectionSlug="brancos"
-          products={brancos.data}
+          products={brancos}
         />
+      ) : brancosQ.isLoading ? (
+        <ShowcaseSkeleton title="Brancos" subtitle="Frescor, mineralidade e elegância" />
       ) : null}
 
-      {espumantes.isLoading ? (
-        <ShowcaseSkeleton title="Espumantes" subtitle="Espumantes selecionados" />
-      ) : espumantes.data && espumantes.data.length > 0 ? (
+      {espumantes.length > 0 ? (
         <ProductCarouselSection
           title="Espumantes"
           subtitle="Espumantes selecionados"
           collectionSlug="so-espumantes"
-          products={espumantes.data}
+          products={espumantes}
         />
+      ) : espumantesQ.isLoading ? (
+        <ShowcaseSkeleton title="Espumantes" subtitle="Espumantes selecionados" />
       ) : null}
 
-      <CountryDiscoverySection />
+      <CountryDiscoverySection countries={countries} />
 
-      {kits.isLoading ? (
-        <ShowcaseSkeleton title="Kits & Combos" subtitle="Presentes especiais selecionados" />
-      ) : kits.data && kits.data.length > 0 ? (
+      {kits.length > 0 ? (
         <ProductCarouselSection
           title="Kits & Combos"
           subtitle="Presentes especiais selecionados"
           collectionSlug="combos"
-          products={kits.data}
+          products={kits}
         />
+      ) : kitsQ.isLoading ? (
+        <ShowcaseSkeleton title="Kits & Combos" subtitle="Presentes especiais selecionados" />
       ) : null}
 
-      {/* Google Merchant / SEO structured data */}
+      {/* Google Merchant / SEO structured data (produtos do loader/SSR) */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify([
-            ...(bestSellers.data && bestSellers.data.length > 0
+            ...(bestSellers.length > 0
               ? [
                   {
                     "@context": "https://schema.org",
                     "@type": "ItemList",
                     name: `Mais vendidos — ${STORE.name}`,
-                    itemListElement: bestSellers.data.map((p, i) => {
+                    itemListElement: bestSellers.map((p, i) => {
                       const brandName = resolveProductBrandName(p.name, null, p.country);
                       return {
                         "@type": "ListItem",

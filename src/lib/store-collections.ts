@@ -42,10 +42,11 @@ export async function fetchStoreCategoriesWithProducts(): Promise<StoreCategory[
   );
 }
 
-export function useStoreCategories() {
+export function useStoreCategories(initialData?: StoreCategory[]) {
   return useQuery({
     queryKey: ["store-categories-with-products"],
     queryFn: fetchStoreCategoriesWithProducts,
+    ...(initialData ? { initialData } : {}),
     staleTime: 5 * 60_000,
   });
 }

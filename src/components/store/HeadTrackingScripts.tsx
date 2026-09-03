@@ -38,12 +38,18 @@ export function HeadTrackingScripts() {
     const clarityId = tracking.microsoftClarityId;
 
     const added: HTMLElement[] = [];
+    let cancelled = false;
+    let idleId: number | undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
     const appendHead = (el: HTMLElement) => {
       el.setAttribute(MARKER, "1");
       document.head.appendChild(el);
       added.push(el);
     };
+
+    const inject = () => {
+      if (cancelled) return;
 
     if (gtmId) {
       const gtm = document.createElement("script");
@@ -99,8 +105,20 @@ export function HeadTrackingScripts() {
       ].join("");
       appendHead(clarity);
     }
+    };
+
+    // Fora do caminho crítico (LCP/FCP): injeta após idle ou ~2,5s — bots ainda veem HTML/SEO da loja.
+    const ric = window.requestIdleCallback?.bind(window);
+    if (ric) {
+      idleId = ric(() => inject(), { timeout: 2500 });
+    } else {
+      timeoutId = setTimeout(inject, 2500);
+    }
 
     return () => {
+      cancelled = true;
+      if (idleId != null && window.cancelIdleCallback) window.cancelIdleCallback(idleId);
+      if (timeoutId != null) clearTimeout(timeoutId);
       for (const el of added) el.remove();
       document.head.querySelectorAll(`[${MARKER}]`).forEach((n) => n.remove());
     };
