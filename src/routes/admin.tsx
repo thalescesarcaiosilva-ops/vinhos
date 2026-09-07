@@ -1321,12 +1321,26 @@ function ProductForm({
 }
 
 /* ---------- Banners ---------- */
+
+/** Dimensões reais da arte: alimentam banners.width/height e reservam a caixa do hero (CLS). */
+function measureImageSize(url: string): Promise<{ width: number; height: number } | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = () => resolve(null);
+    img.src = toSiteImageUrl(url);
+  });
+}
+
 function BannersAdmin() {
   const [items, setItems] = useState<any[]>([]);
   const [editing, setEditing] = useState<any | null>(null);
+  // As colunas width/height chegam por migration; até lá o admin não pode enviá-las.
+  const [hasSizeColumns, setHasSizeColumns] = useState(false);
   async function load() {
     const { data } = await supabase.from("banners").select("*").order("sort_order");
     setItems(data ?? []);
+    setHasSizeColumns(!!data?.[0] && "width" in data[0]);
   }
   useEffect(() => {
     load();
@@ -1336,6 +1350,10 @@ function BannersAdmin() {
     const payload = { ...b };
     delete payload.id;
     delete payload.created_at;
+    if (!hasSizeColumns) {
+      delete payload.width;
+      delete payload.height;
+    }
     const { error } = b.id
       ? await supabase.from("banners").update(payload).eq("id", b.id)
       : await supabase.from("banners").insert(payload);
@@ -1384,10 +1402,21 @@ function BannersAdmin() {
           <span className="text-xs uppercase text-muted-foreground">Imagem</span>
           <ImageField
             value={editing.image_url}
-            onChange={(url) => setEditing({ ...editing, image_url: url })}
+            onChange={async (url) => {
+              setEditing((cur: any) => ({ ...cur, image_url: url, width: null, height: null }));
+              const size = url ? await measureImageSize(url) : null;
+              if (size) {
+                setEditing((cur: any) => (cur?.image_url === url ? { ...cur, ...size } : cur));
+              }
+            }}
             bucket="banner-images"
             previewClass="mt-2 max-h-48 w-full rounded-sm object-contain border border-border bg-muted"
           />
+          {editing.width && editing.height ? (
+            <p className="mt-1 text-xs text-muted-foreground">
+              Arte {editing.width}×{editing.height}px — a proporção é preservada, sem corte.
+            </p>
+          ) : null}
         </div>
         <label className="block">
           <span className="text-xs uppercase text-muted-foreground">Posição</span>

@@ -90,15 +90,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/assets/favicon.png" },
       { rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
       { rel: "stylesheet", href: appCss },
-      // Fonte: display=optional reduz CLS; preconnect só se a stylesheet pedir gstatic em seguida.
+      // Jost sai do próprio domínio (@font-face em styles.css): sem fonts.googleapis.com
+      // nem fonts.gstatic.com no caminho crítico. Só o subset latin é pré-carregado —
+      // latin-ext e itálico ficam sob demanda, via unicode-range.
       {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
+        rel: "preload",
+        as: "font",
+        type: "font/woff2",
+        href: "/fonts/jost-latin.woff2",
         crossOrigin: "anonymous",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;0,700;1,400&display=optional",
       },
     ],
     scripts: [

@@ -2,6 +2,40 @@
 @source "../src";
 @import "tw-animate-css";
 
+/* Jost servida do próprio domínio: tira fonts.googleapis.com e fonts.gstatic.com
+   do caminho crítico (dois DNS+TLS a menos antes do primeiro paint).
+   `optional` mantém CLS zero — com o arquivo local o browser quase sempre chega a tempo. */
+@font-face {
+  font-family: "Jost";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: optional;
+  src: url("/fonts/jost-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Jost";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: optional;
+  src: url("/fonts/jost-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Jost";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: optional;
+  src: url("/fonts/jost-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -132,6 +166,21 @@
   h1 {
     font-weight: 700;
     letter-spacing: -0.01em;
+  }
+}
+
+/* Banner: a caixa é reservada pela proporção real da arte antes do download.
+   As vars saem das colunas `width`/`height` de `banners`; sem elas, `auto`
+   mantém o comportamento antigo. `contain` garante que um valor errado gere
+   borda, nunca corte ou distorção da arte. */
+.hero-banner-img {
+  aspect-ratio: var(--hero-ratio-mobile, auto);
+  object-fit: contain;
+}
+
+@media (min-width: 1280px) {
+  .hero-banner-img {
+    aspect-ratio: var(--hero-ratio-desktop, var(--hero-ratio-mobile, auto));
   }
 }
 

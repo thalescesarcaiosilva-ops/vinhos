@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "import:products": "node scripts/import-products.mjs",
-    "import:vinoteca": "node scripts/import-vinoteca.mjs"
+    "import:vinoteca": "node scripts/import-vinoteca.mjs",
+    "banners:dimensions": "node scripts/backfill-banner-dimensions.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -87,6 +88,7 @@
     "globals": "^15.15.0",
     "nitro": "3.0.260603-beta",
     "prettier": "^3.7.3",
+    "sharp": "^0.35.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1"

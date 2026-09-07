@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import { BenefitsBar } from "@/components/store/BenefitsBar";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
-import { HeroBanner, HomeHeroBanner, homeHeroLcpPreloadHref } from "@/components/store/HeroBanner";
+import { HeroBanner, HomeHeroBanner, homeHeroPreloadLinks } from "@/components/store/HeroBanner";
 
 const HOME_BANNER_POSITIONS = [
   "home_hero",
@@ -67,6 +67,9 @@ type HomeBanner = {
   link_url: string | null;
   position: string;
   sort_order: number;
+  /** Dimensões da arte original; ausentes até o backfill rodar. */
+  width?: number | null;
+  height?: number | null;
 };
 
 type CategoryTile = { slug: string; label: string; img: string };
@@ -140,6 +143,20 @@ function resolveHomeHero(banners: HomeBanner[]) {
   const desktop = pickBanner(banners, "home_hero_desktop") ?? legacy;
   const mobile = pickBanner(banners, "home_hero_mobile") ?? desktop ?? legacy;
   return { desktop, mobile };
+}
+
+/** Mesmas props para o <picture> e para o preload — qualquer divergência anula o preload. */
+function homeHeroProps(banners: HomeBanner[]) {
+  const { desktop, mobile } = resolveHomeHero(banners);
+  return {
+    desktopSrc: desktop?.image_url,
+    mobileSrc: mobile?.image_url,
+    alt: desktop?.title?.trim() || mobile?.title?.trim() || "Banner home",
+    desktopLinkUrl: desktop?.link_url,
+    mobileLinkUrl: mobile?.link_url,
+    desktopSize: { width: desktop?.width, height: desktop?.height },
+    mobileSize: { width: mobile?.width, height: mobile?.height },
+  };
 }
 
 function countryTilesFromStore(cats: StoreCategory[]) {
@@ -216,17 +233,10 @@ export const Route = createFileRoute("/")({
       description: SEO.homeDescription,
       path: "/",
     });
-    const { desktop, mobile } = resolveHomeHero(loaderData?.banners ?? []);
-    const lcpHref = homeHeroLcpPreloadHref(mobile?.image_url, desktop?.image_url);
     const seoLinks = Array.isArray(seo.links) ? seo.links : [];
     return {
       ...seo,
-      links: [
-        ...seoLinks,
-        ...(lcpHref
-          ? [{ rel: "preload" as const, as: "image" as const, href: lcpHref, type: "image/webp" }]
-          : []),
-      ],
+      links: [...seoLinks, ...homeHeroPreloadLinks(homeHeroProps(loaderData?.banners ?? []))],
     };
   },
   component: Home,
@@ -481,7 +491,7 @@ function Home() {
   const espumantes = productsOrFallback(espumantesQ.data, loaderData.espumantes);
   const kits = productsOrFallback(kitsQ.data, loaderData.kits);
 
-  const { desktop: heroDesktop, mobile: heroMobile } = resolveHomeHero(banners.data ?? []);
+  const heroProps = homeHeroProps(banners.data ?? []);
   const stripBanner = pickBanner(banners.data ?? [], "home_strip");
 
   return (
@@ -489,13 +499,7 @@ function Home() {
       <BenefitsBar />
 
       <section className="w-full bg-muted">
-        <HomeHeroBanner
-          desktopSrc={heroDesktop?.image_url}
-          mobileSrc={heroMobile?.image_url}
-          alt={heroDesktop?.title?.trim() || heroMobile?.title?.trim() || "Banner home"}
-          desktopLinkUrl={heroDesktop?.link_url}
-          mobileLinkUrl={heroMobile?.link_url}
-        />
+        <HomeHeroBanner {...heroProps} />
       </section>
 
       {bestSellers.length > 0 ? (
@@ -529,6 +533,8 @@ function Home() {
               alt={stripBanner.title?.trim() || "Banner"}
               linkUrl={stripBanner.link_url}
               priority={false}
+              width={stripBanner.width}
+              height={stripBanner.height}
               className="rounded-sm"
             />
           </StoreContainer>
