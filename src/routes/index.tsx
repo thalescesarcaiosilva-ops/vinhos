@@ -398,21 +398,26 @@ function DiscoverySection({
           </div>
         )}
 
-        <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border/60 pt-5">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+        <div className="mt-8 border-t border-border/60 pt-5 sm:mt-10">
+          <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-foreground sm:mb-4">
             Escolha por preço
-          </span>
-          {PRICE_FILTERS.map((range) => (
-            <Link
-              key={range.legacySlug}
-              to="/colecao/$slug"
-              params={{ slug: "todos" }}
-              search={{ page: 1, ...priceFilterToSearch(range.min, range.max) }}
-              className="border-b border-primary/40 pb-0.5 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
-            >
-              {range.label}
-            </Link>
-          ))}
+          </h3>
+          <Carousel opts={{ align: "start" }} aria-label="Faixas de preço">
+            <CarouselContent className="-ml-2 sm:-ml-4">
+              {PRICE_FILTERS.map((range) => (
+                <CarouselItem key={range.legacySlug} className="basis-auto pl-2 sm:pl-4">
+                  <Link
+                    to="/colecao/$slug"
+                    params={{ slug: "todos" }}
+                    search={{ page: 1, ...priceFilterToSearch(range.min, range.max) }}
+                    className="block whitespace-nowrap rounded-full border border-primary/40 bg-background px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary"
+                  >
+                    {range.label}
+                  </Link>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
       </StoreContainer>
     </section>
@@ -516,7 +521,6 @@ function Home() {
         <ShowcaseSkeleton title="Tintos" subtitle="Encorpados, elegantes, marcantes" />
       ) : null}
 
-      {/* Banner secundário — aspect reservado */}
       {stripBanner?.image_url && (
         <section className="py-10 lg:py-12">
           <StoreContainer>
@@ -525,7 +529,7 @@ function Home() {
               alt={stripBanner.title?.trim() || "Banner"}
               linkUrl={stripBanner.link_url}
               priority={false}
-              aspectClassName="aspect-[1600/386] rounded-sm"
+              className="rounded-sm"
             />
           </StoreContainer>
         </section>

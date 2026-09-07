@@ -117,11 +117,11 @@ export function Header() {
       ref={headerRef}
       className="sticky top-0 z-40 bg-background shadow-[0_3px_14px_rgba(34,16,18,0.06)]"
     >
-      {/* Topbar: no mobile só frete; no desktop links + frete. */}
+      {/* Topbar: no mobile e no tablet só frete; no desktop links + frete. */}
       <div className="min-h-8 bg-primary text-primary-foreground">
-        <StoreContainer className="flex min-h-8 items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] sm:grid sm:grid-cols-[1fr_auto_1fr] sm:text-[11px] sm:tracking-[0.14em]">
+        <StoreContainer className="flex min-h-8 items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] xl:grid xl:grid-cols-[1fr_auto_1fr] xl:text-[11px] xl:tracking-[0.14em]">
           <nav
-            className="hidden min-w-0 items-center gap-4 sm:flex"
+            className="hidden min-w-0 items-center gap-4 xl:flex"
             aria-label="Atalhos da loja"
           >
             <Link
@@ -143,13 +143,13 @@ export function Header() {
               <>Frete grátis acima de R$ {freeFrom.toFixed(2).replace(".", ",")}</>
             ) : null}
           </p>
-          <span className="hidden sm:block" aria-hidden />
+          <span className="hidden xl:block" aria-hidden />
         </StoreContainer>
       </div>
 
       {/* Uma única linha principal; dropdowns e busca são sobrepostos e não provocam reflow. */}
       <div className="relative border-b border-border/40 bg-background">
-        <StoreContainer className="grid h-[68px] grid-cols-[1fr_auto_1fr] items-center gap-2 md:h-[82px]">
+        <StoreContainer className="grid h-[68px] grid-cols-[1fr_auto_1fr] items-center gap-2 xl:h-[82px]">
           <div className="flex min-w-0 items-center">
             <button
               type="button"
@@ -259,7 +259,7 @@ export function Header() {
               fetchPriority="high"
               decoding="async"
               style={{ maxHeight: logoMaxHeight }}
-              className="h-9 w-auto object-contain sm:h-12 md:h-[54px]"
+              className="h-9 w-auto object-contain xl:h-[54px]"
             />
           </Link>
 

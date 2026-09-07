@@ -36,7 +36,7 @@ export function ProductMobileBuyBar({
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-30 border-t border-border/50 bg-background px-4 pt-3 shadow-[0_-6px_20px_rgba(0,0,0,0.07)] transition duration-200 lg:hidden ${
+      className={`fixed inset-x-0 bottom-0 z-30 border-t border-border/50 bg-background px-4 pt-3 shadow-[0_-6px_20px_rgba(0,0,0,0.07)] transition duration-200 xl:hidden ${
         footerVisible
           ? "pointer-events-none translate-y-full opacity-0"
           : "translate-y-0 opacity-100"

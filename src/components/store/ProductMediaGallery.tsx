@@ -69,7 +69,7 @@ function MediaSlide({
         alt={productName}
         displaySize={480}
         priority={priority}
-        sizes="(max-width: 1024px) 100vw, 480px"
+        sizes="(max-width: 1279px) 100vw, 480px"
         className={className ?? "h-full w-full max-h-full max-w-full object-contain"}
       />
     </div>
@@ -130,7 +130,7 @@ export function ProductMediaMobileCarousel({
   if (media.length === 0) return null;
 
   return (
-    <div className="lg:hidden">
+    <div className="xl:hidden">
       <Carousel
         setApi={setApi}
         opts={{ align: "center", loop: media.length > 1 }}
@@ -206,7 +206,7 @@ export function ProductMediaDesktopMain({
   country?: string | null;
 }) {
   return (
-    <div className="hidden lg:block">
+    <div className="hidden xl:block">
       <div className="relative aspect-square w-full max-w-full overflow-hidden bg-card">
         <GalleryBadges discount={discount} bestSeller={bestSeller} />
         {item ? <MediaSlide item={item} productName={productName} priority /> : null}

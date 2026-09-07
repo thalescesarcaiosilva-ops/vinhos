@@ -415,7 +415,7 @@ function ProductPage() {
   }
 
   return (
-    <div className="bg-background pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-0">
+    <div className="bg-background pb-[calc(6rem+env(safe-area-inset-bottom))] xl:pb-0">
       <BenefitsBar />
       <StoreContainer className="py-6">
         <nav className="mb-5 text-xs text-muted-foreground">
@@ -433,7 +433,7 @@ function ProductPage() {
           <span className="text-foreground">{p.name}</span>
         </nav>
 
-        <div className="grid gap-8 lg:grid-cols-[40fr_32fr_28fr] lg:items-start xl:gap-10">
+        <div className="grid gap-8 xl:grid-cols-[40fr_32fr_28fr] xl:items-start xl:gap-10">
           {/* Galeria */}
           <div className="min-w-0">
             <ProductMediaMobileCarousel
@@ -454,7 +454,7 @@ function ProductPage() {
             />
             {media.length > 1 && (
               <div
-                className="mt-4 hidden items-center gap-2 lg:flex"
+                className="mt-4 hidden items-center gap-2 xl:flex"
                 aria-label="Miniaturas do produto"
               >
                 {media.length > 5 && (
@@ -603,7 +603,7 @@ function ProductPage() {
           </section>
 
           {/* Compra e frete */}
-          <aside className="min-w-0 space-y-6 lg:sticky lg:top-32">
+          <aside className="min-w-0 space-y-6 xl:sticky xl:top-32">
             <div className="space-y-1">
               {compare > price && (
                 <div className="text-sm text-muted-foreground line-through">de {brl(compare)}</div>

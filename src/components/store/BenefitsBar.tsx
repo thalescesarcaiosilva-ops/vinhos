@@ -51,13 +51,13 @@ export function BenefitsBar() {
     <section className="border-b border-border/70 bg-background">
       <StoreContainer className="py-4">
         <ul
-          className="flex gap-0 overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-4 lg:overflow-visible"
+          className="flex gap-0 overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden xl:grid xl:grid-cols-4 xl:overflow-visible"
           aria-label="Benefícios da loja"
         >
           {items.map(({ id, icon: Icon, title, text }) => (
             <li
               key={id}
-              className="flex min-h-11 w-[82%] shrink-0 items-center gap-3 border-r border-border/60 pr-5 last:border-r-0 sm:w-1/2 sm:px-5 lg:w-auto lg:min-w-0 lg:px-5"
+              className="flex min-h-11 w-[82%] shrink-0 items-center gap-3 border-r border-border/60 pr-5 last:border-r-0 sm:w-1/2 sm:px-5 xl:w-auto xl:min-w-0 xl:px-5"
             >
               <Icon className="h-6 w-6 shrink-0 text-primary" strokeWidth={1.45} aria-hidden />
               <div className="min-w-0">
