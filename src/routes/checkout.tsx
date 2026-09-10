@@ -2,7 +2,7 @@ import { useAuth } from "@/lib/auth";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useCart } from "@/lib/cart";
 import { brl } from "@/lib/format";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CheckCircle2, Tag, X, Copy, Loader2, CreditCard, QrCode, Pencil, Check, ShieldCheck, ArrowLeft } from "lucide-react";
 import { maskCEP, maskPhone, maskCPF, fetchAddressByCEP, isAdultBirthDate } from "@/lib/validation";
@@ -10,8 +10,8 @@ import { calcShipping, type ShippingQuote } from "@/lib/shipping";
 import { validateCoupon } from "@/lib/coupon";
 import { useStoreSettings, installmentPlan } from "@/lib/store-settings";
 import { useServerFn } from "@tanstack/react-start";
-import { createCheckoutPix, createCheckoutCard, getPayoutStatus } from "@/lib/payoutbr.functions";
-import { PayoutCardForm, type PayoutCardHandle } from "@/components/store/PayoutCardForm";
+import { createCheckoutPix, getPayoutStatus } from "@/lib/payoutbr.functions";
+import { PayoutCardForm } from "@/components/store/PayoutCardForm";
 import { GoogleAdsConversion } from "@/components/store/GoogleAdsConversion";
 import { PixReceiptUpload } from "@/components/store/PixReceiptUpload";
 import { CheckoutLegalConsent, CheckoutPolicyLinks } from "@/components/store/CheckoutLegalConsent";
@@ -31,21 +31,6 @@ export const Route = createFileRoute("/checkout")({
   component: Checkout,
 });
 
-// Mensagem amigável para recusas de cartão a partir do refusedReason da PayoutBR.
-function cardDeclineMessage(reason?: string | null): string {
-  const fallback = "Pagamento não autorizado. Verifique os dados do cartão ou tente outro cartão.";
-  if (!reason) return fallback;
-  const r = reason.toLowerCase();
-  if (r.includes("insufficient") || r.includes("saldo") || r.includes("limit")) return "Pagamento não autorizado. Cartão sem saldo/limite disponível.";
-  if (r.includes("cvv") || r.includes("cvc") || r.includes("security")) return "Pagamento não autorizado. Código de segurança (CVV) inválido.";
-  if (r.includes("expired") || r.includes("expir")) return "Pagamento não autorizado. Cartão expirado.";
-  // A PayoutBR já retorna descrições em pt-BR — se for uma frase legível, usa direto.
-  if (/[a-zà-ú]/i.test(reason) && reason.trim().length > 12) return reason.trim();
-  return fallback;
-}
-
-
-
 function Checkout() {
   const { items, subtotal, clear, count } = useCart();
   const { data: settings } = useStoreSettings();
@@ -64,9 +49,6 @@ function Checkout() {
   const [paid, setPaid] = useState<{ orderId: string; order_number: string; total: number } | null>(null);
   const [method, setMethod] = useState<"pix" | "credit_card">("pix");
   const [installments, setInstallments] = useState(1);
-  const cardHandleRef = useRef<PayoutCardHandle | null>(null);
-  const [cardReady, setCardReady] = useState(false);
-  const [cardValid, setCardValid] = useState(false);
 
   // Stepper
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -179,7 +161,6 @@ function Checkout() {
   }
 
   const createPix = useServerFn(createCheckoutPix);
-  const createCard = useServerFn(createCheckoutCard);
   const pollStatus = useServerFn(getPayoutStatus);
 
   useEffect(() => {
@@ -417,21 +398,8 @@ function Checkout() {
           receiptToken: pixRes.receiptToken ?? null,
         });
       } else {
-        if (!cardHandleRef.current?.valid) {
-          toast.error("Preencha os dados do cartão");
-          return;
-        }
-        const res = await cardHandleRef.current.submit(async (token) => {
-          return createCard({ data: { ...baseData, token, installments } });
-        });
-        if (res.status === "confirmed") {
-          setPaid({ orderId: res.orderId, order_number: res.orderNumber, total: cardPrice });
-          clear();
-        } else if (res.status === "cancelled") {
-          toast.error(cardDeclineMessage(res.refusedReason));
-        } else {
-          toast.message("Pagamento em processamento. Aguarde a confirmação por e-mail.");
-        }
+        toast.error("Pagamento por cartão indisponível no momento. Use Pix.");
+        setMethod("pix");
       }
     } catch (err: any) {
       console.error(err);
@@ -666,17 +634,29 @@ function Checkout() {
                             setInstallments={setInstallments}
                             maxInstallments={payments?.maxInstallments ?? 6}
                             plan={plan}
-                            onReadyChange={setCardReady}
-                            onValidChange={setCardValid}
-                            registerHandle={(h) => { cardHandleRef.current = h; }}
+                            registerHandle={() => {}}
                           />
+                          <div
+                            role="alert"
+                            className="rounded-md border border-amber-500/40 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+                          >
+                            <p className="font-semibold">Pagamento por cartão indisponível no momento</p>
+                            <p className="mt-1 text-amber-900/90">
+                              Finalize seu pedido com <strong>Pix</strong> — aprovação imediata
+                              {(payments?.pixDiscount ?? 0) > 0
+                                ? ` e ${payments?.pixDiscount}% de desconto`
+                                : ""}
+                              .
+                            </p>
+                          </div>
                           <CheckoutLegalConsent checked={legalConsent} onChange={setLegalConsent} />
                           <button
-                            type="submit"
-                            disabled={loading || !cardReady || !cardValid || !legalConsent}
+                            type="button"
+                            disabled={!pixEnabled}
+                            onClick={() => setMethod("pix")}
                             className={btnPrimary}
                           >
-                            {loading ? "Processando pagamento..." : `Pagar ${brl(cardPrice)}`}
+                            {pixEnabled ? "Pagar com Pix" : "Pix indisponível"}
                           </button>
                         </div>
                       )}

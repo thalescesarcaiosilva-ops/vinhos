@@ -3,11 +3,17 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import {
   buildPixQrDataUrl,
-  extractPixCopyPaste,
-  extractPixExpiration,
-  extractPixImageFromApi,
 } from "@/lib/pix-qrcode";
 import { installmentPlan, mergeInstallmentRates, type InstallmentPlanInput } from "@/lib/installments";
+import { paymentDescription } from "@/lib/payment-description";
+import {
+  allowPayCreatePix,
+  allowPayPaymentStatus,
+  allowPayWebhookSecret,
+  encodeAllowPayRouteNote,
+  mapAllowPayStatus,
+  parseAllowPayRoute,
+} from "@/lib/allowpay";
 
 type SupabaseAdmin = Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"];
 
@@ -317,9 +323,12 @@ function buildCustomer(customer: { name: string; email: string; phone?: string |
   };
 }
 
-function buildItems(items: Array<{ name: string; price: number; quantity: number; productId?: string | null }>) {
+function buildItems(
+  items: Array<{ name: string; price: number; quantity: number; productId?: string | null }>,
+  title: string,
+) {
   return items.map((item) => ({
-    title: item.name.slice(0, 120),
+    title,
     unitPrice: Math.round(item.price * 100),
     quantity: item.quantity,
     tangible: true,
@@ -331,17 +340,19 @@ function buildItems(items: Array<{ name: string; price: number; quantity: number
  * Monta itens para a PayoutBR com soma (unitPrice * qty) === targetItemsCents.
  * Necessário quando há desconto Pix/cupom: o `amount` cobrado é menor que o
  * subtotal cheio; a gateway rejeita se amount ≠ itens + frete.
+ * `title` = nome padronizado (nunca o produto real da loja).
  */
 function buildItemsMatchingAmount(
   items: Array<{ name: string; price: number; quantity: number; productId?: string | null }>,
   targetItemsCents: number,
+  title: string,
 ) {
   const target = Math.max(0, Math.round(targetItemsCents));
 
   if (!items.length) {
     return [
       {
-        title: "Pedido",
+        title,
         unitPrice: target,
         quantity: 1,
         tangible: true as const,
@@ -354,7 +365,7 @@ function buildItemsMatchingAmount(
 
   if (gross <= 0) {
     return items.map((item, idx) => ({
-      title: item.name.slice(0, 120),
+      title,
       unitPrice: idx === 0 ? target : 0,
       quantity: idx === 0 ? 1 : Math.max(1, item.quantity),
       tangible: true as const,
@@ -372,7 +383,7 @@ function buildItemsMatchingAmount(
     const qty = Math.max(1, item.quantity);
     if (lineTotal % qty === 0) {
       return {
-        title: item.name.slice(0, 120),
+        title,
         unitPrice: lineTotal / qty,
         quantity: qty,
         tangible: true as const,
@@ -381,7 +392,7 @@ function buildItemsMatchingAmount(
     }
     // Soma exata: 1 unidade com o valor rateado da linha
     return {
-      title: item.name.slice(0, 120),
+      title,
       unitPrice: lineTotal,
       quantity: 1,
       tangible: true as const,
@@ -394,6 +405,8 @@ function payoutLineItems(
   items: Array<{ name: string; price: number; quantity: number; productId?: string | null }>,
   total: number,
   shipping: number,
+  /** Nome padronizado só para a gateway — nunca o vinho real. */
+  paymentTitle: string,
 ) {
   const amountCents = Math.round(total * 100);
   const shippingCents = Math.round(shipping * 100);
@@ -404,12 +417,12 @@ function payoutLineItems(
   );
   // Sem desconto (ou diferença só de arredondamento irrelevante): mantém preços cheios
   if (Math.abs(grossItemsCents - targetItemsCents) <= 1) {
-    return { amountCents, shippingCents, items: buildItems(items) };
+    return { amountCents, shippingCents, items: buildItems(items, paymentTitle) };
   }
   return {
     amountCents,
     shippingCents,
-    items: buildItemsMatchingAmount(items, targetItemsCents),
+    items: buildItemsMatchingAmount(items, targetItemsCents, paymentTitle),
   };
 }
 
@@ -532,31 +545,47 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const order = await createOrderWithItems(supabaseAdmin, { ...data, payment_method: "pix" });
 
-    const { amountCents, shippingCents, items: payoutItems } = payoutLineItems(
-      data.items,
-      data.total,
-      data.shipping,
-    );
-    const compliance = buildTransactionCompliance(order.id, data.customer.email);
+    const description = paymentDescription(order.id, data.total);
+    const amountCents = Math.round(data.total * 100);
+    const cellphone = (data.customer.phone || "").replace(/\D/g, "");
+    const taxId = data.customer.document.replace(/\D/g, "");
+    if (cellphone.length < 10) {
+      await supabaseAdmin
+        .from("orders")
+        .update({
+          payment_status: "cancelled",
+          status: "cancelled",
+          notes: [data.notes, "Telefone inválido para Pix (DDD + número)"].filter(Boolean).join(" | "),
+        })
+        .eq("id", order.id);
+      throw new Error("Informe um celular válido com DDD para pagar com Pix.");
+    }
+    if (taxId.length !== 11) {
+      await supabaseAdmin
+        .from("orders")
+        .update({
+          payment_status: "cancelled",
+          status: "cancelled",
+          notes: [data.notes, "CPF inválido para Pix"].filter(Boolean).join(" | "),
+        })
+        .eq("id", order.id);
+      throw new Error("Informe um CPF válido para pagar com Pix.");
+    }
 
-    let tx: any;
+    const webhookSecret = allowPayWebhookSecret();
+    let pix: Awaited<ReturnType<typeof allowPayCreatePix>>;
     try {
-      tx = await payoutbrFetch("/transactions", {
-        method: "POST",
-        body: JSON.stringify({
-          amount: amountCents,
-          paymentMethod: "pix",
-          customer: buildCustomer(data.customer, data.shippingAddress),
-          shipping: {
-            fee: shippingCents,
-            address: buildAddress(data.shippingAddress),
-          },
-          items: payoutItems,
-          postbackUrl: `${siteOrigin()}/api/public/payoutbr-webhook`,
-          ...compliance,
-          traceable: true,
-          pix: { expiresInDays: 1 },
-        }),
+      pix = await allowPayCreatePix({
+        amountCents,
+        description,
+        customer: {
+          name: data.customer.name,
+          email: data.customer.email,
+          cellphone,
+          taxId,
+        },
+        webhookUrl: `${siteOrigin()}/api/public/allowpay-webhook`,
+        webhookSecret,
       });
     } catch (e) {
       await supabaseAdmin
@@ -564,50 +593,35 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
         .update({
           payment_status: "cancelled",
           status: "cancelled",
-          notes: [data.notes, "Falha ao gerar Pix na PayoutBR"].filter(Boolean).join(" | "),
+          notes: [data.notes, "Falha ao gerar Pix na AllowPay"].filter(Boolean).join(" | "),
         })
         .eq("id", order.id);
       throw e;
     }
 
-    const pixPayload = (tx?.pix ?? {}) as Record<string, unknown>;
-    const qrCode = extractPixCopyPaste(pixPayload);
-    const qrImage = await buildPixQrDataUrl(qrCode, extractPixImageFromApi(pixPayload));
-    const expiration = extractPixExpiration(pixPayload);
-    const txId = tx?.id != null ? String(tx.id) : null;
-    const mapped = mapStatus(tx?.status);
+    const qrCode = pix.pixCode;
+    const qrImage = await buildPixQrDataUrl(qrCode, pix.pixQrCode);
+    const expiration = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
     const { newPixReceiptToken } = await import("@/lib/pix-receipt.functions");
     const receiptToken = newPixReceiptToken();
-
-    if (!qrCode) {
-      await supabaseAdmin
-        .from("orders")
-        .update({
-          pagou_transaction_id: txId,
-          payment_status: mapped === "confirmed" ? mapped : "cancelled",
-          status: mapped === "confirmed" ? "confirmed" : "cancelled",
-          notes: [data.notes, "Pix criado sem QR/código copia-e-cola"].filter(Boolean).join(" | "),
-        })
-        .eq("id", order.id);
-      throw new Error("Não foi possível gerar o QR Code Pix. Tente novamente em alguns minutos.");
-    }
 
     await supabaseAdmin
       .from("orders")
       .update({
-        pagou_transaction_id: txId,
-        payment_status: mapped,
+        pagou_transaction_id: pix.txid,
+        payment_status: "pending",
         pix_qr_code: qrCode,
         pix_expiration: expiration,
         pix_receipt_token: receiptToken,
+        notes: encodeAllowPayRouteNote(data.notes, pix.route),
       })
       .eq("id", order.id);
 
     return {
       orderId: order.id,
       orderNumber: order.order_number,
-      transactionId: txId,
-      status: mapped,
+      transactionId: pix.txid,
+      status: "pending" as const,
       qrCode,
       qrImage,
       expiresAt: expiration,
@@ -617,102 +631,8 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
 
 export const createCheckoutCard = createServerFn({ method: "POST" })
   .inputValidator((d) => CardInput.parse(d))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const payments = await loadPaymentSettings(supabaseAdmin);
-    const cardBase = Math.max(0, data.subtotal - data.discount) + data.shipping;
-    const plan = installmentPlan(cardBase, payments);
-    const chosen = plan.find((p) => p.n === data.installments);
-    if (!chosen) {
-      throw new Error("Número de parcelas inválido para este pedido.");
-    }
-    // Valor enviado à PayoutBR = total do pedido (itens + frete − desconto), SEM somar
-    // de novo as taxas de 2x–6x. Essas taxas já estão no painel da operadora e entram
-    // uma vez no cartão via `installments`. Somar aqui cobraria o cliente em dobro.
-    const charged = {
-      ...data,
-      total: cardBase,
-      notes: [
-        data.notes,
-        `Cartão em ${chosen.n}x${chosen.hasInterest ? " com juros (taxa da operadora, sem acréscimo extra da loja)" : " sem juros"}`,
-      ]
-        .filter(Boolean)
-        .join(" | "),
-    };
-    const order = await createOrderWithItems(supabaseAdmin, { ...charged, payment_method: "credit_card" });
-
-    const { amountCents, shippingCents, items: payoutItems } = payoutLineItems(
-      charged.items,
-      cardBase,
-      charged.shipping,
-    );
-    const compliance = buildTransactionCompliance(order.id, data.customer.email);
-
-    let tx: any;
-    try {
-      tx = await payoutbrFetch("/transactions", {
-        method: "POST",
-        body: JSON.stringify({
-          amount: amountCents,
-          paymentMethod: "credit_card",
-          installments: data.installments,
-          card: { hash: data.token },
-          customer: buildCustomer(data.customer, data.shippingAddress),
-          shipping: {
-            fee: shippingCents,
-            address: buildAddress(data.shippingAddress),
-          },
-          items: payoutItems,
-          postbackUrl: `${siteOrigin()}/api/public/payoutbr-webhook`,
-          ...compliance,
-          traceable: true,
-        }),
-      });
-    } catch (e) {
-      await supabaseAdmin
-        .from("orders")
-        .update({
-          payment_status: "cancelled",
-          status: "cancelled",
-          notes: [data.notes, "Falha ao processar cartão na PayoutBR"].filter(Boolean).join(" | "),
-        })
-        .eq("id", order.id);
-      throw e;
-    }
-
-    const txId = tx?.id != null ? String(tx.id) : null;
-    const mapped = mapStatus(tx?.status);
-    const refusedReason = extractRefusedReason(tx?.refusedReason);
-    const update: {
-      pagou_transaction_id: string | null;
-      payment_status: string;
-      status?: "confirmed" | "cancelled";
-    } = {
-      pagou_transaction_id: txId,
-      payment_status: mapped,
-    };
-    if (mapped === "confirmed") update.status = "confirmed";
-    if (mapped === "cancelled") update.status = "cancelled";
-
-    await supabaseAdmin.from("orders").update(update).eq("id", order.id);
-
-    if (mapped === "confirmed") {
-      try {
-        const { sendOrderPaidEmail } = await import("@/lib/order-email");
-        await sendOrderPaidEmail(order.id);
-      } catch (e) {
-        console.error("order confirmation email failed", e);
-      }
-    }
-
-    return {
-      orderId: order.id,
-      orderNumber: order.order_number,
-      transactionId: txId,
-      status: mapped,
-      rawStatus: tx?.status ?? null,
-      refusedReason,
-    };
+  .handler(async () => {
+    throw new Error("Pagamento por cartão indisponível no momento. Use Pix.");
   });
 
 export const getPayoutStatus = createServerFn({ method: "POST" })
@@ -722,7 +642,7 @@ export const getPayoutStatus = createServerFn({ method: "POST" })
 
     const { data: order } = await supabaseAdmin
       .from("orders")
-      .select("id, pagou_transaction_id, payment_status, status")
+      .select("id, pagou_transaction_id, payment_status, status, payment_method, notes")
       .eq("id", data.orderId)
       .maybeSingle();
 
@@ -730,8 +650,16 @@ export const getPayoutStatus = createServerFn({ method: "POST" })
       return { status: order?.payment_status ?? "pending", orderStatus: order?.status ?? "pending" };
     }
 
-    const tx = await payoutbrFetch(`/transactions/${order.pagou_transaction_id}`);
-    const mapped = mapStatus(tx?.status);
+    const allowRoute = parseAllowPayRoute(order.notes);
+    let mapped: "pending" | "confirmed" | "cancelled" | "refunded";
+
+    if (order.payment_method === "pix" && allowRoute) {
+      const allowStatus = await allowPayPaymentStatus(order.pagou_transaction_id, allowRoute);
+      mapped = mapAllowPayStatus(allowStatus);
+    } else {
+      const tx = await payoutbrFetch(`/transactions/${order.pagou_transaction_id}`);
+      mapped = mapStatus(tx?.status);
+    }
 
     const update: { payment_status: string; status?: "confirmed" | "cancelled" | "refunded" } = {
       payment_status: mapped,

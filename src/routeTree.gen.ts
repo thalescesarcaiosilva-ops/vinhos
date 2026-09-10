@@ -33,6 +33,7 @@ import { Route as ColecaoSlugRouteImport } from './routes/colecao.$slug'
 import { Route as PaginaSlugRouteImport } from './routes/pagina.$slug'
 import { Route as PoliticasSlugRouteImport } from './routes/politicas.$slug'
 import { Route as ProdutoSlugRouteImport } from './routes/produto.$slug'
+import { Route as ApiPublicAllowpayWebhookRouteImport } from './routes/api/public/allowpay-webhook'
 import { Route as ApiPublicPayoutbrWebhookRouteImport } from './routes/api/public/payoutbr-webhook'
 import { Route as ApiPublicUploadImagesRouteImport } from './routes/api/public/upload-images'
 import { Route as StorageV1SplatRouteImport } from './routes/storage.v1.$'
@@ -159,6 +160,12 @@ const ProdutoSlugRoute = ProdutoSlugRouteImport.update({
   path: '/produto/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicAllowpayWebhookRoute =
+  ApiPublicAllowpayWebhookRouteImport.update({
+    id: '/api/public/allowpay-webhook',
+    path: '/api/public/allowpay-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPayoutbrWebhookRoute =
   ApiPublicPayoutbrWebhookRouteImport.update({
     id: '/api/public/payoutbr-webhook',
@@ -213,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/pagina/$slug': typeof PaginaSlugRoute
   '/politicas/$slug': typeof PoliticasSlugRoute
   '/produto/$slug': typeof ProdutoSlugRoute
+  '/api/public/allowpay-webhook': typeof ApiPublicAllowpayWebhookRoute
   '/api/public/payoutbr-webhook': typeof ApiPublicPayoutbrWebhookRoute
   '/api/public/upload-images': typeof ApiPublicUploadImagesRoute
   '/storage/v1/$': typeof StorageV1SplatRoute
@@ -244,6 +252,7 @@ export interface FileRoutesByTo {
   '/pagina/$slug': typeof PaginaSlugRoute
   '/politicas/$slug': typeof PoliticasSlugRoute
   '/produto/$slug': typeof ProdutoSlugRoute
+  '/api/public/allowpay-webhook': typeof ApiPublicAllowpayWebhookRoute
   '/api/public/payoutbr-webhook': typeof ApiPublicPayoutbrWebhookRoute
   '/api/public/upload-images': typeof ApiPublicUploadImagesRoute
   '/storage/v1/$': typeof StorageV1SplatRoute
@@ -276,6 +285,7 @@ export interface FileRoutesById {
   '/pagina/$slug': typeof PaginaSlugRoute
   '/politicas/$slug': typeof PoliticasSlugRoute
   '/produto/$slug': typeof ProdutoSlugRoute
+  '/api/public/allowpay-webhook': typeof ApiPublicAllowpayWebhookRoute
   '/api/public/payoutbr-webhook': typeof ApiPublicPayoutbrWebhookRoute
   '/api/public/upload-images': typeof ApiPublicUploadImagesRoute
   '/storage/v1/$': typeof StorageV1SplatRoute
@@ -309,6 +319,7 @@ export interface FileRouteTypes {
     | '/pagina/$slug'
     | '/politicas/$slug'
     | '/produto/$slug'
+    | '/api/public/allowpay-webhook'
     | '/api/public/payoutbr-webhook'
     | '/api/public/upload-images'
     | '/storage/v1/$'
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/pagina/$slug'
     | '/politicas/$slug'
     | '/produto/$slug'
+    | '/api/public/allowpay-webhook'
     | '/api/public/payoutbr-webhook'
     | '/api/public/upload-images'
     | '/storage/v1/$'
@@ -371,6 +383,7 @@ export interface FileRouteTypes {
     | '/pagina/$slug'
     | '/politicas/$slug'
     | '/produto/$slug'
+    | '/api/public/allowpay-webhook'
     | '/api/public/payoutbr-webhook'
     | '/api/public/upload-images'
     | '/storage/v1/$'
@@ -403,6 +416,7 @@ export interface RootRouteChildren {
   PaginaSlugRoute: typeof PaginaSlugRoute
   PoliticasSlugRoute: typeof PoliticasSlugRoute
   ProdutoSlugRoute: typeof ProdutoSlugRoute
+  ApiPublicAllowpayWebhookRoute: typeof ApiPublicAllowpayWebhookRoute
   ApiPublicPayoutbrWebhookRoute: typeof ApiPublicPayoutbrWebhookRoute
   ApiPublicUploadImagesRoute: typeof ApiPublicUploadImagesRoute
   StorageV1SplatRoute: typeof StorageV1SplatRoute
@@ -580,6 +594,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdutoSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/allowpay-webhook': {
+      id: '/api/public/allowpay-webhook'
+      path: '/api/public/allowpay-webhook'
+      fullPath: '/api/public/allowpay-webhook'
+      preLoaderRoute: typeof ApiPublicAllowpayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payoutbr-webhook': {
       id: '/api/public/payoutbr-webhook'
       path: '/api/public/payoutbr-webhook'
@@ -643,6 +664,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaginaSlugRoute: PaginaSlugRoute,
   PoliticasSlugRoute: PoliticasSlugRoute,
   ProdutoSlugRoute: ProdutoSlugRoute,
+  ApiPublicAllowpayWebhookRoute: ApiPublicAllowpayWebhookRoute,
   ApiPublicPayoutbrWebhookRoute: ApiPublicPayoutbrWebhookRoute,
   ApiPublicUploadImagesRoute: ApiPublicUploadImagesRoute,
   StorageV1SplatRoute: StorageV1SplatRoute,
