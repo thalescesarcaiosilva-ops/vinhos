@@ -1,10 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import {
   buildPixQrDataUrl,
 } from "@/lib/pix-qrcode";
-import { installmentPlan, mergeInstallmentRates, type InstallmentPlanInput } from "@/lib/installments";
 import { paymentDescription } from "@/lib/payment-description";
 import {
   allowPayCreatePix,
@@ -41,6 +39,8 @@ async function resolveCheckoutUserId(
   customerEmail: string,
 ): Promise<string | null> {
   try {
+    // Import dinâmico: este módulo é importado pelo checkout no client via createServerFn.
+    const { getRequest } = await import("@tanstack/react-start/server");
     const request = getRequest();
     const authHeader = request?.headers?.get("authorization");
     if (authHeader?.startsWith("Bearer ")) {
@@ -173,18 +173,6 @@ async function payoutbrFetch(path: string, init?: RequestInit) {
   return json?.data ?? json;
 }
 
-// A PayoutBR devolve refusedReason ora como string, ora como objeto
-// { acquirerCode, description, antifraud }. Extrai um texto legível.
-function extractRefusedReason(reason: unknown): string | null {
-  if (!reason) return null;
-  if (typeof reason === "string") return reason.trim() || null;
-  if (typeof reason === "object") {
-    const desc = (reason as { description?: unknown }).description;
-    if (typeof desc === "string" && desc.trim()) return desc.trim();
-  }
-  return null;
-}
-
 function mapStatus(s?: string): "pending" | "confirmed" | "cancelled" | "refunded" {
   switch ((s ?? "").toLowerCase()) {
     case "paid":
@@ -207,223 +195,6 @@ function siteOrigin(): string {
     /\/+$/,
     "",
   );
-}
-
-/** IP do comprador (x-forwarded-for / x-real-ip). Omite se inválido. */
-function getClientIp(): string | undefined {
-  try {
-    const request = getRequest();
-    if (!request?.headers) return undefined;
-    const candidates: string[] = [];
-    const forwarded = request.headers.get("x-forwarded-for");
-    if (forwarded) {
-      for (const part of forwarded.split(",")) {
-        const ip = part.trim();
-        if (ip) candidates.push(ip);
-      }
-    }
-    for (const header of ["x-real-ip", "cf-connecting-ip", "true-client-ip"]) {
-      const v = request.headers.get(header)?.trim();
-      if (v) candidates.push(v);
-    }
-    for (const raw of candidates) {
-      const ip = normalizeClientIp(raw);
-      if (ip) return ip;
-    }
-  } catch {
-    /* request indisponível */
-  }
-  return undefined;
-}
-
-function normalizeClientIp(raw: string): string | undefined {
-  let ip = raw.trim();
-  if (!ip) return undefined;
-  // IPv4 com porta (ex.: 1.2.3.4:1234)
-  const v4Port = ip.match(/^(\d{1,3}(?:\.\d{1,3}){3}):\d+$/);
-  if (v4Port) ip = v4Port[1];
-  // [IPv6]:port
-  const v6Brackets = ip.match(/^\[([0-9a-f:]+)\](?::\d+)?$/i);
-  if (v6Brackets) ip = v6Brackets[1];
-
-  const lower = ip.toLowerCase();
-  if (
-    lower === "unknown" ||
-    lower === "undefined" ||
-    lower === "null" ||
-    lower === "localhost" ||
-    lower === "::1" ||
-    lower === "127.0.0.1" ||
-    lower === "0.0.0.0"
-  ) {
-    return undefined;
-  }
-
-  if (/^(\d{1,3}\.){3}\d{1,3}$/.test(ip)) {
-    const ok = ip.split(".").every((octet) => {
-      const n = Number(octet);
-      return Number.isInteger(n) && n >= 0 && n <= 255;
-    });
-    return ok ? ip : undefined;
-  }
-
-  // IPv6 básico
-  if (ip.includes(":") && /^[0-9a-f:]+$/i.test(ip) && ip.length <= 45) {
-    return ip;
-  }
-  return undefined;
-}
-
-/** Metadata de compliance + IP (campo próprio) + externalRef estável. */
-function buildTransactionCompliance(orderId: string, userEmail: string): {
-  metadata: string;
-  externalRef: string;
-  ip?: string;
-} {
-  const shopUrl = siteOrigin();
-  const metadata = JSON.stringify({
-    provider: "CustomCheckout",
-    user_email: userEmail,
-    order_id: orderId,
-    checkout_url: `${shopUrl}/checkout`,
-    shop_url: shopUrl,
-  });
-  const ip = getClientIp();
-  return {
-    metadata,
-    externalRef: orderId,
-    ...(ip ? { ip } : {}),
-  };
-}
-
-function buildAddress(addr: Record<string, any>) {
-  return {
-    street: addr.street ?? "",
-    streetNumber: String(addr.number ?? ""),
-    complement: addr.complement || undefined,
-    neighborhood: addr.neighborhood ?? "",
-    city: addr.city ?? "",
-    state: addr.state ?? "",
-    zipCode: String(addr.zip ?? addr.zipCode ?? "").replace(/\D/g, ""),
-    country: "BR",
-  };
-}
-
-function buildCustomer(customer: { name: string; email: string; phone?: string | null; document: string }, addr: Record<string, any>) {
-  const phone = (customer.phone || "").replace(/\D/g, "");
-  return {
-    name: customer.name,
-    email: customer.email,
-    phone: phone || undefined,
-    document: {
-      type: "cpf",
-      number: customer.document.replace(/\D/g, ""),
-    },
-    address: buildAddress(addr),
-  };
-}
-
-function buildItems(
-  items: Array<{ name: string; price: number; quantity: number; productId?: string | null }>,
-  title: string,
-) {
-  return items.map((item) => ({
-    title,
-    unitPrice: Math.round(item.price * 100),
-    quantity: item.quantity,
-    tangible: true,
-    externalRef: item.productId ?? undefined,
-  }));
-}
-
-/**
- * Monta itens para a PayoutBR com soma (unitPrice * qty) === targetItemsCents.
- * Necessário quando há desconto Pix/cupom: o `amount` cobrado é menor que o
- * subtotal cheio; a gateway rejeita se amount ≠ itens + frete.
- * `title` = nome padronizado (nunca o produto real da loja).
- */
-function buildItemsMatchingAmount(
-  items: Array<{ name: string; price: number; quantity: number; productId?: string | null }>,
-  targetItemsCents: number,
-  title: string,
-) {
-  const target = Math.max(0, Math.round(targetItemsCents));
-
-  if (!items.length) {
-    return [
-      {
-        title,
-        unitPrice: target,
-        quantity: 1,
-        tangible: true as const,
-      },
-    ];
-  }
-
-  const weights = items.map((i) => Math.max(0, Math.round(i.price * 100) * Math.max(1, i.quantity)));
-  const gross = weights.reduce((a, b) => a + b, 0);
-
-  if (gross <= 0) {
-    return items.map((item, idx) => ({
-      title,
-      unitPrice: idx === 0 ? target : 0,
-      quantity: idx === 0 ? 1 : Math.max(1, item.quantity),
-      tangible: true as const,
-      externalRef: item.productId ?? undefined,
-    }));
-  }
-
-  let remaining = target;
-  return items.map((item, idx) => {
-    const isLast = idx === items.length - 1;
-    let lineTotal = isLast ? remaining : Math.floor((weights[idx] / gross) * target);
-    if (!isLast) remaining -= lineTotal;
-    lineTotal = Math.max(0, lineTotal);
-
-    const qty = Math.max(1, item.quantity);
-    if (lineTotal % qty === 0) {
-      return {
-        title,
-        unitPrice: lineTotal / qty,
-        quantity: qty,
-        tangible: true as const,
-        externalRef: item.productId ?? undefined,
-      };
-    }
-    // Soma exata: 1 unidade com o valor rateado da linha
-    return {
-      title,
-      unitPrice: lineTotal,
-      quantity: 1,
-      tangible: true as const,
-      externalRef: item.productId ?? undefined,
-    };
-  });
-}
-
-function payoutLineItems(
-  items: Array<{ name: string; price: number; quantity: number; productId?: string | null }>,
-  total: number,
-  shipping: number,
-  /** Nome padronizado só para a gateway — nunca o vinho real. */
-  paymentTitle: string,
-) {
-  const amountCents = Math.round(total * 100);
-  const shippingCents = Math.round(shipping * 100);
-  const targetItemsCents = Math.max(0, amountCents - shippingCents);
-  const grossItemsCents = items.reduce(
-    (s, i) => s + Math.round(i.price * 100) * Math.max(1, i.quantity),
-    0,
-  );
-  // Sem desconto (ou diferença só de arredondamento irrelevante): mantém preços cheios
-  if (Math.abs(grossItemsCents - targetItemsCents) <= 1) {
-    return { amountCents, shippingCents, items: buildItems(items, paymentTitle) };
-  }
-  return {
-    amountCents,
-    shippingCents,
-    items: buildItemsMatchingAmount(items, targetItemsCents, paymentTitle),
-  };
 }
 
 async function createOrderWithItems(
@@ -512,21 +283,6 @@ const CardInput = CheckoutInput.extend({
   token: z.string().min(1),
   installments: z.number().int().min(1).max(12).default(1),
 });
-
-async function loadPaymentSettings(supabaseAdmin: SupabaseAdmin): Promise<InstallmentPlanInput> {
-  const { data } = await supabaseAdmin
-    .from("store_settings")
-    .select("data")
-    .eq("id", "singleton")
-    .maybeSingle();
-  const raw = (data as { data?: { payments?: Record<string, unknown> } } | null)?.data?.payments ?? {};
-  return {
-    maxInstallments: Number(raw.maxInstallments) || 6,
-    minInstallment: Number(raw.minInstallment) || 0,
-    interestFreeUpTo: Number(raw.interestFreeUpTo) || 1,
-    installmentRates: mergeInstallmentRates(raw.installmentRates as Record<string, number> | undefined),
-  };
-}
 
 export const getPayoutPublicConfig = createServerFn({ method: "GET" }).handler(async () => {
   const publicKey = serverEnv("PAYOUTBR_PUBLIC_KEY")?.trim() ?? "";
