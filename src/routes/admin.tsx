@@ -2701,8 +2701,8 @@ function SettingsAdmin() {
         <h3 className="mb-1 font-serif text-lg font-bold text-primary">Frete</h3>
         <p className="mb-4 text-sm text-muted-foreground">
           Conforme a Política de frete e os Termos: envio para todo o Brasil, separação de 1 a 2
-          dias úteis, transporte de 6 a 9 dias úteis (prazo total 7 a 11 dias úteis após o
-          pagamento), frete grátis a partir de R$ 300,00 e frete fixo de R$ 43,20 abaixo desse valor.
+          dias úteis, transporte de 3 a 4 dias úteis (prazo total 4 a 6 dias úteis após o
+          pagamento), frete grátis a partir de R$ 200,00 e frete fixo de R$ 15,20 abaixo desse valor.
           Carrinho, checkout e calculadora de CEP mostram só o prazo de transporte (transit time),
           como no Google Merchant Center — a separação não entra nessa cotação.
         </p>
@@ -2767,7 +2767,7 @@ function SettingsAdmin() {
           </label>
         </div>
         <p className="mb-6 text-[11px] text-muted-foreground">
-          Carrinho e checkout exibem apenas o transporte (6–9 dias úteis). A separação (1–2) fica
+          Carrinho e checkout exibem apenas o transporte (3–4 dias úteis). A separação (1–2) fica
           na política da loja e no handling time do Merchant Center, para não misturar os dois prazos.
         </p>
 

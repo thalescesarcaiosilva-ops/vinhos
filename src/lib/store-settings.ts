@@ -41,13 +41,13 @@ export type ShippingSettings = {
   regions: ShippingRegion[];
 };
 
-/** Frete da política: grátis ≥ R$ 300; abaixo R$ 43,20; transporte 6–9 dias úteis. */
+/** Frete da política: grátis ≥ R$ 200; abaixo R$ 15,20; transporte 3–4 dias úteis. */
 export const POLICY_SHIPPING_METHOD: ShippingMethod = {
   id: "entrega-padrao",
   label: "Entrega",
   price: STORE.flatShipping,
-  etaMinDays: 6,
-  etaMaxDays: 9,
+  etaMinDays: 3,
+  etaMaxDays: 4,
   enabled: true,
 };
 

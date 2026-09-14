@@ -20,7 +20,7 @@ export const STORE = {
   },
   /** Sem WhatsApp comercial no momento. */
   whatsappNumber: "",
-  freeShippingFrom: 300,
-  flatShipping: 43.2,
-  expressShipping: 43.2,
+  freeShippingFrom: 200,
+  flatShipping: 15.2,
+  expressShipping: 15.2,
 };
