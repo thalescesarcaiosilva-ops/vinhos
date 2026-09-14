@@ -36,6 +36,7 @@ import { Route as ProdutoSlugRouteImport } from './routes/produto.$slug'
 import { Route as ApiPublicAllowpayWebhookRouteImport } from './routes/api/public/allowpay-webhook'
 import { Route as ApiPublicPayoutbrWebhookRouteImport } from './routes/api/public/payoutbr-webhook'
 import { Route as ApiPublicUploadImagesRouteImport } from './routes/api/public/upload-images'
+import { Route as ApiPublicVenoWebhookRouteImport } from './routes/api/public/veno-webhook'
 import { Route as StorageV1SplatRouteImport } from './routes/storage.v1.$'
 import { Route as StorageV1ObjectPublicSplatRouteImport } from './routes/storage.v1.object.public.$'
 import { Route as StorageV1RenderImagePublicSplatRouteImport } from './routes/storage.v1.render.image.public.$'
@@ -177,6 +178,11 @@ const ApiPublicUploadImagesRoute = ApiPublicUploadImagesRouteImport.update({
   path: '/api/public/upload-images',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicVenoWebhookRoute = ApiPublicVenoWebhookRouteImport.update({
+  id: '/api/public/veno-webhook',
+  path: '/api/public/veno-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StorageV1SplatRoute = StorageV1SplatRouteImport.update({
   id: '/storage/v1/$',
   path: '/storage/v1/$',
@@ -223,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/api/public/allowpay-webhook': typeof ApiPublicAllowpayWebhookRoute
   '/api/public/payoutbr-webhook': typeof ApiPublicPayoutbrWebhookRoute
   '/api/public/upload-images': typeof ApiPublicUploadImagesRoute
+  '/api/public/veno-webhook': typeof ApiPublicVenoWebhookRoute
   '/storage/v1/$': typeof StorageV1SplatRoute
   '/storage/v1/object/public/$': typeof StorageV1ObjectPublicSplatRoute
   '/storage/v1/render/image/public/$': typeof StorageV1RenderImagePublicSplatRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByTo {
   '/api/public/allowpay-webhook': typeof ApiPublicAllowpayWebhookRoute
   '/api/public/payoutbr-webhook': typeof ApiPublicPayoutbrWebhookRoute
   '/api/public/upload-images': typeof ApiPublicUploadImagesRoute
+  '/api/public/veno-webhook': typeof ApiPublicVenoWebhookRoute
   '/storage/v1/$': typeof StorageV1SplatRoute
   '/storage/v1/object/public/$': typeof StorageV1ObjectPublicSplatRoute
   '/storage/v1/render/image/public/$': typeof StorageV1RenderImagePublicSplatRoute
@@ -288,6 +296,7 @@ export interface FileRoutesById {
   '/api/public/allowpay-webhook': typeof ApiPublicAllowpayWebhookRoute
   '/api/public/payoutbr-webhook': typeof ApiPublicPayoutbrWebhookRoute
   '/api/public/upload-images': typeof ApiPublicUploadImagesRoute
+  '/api/public/veno-webhook': typeof ApiPublicVenoWebhookRoute
   '/storage/v1/$': typeof StorageV1SplatRoute
   '/storage/v1/object/public/$': typeof StorageV1ObjectPublicSplatRoute
   '/storage/v1/render/image/public/$': typeof StorageV1RenderImagePublicSplatRoute
@@ -322,6 +331,7 @@ export interface FileRouteTypes {
     | '/api/public/allowpay-webhook'
     | '/api/public/payoutbr-webhook'
     | '/api/public/upload-images'
+    | '/api/public/veno-webhook'
     | '/storage/v1/$'
     | '/storage/v1/object/public/$'
     | '/storage/v1/render/image/public/$'
@@ -354,6 +364,7 @@ export interface FileRouteTypes {
     | '/api/public/allowpay-webhook'
     | '/api/public/payoutbr-webhook'
     | '/api/public/upload-images'
+    | '/api/public/veno-webhook'
     | '/storage/v1/$'
     | '/storage/v1/object/public/$'
     | '/storage/v1/render/image/public/$'
@@ -386,6 +397,7 @@ export interface FileRouteTypes {
     | '/api/public/allowpay-webhook'
     | '/api/public/payoutbr-webhook'
     | '/api/public/upload-images'
+    | '/api/public/veno-webhook'
     | '/storage/v1/$'
     | '/storage/v1/object/public/$'
     | '/storage/v1/render/image/public/$'
@@ -419,6 +431,7 @@ export interface RootRouteChildren {
   ApiPublicAllowpayWebhookRoute: typeof ApiPublicAllowpayWebhookRoute
   ApiPublicPayoutbrWebhookRoute: typeof ApiPublicPayoutbrWebhookRoute
   ApiPublicUploadImagesRoute: typeof ApiPublicUploadImagesRoute
+  ApiPublicVenoWebhookRoute: typeof ApiPublicVenoWebhookRoute
   StorageV1SplatRoute: typeof StorageV1SplatRoute
   StorageV1ObjectPublicSplatRoute: typeof StorageV1ObjectPublicSplatRoute
   StorageV1RenderImagePublicSplatRoute: typeof StorageV1RenderImagePublicSplatRoute
@@ -615,6 +628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicUploadImagesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/veno-webhook': {
+      id: '/api/public/veno-webhook'
+      path: '/api/public/veno-webhook'
+      fullPath: '/api/public/veno-webhook'
+      preLoaderRoute: typeof ApiPublicVenoWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/storage/v1/$': {
       id: '/storage/v1/$'
       path: '/storage/v1/$'
@@ -667,6 +687,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicAllowpayWebhookRoute: ApiPublicAllowpayWebhookRoute,
   ApiPublicPayoutbrWebhookRoute: ApiPublicPayoutbrWebhookRoute,
   ApiPublicUploadImagesRoute: ApiPublicUploadImagesRoute,
+  ApiPublicVenoWebhookRoute: ApiPublicVenoWebhookRoute,
   StorageV1SplatRoute: StorageV1SplatRoute,
   StorageV1ObjectPublicSplatRoute: StorageV1ObjectPublicSplatRoute,
   StorageV1RenderImagePublicSplatRoute: StorageV1RenderImagePublicSplatRoute,

@@ -122,10 +122,10 @@ export const Route = createFileRoute("/api/public/payoutbr-webhook")({
             ).data?.id;
           if (paidOrderId) {
             try {
-              const { sendOrderPaidEmail } = await import("@/lib/order-email");
-              await sendOrderPaidEmail(paidOrderId);
+              const { onPaymentConfirmed } = await import("@/lib/track7-sync");
+              await onPaymentConfirmed(paidOrderId);
             } catch (e) {
-              console.error("order confirmation email failed", e);
+              console.error("onPaymentConfirmed failed", e);
             }
           }
         }

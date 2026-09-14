@@ -5,13 +5,12 @@ import {
 } from "@/lib/pix-qrcode";
 import { paymentDescription } from "@/lib/payment-description";
 import {
-  allowPayCreatePix,
-  allowPayPaymentStatus,
-  allowPayWebhookSecret,
-  encodeAllowPayRouteNote,
-  mapAllowPayStatus,
-  parseAllowPayRoute,
-} from "@/lib/allowpay";
+  encodeVenoProviderNote,
+  isVenoOrder,
+  mapVenoStatus,
+  venoCreatePix,
+  venoPaymentStatus,
+} from "@/lib/veno";
 
 type SupabaseAdmin = Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"];
 
@@ -316,32 +315,36 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
         .eq("id", order.id);
       throw new Error("Informe um celular válido com DDD para pagar com Pix.");
     }
-    if (taxId.length !== 11) {
+    if (taxId.length !== 11 && taxId.length !== 14) {
       await supabaseAdmin
         .from("orders")
         .update({
           payment_status: "cancelled",
           status: "cancelled",
-          notes: [data.notes, "CPF inválido para Pix"].filter(Boolean).join(" | "),
+          notes: [data.notes, "CPF/CNPJ inválido para Pix"].filter(Boolean).join(" | "),
         })
         .eq("id", order.id);
-      throw new Error("Informe um CPF válido para pagar com Pix.");
+      throw new Error("Informe um CPF ou CNPJ válido para pagar com Pix.");
     }
 
-    const webhookSecret = allowPayWebhookSecret();
-    let pix: Awaited<ReturnType<typeof allowPayCreatePix>>;
+    const addr = data.shippingAddress ?? {};
+    let pix: Awaited<ReturnType<typeof venoCreatePix>>;
     try {
-      pix = await allowPayCreatePix({
+      pix = await venoCreatePix({
         amountCents,
         description,
-        customer: {
+        externalId: order.id,
+        callbackUrl: `${siteOrigin()}/api/public/veno-webhook`,
+        payer: {
           name: data.customer.name,
           email: data.customer.email,
-          cellphone,
-          taxId,
+          document: taxId,
+          phone: cellphone,
+          address: [addr.street, addr.number].filter(Boolean).join(", ") || undefined,
+          city: typeof addr.city === "string" ? addr.city : undefined,
+          state: typeof addr.state === "string" ? addr.state : undefined,
+          zipCode: String(addr.zip ?? addr.zipCode ?? "").replace(/\D/g, "") || undefined,
         },
-        webhookUrl: `${siteOrigin()}/api/public/allowpay-webhook`,
-        webhookSecret,
       });
     } catch (e) {
       await supabaseAdmin
@@ -349,34 +352,36 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
         .update({
           payment_status: "cancelled",
           status: "cancelled",
-          notes: [data.notes, "Falha ao gerar Pix na AllowPay"].filter(Boolean).join(" | "),
+          notes: [data.notes, "Falha ao gerar Pix na Veno"].filter(Boolean).join(" | "),
         })
         .eq("id", order.id);
       throw e;
     }
 
-    const qrCode = pix.pixCode;
-    const qrImage = await buildPixQrDataUrl(qrCode, pix.pixQrCode);
-    const expiration = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    const qrCode = pix.pixCopyPaste;
+    const qrImage = await buildPixQrDataUrl(qrCode, pix.qrImage);
+    const expiration =
+      pix.expiresAt ?? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
     const { newPixReceiptToken } = await import("@/lib/pix-receipt.functions");
     const receiptToken = newPixReceiptToken();
 
     await supabaseAdmin
       .from("orders")
       .update({
-        pagou_transaction_id: pix.txid,
+        // UUID do depósito Veno — usado no GET /api/v1/pix/{id}/status e no webhook.
+        pagou_transaction_id: pix.id,
         payment_status: "pending",
         pix_qr_code: qrCode,
         pix_expiration: expiration,
         pix_receipt_token: receiptToken,
-        notes: encodeAllowPayRouteNote(data.notes, pix.route),
+        notes: encodeVenoProviderNote(data.notes),
       })
       .eq("id", order.id);
 
     return {
       orderId: order.id,
       orderNumber: order.order_number,
-      transactionId: pix.txid,
+      transactionId: pix.id,
       status: "pending" as const,
       qrCode,
       qrImage,
@@ -406,12 +411,11 @@ export const getPayoutStatus = createServerFn({ method: "POST" })
       return { status: order?.payment_status ?? "pending", orderStatus: order?.status ?? "pending" };
     }
 
-    const allowRoute = parseAllowPayRoute(order.notes);
     let mapped: "pending" | "confirmed" | "cancelled" | "refunded";
 
-    if (order.payment_method === "pix" && allowRoute) {
-      const allowStatus = await allowPayPaymentStatus(order.pagou_transaction_id, allowRoute);
-      mapped = mapAllowPayStatus(allowStatus);
+    if (order.payment_method === "pix" && isVenoOrder(order.notes)) {
+      const venoStatus = await venoPaymentStatus(order.pagou_transaction_id);
+      mapped = mapVenoStatus(venoStatus);
     } else {
       const tx = await payoutbrFetch(`/transactions/${order.pagou_transaction_id}`);
       mapped = mapStatus(tx?.status);
@@ -428,10 +432,10 @@ export const getPayoutStatus = createServerFn({ method: "POST" })
 
     if (mapped === "confirmed" && order.status === "pending") {
       try {
-        const { sendOrderPaidEmail } = await import("@/lib/order-email");
-        await sendOrderPaidEmail(data.orderId);
+        const { onPaymentConfirmed } = await import("@/lib/track7-sync");
+        await onPaymentConfirmed(data.orderId);
       } catch (e) {
-        console.error("order confirmation email failed", e);
+        console.error("onPaymentConfirmed failed", e);
       }
     }
 

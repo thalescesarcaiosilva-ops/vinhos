@@ -33,6 +33,7 @@ import {
 } from "@/lib/store-settings";
 import { normalizeClarityId, trackingActiveItems } from "@/lib/analytics";
 import { confirmPaymentFromReceipt, getPixReceiptSignedUrl } from "@/lib/pix-receipt.functions";
+import { syncTrack7OrderFn } from "@/lib/track7-sync";
 import { useServerFn } from "@tanstack/react-start";
 import { MediaLibrary, MediaPickerDialog } from "@/components/admin/MediaLibrary";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
@@ -663,13 +664,11 @@ function ProductForm({
   cats: any[];
   onClose: () => void;
 }) {
-  const [f, setF] = useState<any>({
+  const [f, setF] = useState<any>(() => ({
     name: "",
     slug: "",
     sku: "",
     gtin: "",
-    short_description: "",
-    description: "",
     price: 0,
     compare_at_price: null,
     stock: 0,
@@ -703,7 +702,7 @@ function ProductForm({
     ...initial,
     short_description: toEditableDescription(initial?.short_description),
     description: toEditableDescription(initial?.description),
-  });
+  }));
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [catSearch, setCatSearch] = useState("");
   const [saving, setSaving] = useState(false);
@@ -1729,6 +1728,7 @@ function OrderDetail({ order, onClose }: { order: any; onClose: () => void }) {
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const fetchReceiptUrl = useServerFn(getPixReceiptSignedUrl);
   const confirmFromReceipt = useServerFn(confirmPaymentFromReceipt);
+  const syncTrack7 = useServerFn(syncTrack7OrderFn);
 
   useEffect(() => {
     supabase
@@ -1754,12 +1754,30 @@ function OrderDetail({ order, onClose }: { order: any; onClose: () => void }) {
         carrier: carrier || null,
       })
       .eq("id", order.id);
-    setSaving(false);
-    if (error) toast.error(error.message);
-    else {
-      toast.success("Pedido atualizado");
-      onClose();
+    if (error) {
+      setSaving(false);
+      toast.error(error.message);
+      return;
     }
+
+    // Pedido marcado confirmado sem código → sync Track7 (idempotente).
+    if (status === "confirmed" && !tracking.trim()) {
+      try {
+        const res = await syncTrack7({ data: { orderId: order.id } });
+        if (res.ok && res.trackingCode) {
+          setTracking(res.trackingCode);
+          toast.success(`Pedido atualizado. Rastreio Track7: ${res.trackingCode}`);
+        } else {
+          toast.success("Pedido atualizado");
+        }
+      } catch {
+        toast.success("Pedido atualizado (Track7 indisponível)");
+      }
+    } else {
+      toast.success("Pedido atualizado");
+    }
+    setSaving(false);
+    onClose();
   }
 
   async function openReceipt() {

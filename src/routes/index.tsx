@@ -39,6 +39,7 @@ import catRoses from "@/assets/cat-roses.webp";
 import catEspumantes from "@/assets/cat-espumantes.webp";
 import catKits from "@/assets/cat-kits.webp";
 import catSemAlcool from "@/assets/cat-semalcool.webp";
+import { withRetry } from "@/lib/with-retry";
 
 const LOCAL_CATEGORY_IMAGES: Record<string, string> = {
   "so-vinhos": catTintos,
@@ -75,26 +76,31 @@ type HomeBanner = {
 type CategoryTile = { slug: string; label: string; img: string };
 
 async function fetchHomeBanners(): Promise<HomeBanner[]> {
-  const { data, error } = await supabase
-    .from("banners")
-    .select("*")
-    .eq("is_active", true)
-    .in("position", [...HOME_BANNER_POSITIONS])
-    .order("sort_order");
-  if (error) throw error;
-  return (data ?? []) as HomeBanner[];
+  return withRetry(async () => {
+    const { data, error } = await supabase
+      .from("banners")
+      .select("*")
+      .eq("is_active", true)
+      .in("position", [...HOME_BANNER_POSITIONS])
+      .order("sort_order");
+    if (error) throw error;
+    return (data ?? []) as HomeBanner[];
+  });
 }
 
 async function fetchCategoryTiles(): Promise<CategoryTile[]> {
-  const { data, error } = await supabase
-    .from("categories")
-    .select(
-      "slug, name, banner_image, product_categories(product_id, products!inner(is_active))",
-    )
-    .in("slug", [...HOME_CATEGORY_SLUGS])
-    .eq("is_active", true)
-    .eq("product_categories.products.is_active", true);
-  if (error) throw error;
+  const data = await withRetry(async () => {
+    const { data, error } = await supabase
+      .from("categories")
+      .select(
+        "slug, name, banner_image, product_categories(product_id, products!inner(is_active))",
+      )
+      .in("slug", [...HOME_CATEGORY_SLUGS])
+      .eq("is_active", true)
+      .eq("product_categories.products.is_active", true);
+    if (error) throw error;
+    return data;
+  });
   const order = new Map<string, number>(HOME_CATEGORY_SLUGS.map((slug, i) => [slug, i]));
   return (data ?? [])
     .filter((category) => (category.product_categories?.length ?? 0) > 0)
@@ -118,20 +124,22 @@ async function fetchHomeProducts(filter?: {
   categorySlug?: string;
   limit?: number;
 }): Promise<Product[]> {
-  const baseCols =
-    "id, name, slug, price, compare_at_price, image_url, country, grape, rating, category_id, featured, best_seller";
-  let q = filter?.categorySlug
-    ? supabase
-        .from("products")
-        .select(baseCols + ", product_categories!inner(category_id, categories!inner(slug))")
-        .eq("is_active", true)
-        .eq("product_categories.categories.slug", filter.categorySlug)
-    : supabase.from("products").select(baseCols).eq("is_active", true);
-  if (filter?.bestSeller) q = q.eq("best_seller", true);
-  q = q.limit(filter?.limit ?? 8);
-  const { data, error } = await q;
-  if (error) throw error;
-  return (data ?? []) as unknown as Product[];
+  return withRetry(async () => {
+    const baseCols =
+      "id, name, slug, price, compare_at_price, image_url, country, grape, rating, category_id, featured, best_seller";
+    let q = filter?.categorySlug
+      ? supabase
+          .from("products")
+          .select(baseCols + ", product_categories!inner(category_id, categories!inner(slug))")
+          .eq("is_active", true)
+          .eq("product_categories.categories.slug", filter.categorySlug)
+      : supabase.from("products").select(baseCols).eq("is_active", true);
+    if (filter?.bestSeller) q = q.eq("best_seller", true);
+    q = q.limit(filter?.limit ?? 8);
+    const { data, error } = await q;
+    if (error) throw error;
+    return (data ?? []) as unknown as Product[];
+  });
 }
 
 function pickBanner(banners: HomeBanner[], position: string) {

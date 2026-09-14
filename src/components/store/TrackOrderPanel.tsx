@@ -63,7 +63,7 @@ export function TrackOrderPanel({ initialCode = "", embedded = false }: Props) {
     void buscar();
   }
 
-  const timeline = [...(result?.events ?? [])].reverse();
+  const timeline = result?.events ?? [];
   const sectionSpacing = embedded ? "mt-6" : "mt-8";
 
   return (

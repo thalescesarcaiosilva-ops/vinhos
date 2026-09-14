@@ -84,10 +84,10 @@ export const Route = createFileRoute("/api/public/allowpay-webhook")({
           await supabaseAdmin.from("orders").update(update).eq("id", order.id);
           if (mapped === "confirmed" && order.status === "pending") {
             try {
-              const { sendOrderPaidEmail } = await import("@/lib/order-email");
-              await sendOrderPaidEmail(order.id);
+              const { onPaymentConfirmed } = await import("@/lib/track7-sync");
+              await onPaymentConfirmed(order.id);
             } catch (e) {
-              console.error("order confirmation email failed", e);
+              console.error("onPaymentConfirmed failed", e);
             }
           }
         }

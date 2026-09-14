@@ -88,19 +88,28 @@ async function assertUploadAccess(
   throw new Error("Você não tem permissão para enviar comprovante neste pedido.");
 }
 
-/** Confirma pagamento como a gateway: status + payment_status + e-mail. */
+/** Confirma pagamento como a gateway: status + payment_status + Track7 + e-mail. */
 export async function confirmOrderPaymentLikeGateway(
   supabaseAdmin: SupabaseAdmin,
   orderId: string,
 ): Promise<void> {
   const { data: order, error } = await supabaseAdmin
     .from("orders")
-    .select("id, status, payment_status")
+    .select("id, status, payment_status, tracking_code")
     .eq("id", orderId)
     .maybeSingle();
   if (error || !order) throw new Error("Pedido não encontrado.");
 
-  if (order.status === "confirmed" && (order.payment_status === "confirmed" || order.payment_status === "paid")) {
+  const alreadyPaid =
+    order.status === "confirmed" &&
+    (order.payment_status === "confirmed" || order.payment_status === "paid");
+
+  if (alreadyPaid) {
+    // Backfill: pago sem código → tenta sync de novo (idempotente).
+    if (!order.tracking_code) {
+      const { syncOrderToTrack7 } = await import("@/lib/track7-sync");
+      await syncOrderToTrack7(orderId);
+    }
     return;
   }
 
@@ -114,10 +123,10 @@ export async function confirmOrderPaymentLikeGateway(
   if (updErr) throw new Error(updErr.message);
 
   try {
-    const { sendOrderPaidEmail } = await import("@/lib/order-email");
-    await sendOrderPaidEmail(orderId);
+    const { onPaymentConfirmed } = await import("@/lib/track7-sync");
+    await onPaymentConfirmed(orderId);
   } catch (e) {
-    console.error("confirmOrderPaymentLikeGateway: email failed", e);
+    console.error("confirmOrderPaymentLikeGateway: onPaymentConfirmed failed", e);
   }
 }
 

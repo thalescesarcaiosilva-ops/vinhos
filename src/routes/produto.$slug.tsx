@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
@@ -65,6 +65,7 @@ import { StoreContainer } from "@/components/store/StoreContainer";
 import { ProductHtmlContent } from "@/components/store/ProductHtmlContent";
 import { PixDiscountBanner } from "@/components/store/PixDiscountBanner";
 import { BenefitsBar } from "@/components/store/BenefitsBar";
+import { withRetry } from "@/lib/with-retry";
 
 type VideoInfo = {
   kind: "youtube" | "vimeo" | "file";
@@ -104,29 +105,60 @@ function parseVideo(url: string | null | undefined): VideoInfo | null {
 }
 
 async function fetchProductBySlug(slug: string) {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .maybeSingle();
-  if (error) throw error;
+  const data = await withRetry(async () => {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("slug", slug)
+      .eq("is_active", true)
+      .maybeSingle();
+    if (error) throw error;
+    return data;
+  });
   if (!data) return data;
 
-  const { count, error: reviewsError } = await supabase
-    .from("reviews")
-    .select("id", { count: "exact", head: true })
-    .eq("product_id", data.id)
-    .eq("is_approved", true);
-  if (reviewsError) throw reviewsError;
+  // Contagem de reviews é opcional — falha aqui não pode derrubar a PDP (Google Merchant).
+  let approved_review_count = 0;
+  try {
+    const { count, error: reviewsError } = await supabase
+      .from("reviews")
+      .select("id", { count: "exact", head: true })
+      .eq("product_id", data.id)
+      .eq("is_approved", true);
+    if (!reviewsError) approved_review_count = count ?? 0;
+  } catch {
+    /* ignore */
+  }
 
-  return { ...data, approved_review_count: count ?? 0 };
+  return { ...data, approved_review_count };
+}
+
+function legacySlugWithoutSuffix(slug: string): string | null {
+  // Slugs antigos do feed/Merchant após limpeza de sufixo "-2".
+  if (!slug.endsWith("-2") || slug.length <= 2) return null;
+  return slug.slice(0, -2);
 }
 
 export const Route = createFileRoute("/produto/$slug")({
   component: ProductPage,
   loader: async ({ params, context }) => {
-    const product = await fetchProductBySlug(params.slug);
+    let product = await fetchProductBySlug(params.slug);
+
+    // Redirect 301-like: /produto/foo-2 → /produto/foo quando o slug novo existe.
+    if (!product) {
+      const base = legacySlugWithoutSuffix(params.slug);
+      if (base) {
+        const alt = await fetchProductBySlug(base);
+        if (alt) {
+          throw redirect({
+            to: "/produto/$slug",
+            params: { slug: base },
+            replace: true,
+          });
+        }
+      }
+    }
+
     if (!product) throw notFound();
     context.queryClient.setQueryData(["product", params.slug], product);
     return { product };
@@ -274,16 +306,7 @@ function ProductPage() {
 
   const q = useQuery({
     queryKey: ["product", slug],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("slug", slug)
-        .eq("is_active", true)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => fetchProductBySlug(slug),
     initialData: loaderProduct,
     staleTime: 60_000,
   });
@@ -292,14 +315,19 @@ function ProductPage() {
     queryKey: ["reviews-count", q.data?.id],
     enabled: Boolean(q.data?.id),
     queryFn: async () => {
-      const { count, error } = await supabase
-        .from("reviews")
-        .select("id", { count: "exact", head: true })
-        .eq("product_id", q.data!.id)
-        .eq("is_approved", true);
-      if (error) throw error;
-      return count ?? 0;
+      try {
+        const { count, error } = await supabase
+          .from("reviews")
+          .select("id", { count: "exact", head: true })
+          .eq("product_id", q.data!.id)
+          .eq("is_approved", true);
+        if (error) return 0;
+        return count ?? 0;
+      } catch {
+        return 0;
+      }
     },
+    initialData: loaderProduct?.approved_review_count ?? 0,
   });
 
   // Produto pode já vir do loader SSR enquanto store_settings ainda carrega no client.

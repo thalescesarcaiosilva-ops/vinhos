@@ -16,7 +16,6 @@ function track7ApiBase(): string {
 function track7ApiKey(): string {
   const key =
     serverEnv("TRACK7_API_KEY")?.trim() ||
-    serverEnv("VITE_TRACK7_TOKEN")?.trim() ||
     "";
   if (!key) {
     throw new Error("TRACK7_API_KEY não configurada no servidor.");
@@ -69,6 +68,8 @@ async function track7Fetch(path: string): Promise<Track7TrackingResult> {
 
   const url = `${track7ApiBase()}${path.startsWith("/") ? path : `/${path}`}`;
   let res: Response;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12_000);
   try {
     res = await fetch(url, {
       method: "GET",
@@ -76,9 +77,13 @@ async function track7Fetch(path: string): Promise<Track7TrackingResult> {
         Accept: "application/json",
         "X-API-Key": apiKey,
       },
+      signal: controller.signal,
+      cache: "no-store",
     });
   } catch {
     return { ok: false, error: "Falha de conexão com a Track7. Tente novamente.", status: 502 };
+  } finally {
+    clearTimeout(timeout);
   }
 
   if (res.status === 401) {
@@ -109,6 +114,12 @@ async function track7Fetch(path: string): Promise<Track7TrackingResult> {
   if (!data) {
     return { ok: false, error: "Não encontramos dados de rastreio para este código.", status: 404 };
   }
+  // Timeline do mais novo para o mais antigo.
+  data.events = [...data.events].sort((a, b) => {
+    const ta = Date.parse(a.date) || 0;
+    const tb = Date.parse(b.date) || 0;
+    return tb - ta;
+  });
   return { ok: true, data };
 }
 
