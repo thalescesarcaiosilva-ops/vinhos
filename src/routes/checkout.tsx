@@ -5,7 +5,16 @@ import { brl } from "@/lib/format";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CheckCircle2, Tag, X, Copy, Loader2, CreditCard, QrCode, Pencil, Check, ShieldCheck, ArrowLeft } from "lucide-react";
-import { maskCEP, maskPhone, maskCPF, fetchAddressByCEP, isAdultBirthDate } from "@/lib/validation";
+import {
+  maskCEP,
+  maskPhone,
+  maskCPF,
+  maskBirthDate,
+  formatBirthDateDisplay,
+  fetchAddressByCEP,
+  isAdultBirthDate,
+  ageFromBirthDate,
+} from "@/lib/validation";
 import { calcShipping, type ShippingQuote } from "@/lib/shipping";
 import { validateCoupon } from "@/lib/coupon";
 import { useStoreSettings, installmentPlan } from "@/lib/store-settings";
@@ -14,7 +23,7 @@ import { createCheckoutPix, getPayoutStatus } from "@/lib/payoutbr.functions";
 import { PayoutCardForm } from "@/components/store/PayoutCardForm";
 import { GoogleAdsConversion } from "@/components/store/GoogleAdsConversion";
 import { PixReceiptUpload } from "@/components/store/PixReceiptUpload";
-import { CheckoutLegalConsent, CheckoutPolicyLinks } from "@/components/store/CheckoutLegalConsent";
+import { CheckoutPolicyLinks } from "@/components/store/CheckoutLegalConsent";
 import QRCode from "qrcode";
 import { toSiteImageUrl } from "@/lib/image-url";
 import { STORE } from "@/lib/settings";
@@ -71,7 +80,9 @@ function Checkout() {
       name: f.name || (user.user_metadata?.full_name as string | undefined) || (user.user_metadata?.name as string | undefined) || "",
       birthDate:
         f.birthDate ||
-        (typeof user.user_metadata?.birth_date === "string" ? user.user_metadata.birth_date : "") ||
+        (typeof user.user_metadata?.birth_date === "string"
+          ? formatBirthDateDisplay(user.user_metadata.birth_date)
+          : "") ||
         "",
     }));
   }, [user]);
@@ -80,8 +91,6 @@ function Checkout() {
   const [couponInput, setCouponInput] = useState("");
   const [coupon, setCoupon] = useState<{ code: string; discount: number } | null>(null);
   const [couponLoading, setCouponLoading] = useState(false);
-  const [legalConsent, setLegalConsent] = useState(false);
-
   const payments = settings?.payments;
   const pixEnabled = payments?.pixEnabled ?? true;
   const cardEnabled = payments?.cardEnabled ?? true;
@@ -316,22 +325,24 @@ function Checkout() {
   }
 
   // Step gates
+  const birthDigits = form.birthDate.replace(/\D/g, "");
+  const birthComplete = birthDigits.length === 8 && ageFromBirthDate(form.birthDate) !== null;
   const isAdult = isAdultBirthDate(form.birthDate);
   const step1Valid = !!(
     form.name &&
     /\S+@\S+/.test(form.email) &&
     form.phone.replace(/\D/g, "").length >= 10 &&
-    form.birthDate &&
+    birthComplete &&
     isAdult
   );
   const step2Valid = step1Valid && !!(form.zip && form.street && form.number && form.neighborhood && form.city && form.state && quotes.length > 0);
 
   const goStep2 = () => {
-    if (!form.birthDate) {
-      toast.error("Informe a data de nascimento");
+    if (!birthComplete) {
+      toast.error("Informe a data de nascimento completa (DD/MM/AAAA)");
       return;
     }
-    if (!isAdultBirthDate(form.birthDate)) {
+    if (!isAdult) {
       toast.error("A venda de bebidas alcoólicas é proibida para menores de 18 anos");
       return;
     }
@@ -348,10 +359,6 @@ function Checkout() {
     if (!isAdultBirthDate(form.birthDate)) {
       toast.error("A venda de bebidas alcoólicas é proibida para menores de 18 anos");
       setStep(1);
-      return;
-    }
-    if (!legalConsent) {
-      toast.error("Marque que concorda com as políticas da loja para continuar");
       return;
     }
     if (!form.doc || form.doc.replace(/\D/g, "").length < 11) {
@@ -448,8 +455,8 @@ function Checkout() {
           if (s === 3 && step2Valid) setStep(3);
         }} step1Valid={step1Valid} step2Valid={step2Valid} />
         <CheckoutPolicyLinks />
-        <form onSubmit={submit} className="grid gap-6 lg:grid-cols-[1fr_400px]">
-          <div className="space-y-5">
+        <form onSubmit={submit} className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
+          <div className="min-w-0 space-y-5">
             {/* STEP 1 — Identificação */}
             <StepCard n={1} title="Identificação" subtitle="Preencha seus dados para envio do pedido." active={step === 1} done={step > 1} onEdit={() => setStep(1)}>
               {step === 1 ? (
@@ -492,25 +499,45 @@ function Checkout() {
                     </div>
                   </Field>
 
-                  <Field label="Data de nascimento">
-                    <input
-                      required
-                      type="date"
-                      value={form.birthDate}
-                      onChange={upd("birthDate")}
-                      max={new Date().toISOString().slice(0, 10)}
-                      className={inp}
-                      autoComplete="bday"
-                    />
-                    <p className="mt-1.5 text-xs text-muted-foreground">
-                      Venda proibida para menores de 18 anos. Ao continuar, você declara ser maior de idade.
-                    </p>
-                    {form.birthDate && !isAdultBirthDate(form.birthDate) && (
-                      <p className="mt-1.5 text-xs font-medium text-destructive">
-                        Não é possível concluir a compra: é necessário ter 18 anos ou mais.
-                      </p>
-                    )}
-                  </Field>
+                  <div className="min-w-0 space-y-2">
+                    <Field label="Data de nascimento">
+                      <input
+                        required
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="bday"
+                        placeholder="DD/MM/AAAA"
+                        maxLength={10}
+                        value={form.birthDate}
+                        onChange={(e) =>
+                          setForm((f) => ({ ...f, birthDate: maskBirthDate(e.target.value) }))
+                        }
+                        className={`${inp} min-w-0 max-w-full tabular-nums`}
+                        aria-describedby="checkout-age-hint"
+                        aria-invalid={
+                          birthComplete && !isAdult ? true : undefined
+                        }
+                      />
+                    </Field>
+                    <div
+                      id="checkout-age-hint"
+                      className="min-w-0 break-words rounded-md border border-border/80 bg-muted/40 px-3 py-2.5 text-xs leading-snug text-muted-foreground"
+                    >
+                      {birthComplete && isAdult ? (
+                        <span className="text-foreground">
+                          Confirmado: {ageFromBirthDate(form.birthDate)} anos — venda liberada para maiores de 18.
+                        </span>
+                      ) : birthComplete && !isAdult ? (
+                        <span className="font-medium text-destructive">
+                          Não é possível concluir a compra: é necessário ter 18 anos ou mais.
+                        </span>
+                      ) : (
+                        <span>
+                          Digite sua data (ex.: 15/03/1990). Venda proibida para menores de 18 anos.
+                        </span>
+                      )}
+                    </div>
+                  </div>
 
                   {pixEnabled && (payments?.pixDiscount ?? 0) > 0 && (
                     <div className="flex items-center gap-3 rounded-md border border-primary/20 bg-primary/5 px-4 py-3 text-sm">
@@ -649,7 +676,6 @@ function Checkout() {
                               .
                             </p>
                           </div>
-                          <CheckoutLegalConsent checked={legalConsent} onChange={setLegalConsent} />
                           <button
                             type="button"
                             disabled={!pixEnabled}
@@ -694,10 +720,9 @@ function Checkout() {
                           <Field label="CPF/CNPJ">
                             <input required value={form.doc} onChange={e => setForm(f => ({ ...f, doc: maskCPF(e.target.value) }))} placeholder="000.000.000-00" className={inp} />
                           </Field>
-                          <CheckoutLegalConsent checked={legalConsent} onChange={setLegalConsent} />
                           <button
                             type="submit"
-                            disabled={loading || !legalConsent}
+                            disabled={loading}
                             className={btnPrimary}
                           >
                             {loading ? "Gerando Pix..." : `Pagar ${brl(total)}`}
@@ -835,25 +860,25 @@ function StepCard({
 }) {
   const muted = disabled && !active && !done;
   return (
-    <section className={`overflow-hidden rounded-lg border bg-card transition ${active ? "border-primary/30 shadow-sm" : "border-border"}`}>
-      <header className={`flex items-start justify-between gap-4 px-6 py-5 ${active ? "border-b border-border bg-muted/30" : ""}`}>
-        <div className="flex items-start gap-3">
+    <section className={`min-w-0 overflow-hidden rounded-lg border bg-card transition ${active ? "border-primary/30 shadow-sm" : "border-border"}`}>
+      <header className={`flex min-w-0 items-start justify-between gap-3 px-4 py-4 sm:gap-4 sm:px-6 sm:py-5 ${active ? "border-b border-border bg-muted/30" : ""}`}>
+        <div className="flex min-w-0 items-start gap-3">
           <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${done ? "bg-primary text-primary-foreground" : muted ? "bg-muted text-muted-foreground" : active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
             {done ? <Check className="h-4 w-4" /> : n}
           </div>
-          <div>
+          <div className="min-w-0">
             <h2 className={`font-serif text-base font-bold uppercase tracking-wider ${muted ? "text-muted-foreground" : "text-foreground"}`}>{title}</h2>
             {subtitle && active && <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>}
           </div>
         </div>
         {done && onEdit && (
-          <button type="button" onClick={onEdit} className="flex items-center gap-1 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground transition hover:border-primary hover:text-primary">
+          <button type="button" onClick={onEdit} className="flex shrink-0 items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-semibold text-foreground transition hover:border-primary hover:text-primary sm:px-3">
             <Pencil className="h-3.5 w-3.5" /> Editar
           </button>
         )}
       </header>
       {(active || done) && (
-        <div className="px-6 py-5">{children}</div>
+        <div className="min-w-0 px-4 py-4 sm:px-6 sm:py-5">{children}</div>
       )}
     </section>
   );
@@ -861,7 +886,7 @@ function StepCard({
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className="block">
+    <label className="block min-w-0">
       <span className="mb-1.5 block text-xs font-semibold text-foreground">{label}</span>
       {children}
     </label>

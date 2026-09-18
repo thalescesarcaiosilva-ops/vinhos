@@ -31,15 +31,55 @@ export function maskCEP(v: string): string {
   return v.replace(/\D/g, "").slice(0, 8).replace(/(\d{5})(\d)/, "$1-$2");
 }
 
-/** Idade em anos completos a partir de YYYY-MM-DD (fuso local). */
-export function ageFromBirthDate(isoDate: string): number | null {
-  const raw = isoDate.trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) return null;
-  const [y, m, d] = raw.split("-").map(Number);
+/** Máscara de digitação DD/MM/AAAA (mobile-friendly). */
+export function maskBirthDate(v: string): string {
+  const d = v.replace(/\D/g, "").slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
+}
+
+/** Converte YYYY-MM-DD → DD/MM/AAAA para exibir no campo digitável. */
+export function formatBirthDateDisplay(raw: string): string {
+  const s = raw.trim();
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const [y, m, d] = s.split("-");
+    return `${d}/${m}/${y}`;
+  }
+  return maskBirthDate(s);
+}
+
+type BirthParts = { y: number; m: number; d: number };
+
+function parseBirthParts(raw: string): BirthParts | null {
+  const s = raw.trim();
+  let y: number;
+  let m: number;
+  let d: number;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    [y, m, d] = s.split("-").map(Number) as [number, number, number];
+  } else {
+    const digits = s.replace(/\D/g, "");
+    if (digits.length !== 8) return null;
+    d = Number(digits.slice(0, 2));
+    m = Number(digits.slice(2, 4));
+    y = Number(digits.slice(4, 8));
+  }
+  if (!y || !m || !d) return null;
   const birth = new Date(y, m - 1, d);
   if (Number.isNaN(birth.getTime())) return null;
   if (birth.getFullYear() !== y || birth.getMonth() !== m - 1 || birth.getDate() !== d) return null;
+  return { y, m, d };
+}
+
+/** Idade em anos completos a partir de YYYY-MM-DD ou DD/MM/AAAA (fuso local). */
+export function ageFromBirthDate(raw: string): number | null {
+  const parts = parseBirthParts(raw);
+  if (!parts) return null;
+  const birth = new Date(parts.y, parts.m - 1, parts.d);
   const today = new Date();
+  if (birth > today) return null;
   let age = today.getFullYear() - birth.getFullYear();
   const beforeBirthday =
     today.getMonth() < birth.getMonth() ||
@@ -48,8 +88,8 @@ export function ageFromBirthDate(isoDate: string): number | null {
   return age;
 }
 
-export function isAdultBirthDate(isoDate: string, minAge = 18): boolean {
-  const age = ageFromBirthDate(isoDate);
+export function isAdultBirthDate(raw: string, minAge = 18): boolean {
+  const age = ageFromBirthDate(raw);
   return age !== null && age >= minAge;
 }
 
