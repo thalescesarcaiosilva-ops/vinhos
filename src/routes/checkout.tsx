@@ -260,6 +260,19 @@ function Checkout() {
     return () => clearInterval(id);
   }, [pix, paid, pollStatus, clear]);
 
+  // Ao gerar Pix / confirmar pagamento, sobe a tela (mobile costuma ficar no rodapé do formulário).
+  useEffect(() => {
+    if (!pix && !paid) return;
+    const jump = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+    jump();
+    const t = window.setTimeout(jump, 50);
+    return () => window.clearTimeout(t);
+  }, [pix?.orderId, paid?.orderId]);
+
   if (paid) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
@@ -298,15 +311,34 @@ function Checkout() {
           <div className="mt-6 space-y-2 text-left">
             <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pix copia e cola</label>
             <div className="flex gap-2">
-              <input readOnly value={pix.qrCode} className="w-full rounded-full border border-border bg-card px-4 py-2 text-xs" />
+              <input readOnly value={pix.qrCode} className="min-w-0 flex-1 rounded-full border border-border bg-card px-4 py-2 text-xs" />
               <button
                 type="button"
                 onClick={() => { navigator.clipboard.writeText(pix.qrCode!); toast.success("Código copiado"); }}
-                className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90"
+                className="shrink-0 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90"
+                aria-label="Copiar código Pix"
               >
                 <Copy className="h-4 w-4" />
               </button>
             </div>
+            <ol className="mt-4 space-y-2.5 rounded-lg border border-border bg-muted/40 px-4 py-3.5 text-left text-sm text-foreground">
+              <li className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">1</span>
+                <span>Toque em <strong>Copiar</strong> para copiar o código Pix.</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">2</span>
+                <span>Abra o app do seu banco e escolha <strong>Pix → Pix Copia e Cola</strong>.</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">3</span>
+                <span>Cole o código, confira o valor e confirme o pagamento.</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">4</span>
+                <span>Volte aqui — a confirmação aparece em poucos minutos.</span>
+              </li>
+            </ol>
           </div>
         )}
         <p className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">

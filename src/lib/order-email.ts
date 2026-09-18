@@ -59,7 +59,11 @@ function formatAddress(addr: Record<string, unknown> | null): string {
   const city = String(addr.city ?? "");
   const state = String(addr.state ?? "");
   const zip = String(addr.zip ?? addr.zipCode ?? "");
-  return `${street}, ${number}${complement}<br/>${neighborhood}<br/>${city}/${state} · CEP ${zip}`;
+  return [
+    escapeHtml(`${street}, ${number}${complement}`),
+    escapeHtml(neighborhood),
+    escapeHtml(`${city}/${state} · CEP ${zip}`),
+  ].join("<br/>");
 }
 
 function buildOrderEmailHtml(order: OrderEmailPayload): string {
@@ -73,17 +77,22 @@ function buildOrderEmailHtml(order: OrderEmailPayload): string {
           <div style="color:#777;font-size:12px;">Qtd: ${i.quantity}</div>
         </td>
         <td style="padding:10px 0;border-bottom:1px solid #eee;font-size:14px;text-align:right;white-space:nowrap;">
-          ${brl(Number(i.total))}
+          ${escapeHtml(brl(Number(i.total)))}
         </td>
       </tr>`,
     )
     .join("");
 
   const accountUrl = `${siteOrigin()}/minha-conta`;
+  const firstName = escapeHtml(order.customer_name.split(" ")[0] || order.customer_name);
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /></head>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
 <body style="margin:0;padding:0;background:#f7f4f0;font-family:Georgia,'Times New Roman',serif;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f7f4f0;padding:32px 12px;">
     <tr><td align="center">
@@ -91,17 +100,17 @@ function buildOrderEmailHtml(order: OrderEmailPayload): string {
         <tr>
           <td style="background:#5a1a1f;padding:28px 32px;text-align:center;">
             <div style="font-size:22px;font-weight:700;color:#fff;letter-spacing:0.04em;">${escapeHtml(STORE.name.toUpperCase())}</div>
-            <div style="margin-top:6px;font-size:13px;color:#e8c9a0;">Pagamento confirmado</div>
+            <div style="margin-top:6px;font-size:13px;color:#e8c9a0;">${escapeHtml("Pagamento confirmado")}</div>
           </td>
         </tr>
         <tr>
           <td style="padding:28px 32px;">
             <p style="margin:0 0 12px;font-size:16px;color:#1a1a1a;">
-              Olá, <strong>${escapeHtml(order.customer_name.split(" ")[0] || order.customer_name)}</strong>!
+              ${escapeHtml("Olá")}, <strong>${firstName}</strong>!
             </p>
             <p style="margin:0 0 20px;font-size:14px;line-height:1.5;color:#444;">
-              Recebemos o pagamento do seu pedido <strong>#${escapeHtml(order.order_number)}</strong>.
-              Já estamos preparando tudo com carinho.
+              ${escapeHtml("Recebemos o pagamento do seu pedido")} <strong>#${escapeHtml(order.order_number)}</strong>.
+              ${escapeHtml("Já estamos preparando tudo com carinho.")}
             </p>
 
             <table role="presentation" width="100%" style="margin:0 0 20px;">
@@ -111,20 +120,24 @@ function buildOrderEmailHtml(order: OrderEmailPayload): string {
             <table role="presentation" width="100%" style="font-size:14px;color:#444;">
               <tr>
                 <td style="padding:4px 0;">Subtotal</td>
-                <td style="padding:4px 0;text-align:right;">${brl(Number(order.subtotal))}</td>
+                <td style="padding:4px 0;text-align:right;">${escapeHtml(brl(Number(order.subtotal)))}</td>
               </tr>
               ${
                 Number(order.discount) > 0
-                  ? `<tr><td style="padding:4px 0;">Desconto</td><td style="padding:4px 0;text-align:right;">−${brl(Number(order.discount))}</td></tr>`
+                  ? `<tr><td style="padding:4px 0;">Desconto</td><td style="padding:4px 0;text-align:right;">${escapeHtml(`−${brl(Number(order.discount))}`)}</td></tr>`
                   : ""
               }
               <tr>
                 <td style="padding:4px 0;">Frete</td>
-                <td style="padding:4px 0;text-align:right;">${Number(order.shipping) === 0 ? "Grátis" : brl(Number(order.shipping))}</td>
+                <td style="padding:4px 0;text-align:right;">${
+                  Number(order.shipping) === 0
+                    ? escapeHtml("Grátis")
+                    : escapeHtml(brl(Number(order.shipping)))
+                }</td>
               </tr>
               <tr>
                 <td style="padding:12px 0 0;font-size:16px;font-weight:700;color:#5a1a1f;">Total</td>
-                <td style="padding:12px 0 0;text-align:right;font-size:16px;font-weight:700;color:#5a1a1f;">${brl(Number(order.total))}</td>
+                <td style="padding:12px 0 0;text-align:right;font-size:16px;font-weight:700;color:#5a1a1f;">${escapeHtml(brl(Number(order.total)))}</td>
               </tr>
             </table>
 
@@ -142,10 +155,10 @@ function buildOrderEmailHtml(order: OrderEmailPayload): string {
         </tr>
         <tr>
           <td style="padding:18px 32px;background:#faf7f3;font-size:12px;color:#888;text-align:center;line-height:1.5;">
-            Dúvidas? Fale conosco em
+            ${escapeHtml("Dúvidas? Fale conosco em")}
             <a href="mailto:${STORE.email}" style="color:#5a1a1f;">${STORE.email}</a>
-            · <a href="tel:+55${STORE.phoneDigits}" style="color:#5a1a1f;">${STORE.phone}</a><br/>
-            © ${new Date().getFullYear()} ${STORE.name} · Aprecie com moderação
+            ${escapeHtml(" · ")}<a href="tel:+55${STORE.phoneDigits}" style="color:#5a1a1f;">${escapeHtml(STORE.phone)}</a><br/>
+            ${escapeHtml(`© ${new Date().getFullYear()} ${STORE.name} · Aprecie com moderação`)}
           </td>
         </tr>
       </table>
@@ -155,12 +168,37 @@ function buildOrderEmailHtml(order: OrderEmailPayload): string {
 </html>`;
 }
 
+/**
+ * Escapa HTML e converte caracteres não-ASCII em entidades numéricas.
+ * Evita "Olá"/"Já" virarem "Ol�"/"J�" em clientes com encoding quebrado.
+ */
 function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  let out = "";
+  for (const ch of value) {
+    if (ch === "&") {
+      out += "&amp;";
+      continue;
+    }
+    if (ch === "<") {
+      out += "&lt;";
+      continue;
+    }
+    if (ch === ">") {
+      out += "&gt;";
+      continue;
+    }
+    if (ch === '"') {
+      out += "&quot;";
+      continue;
+    }
+    const code = ch.codePointAt(0) ?? 0;
+    if (code > 127) {
+      out += `&#${code};`;
+      continue;
+    }
+    out += ch;
+  }
+  return out;
 }
 
 /**
@@ -215,7 +253,7 @@ export async function sendOrderPaidEmail(orderId: string): Promise<{ sent: boole
     const { error: sendError } = await resend.emails.send({
       from: fromAddress(),
       to: [payload.customer_email],
-      subject: `Pedido #${payload.order_number} confirmado — ${STORE.name}`,
+      subject: `Pedido #${payload.order_number} confirmado - ${STORE.name}`,
       html: buildOrderEmailHtml(payload),
     });
 
