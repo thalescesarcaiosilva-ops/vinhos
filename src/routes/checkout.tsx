@@ -19,7 +19,7 @@ import { calcShipping, type ShippingQuote } from "@/lib/shipping";
 import { validateCoupon } from "@/lib/coupon";
 import { useStoreSettings, installmentPlan } from "@/lib/store-settings";
 import { useServerFn } from "@tanstack/react-start";
-import { createCheckoutPix, getPayoutStatus } from "@/lib/payoutbr.functions";
+import { createCheckoutPix, getPayoutStatus, abandonPendingOrder } from "@/lib/payoutbr.functions";
 import { PayoutCardForm } from "@/components/store/PayoutCardForm";
 import { GoogleAdsConversion } from "@/components/store/GoogleAdsConversion";
 import { PixReceiptUpload } from "@/components/store/PixReceiptUpload";
@@ -59,6 +59,9 @@ type StoredPix = {
   expiresAt: string | null;
   receiptToken: string | null;
   total: number;
+  /** Assinatura do carrinho no momento da criação — usada para detectar se o
+   * cliente mudou de ideia (itens diferentes) entre gerar o Pix e voltar. */
+  cartSignature?: string;
 };
 
 const PENDING_PIX_KEY = "checkout:pendingPix:v1";
@@ -77,6 +80,7 @@ function readStoredPix(): StoredPix | null {
       expiresAt: parsed.expiresAt ?? null,
       receiptToken: parsed.receiptToken ?? null,
       total: parsed.total,
+      cartSignature: typeof parsed.cartSignature === "string" ? parsed.cartSignature : undefined,
     };
   } catch {
     return null;
@@ -103,6 +107,33 @@ function isStillValid(expiresAt: string | null): boolean {
   return Number.isFinite(t) && t > Date.now();
 }
 
+/**
+ * Assinatura simples do carrinho (itens + quantidades) — usada só para
+ * detectar se o carrinho mudou desde que o Pix foi gerado, não é um hash
+ * criptográfico nem precisa ser.
+ */
+function cartSignatureOf(items: { id: string; quantity: number }[]): string {
+  return items
+    .map((i) => `${i.id}:${i.quantity}`)
+    .sort()
+    .join("|");
+}
+
+/**
+ * Um Pix salvo é considerado "a mesma compra de sempre" quando não tem
+ * assinatura de carrinho salva (formato antigo, antes desta correção — nesse
+ * caso preferimos não incomodar o cliente) ou quando o carrinho atual bate
+ * com o que gerou aquele Pix.
+ */
+function matchesCurrentCart(stored: StoredPix, items: { id: string; quantity: number }[]): boolean {
+  if (!stored.cartSignature) return true;
+  return stored.cartSignature === cartSignatureOf(items);
+}
+
+const inp = "w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 transition focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary";
+const btnPrimary = "w-full rounded-md bg-[color:var(--buy)] py-3.5 text-sm font-semibold uppercase tracking-wider text-[color:var(--buy-foreground)] transition hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed";
+const btnSecondary = "w-full rounded-md border border-border bg-background py-3.5 text-sm font-semibold text-foreground transition hover:border-primary hover:text-primary";
+
 function Checkout() {
   const { items, subtotal, clear, count } = useCart();
   const { data: settings } = useStoreSettings();
@@ -111,6 +142,9 @@ function Checkout() {
   const [loading, setLoading] = useState(false);
   const [restoring, setRestoring] = useState(true);
   const [pix, setPix] = useState<StoredPix | null>(null);
+  // Preenchido quando existe um Pix pendente, mas o carrinho atual é
+  // diferente do que gerou aquele Pix — aí perguntamos em vez de forçar.
+  const [pendingResume, setPendingResume] = useState<StoredPix | null>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [paid, setPaid] = useState<{ orderId: string; order_number: string; total: number } | null>(null);
   const [method, setMethod] = useState<"pix" | "credit_card">("pix");
@@ -228,6 +262,7 @@ function Checkout() {
 
   const createPix = useServerFn(createCheckoutPix);
   const pollStatus = useServerFn(getPayoutStatus);
+  const abandonOrder = useServerFn(abandonPendingOrder);
 
   useEffect(() => {
     let cancelled = false;
@@ -319,7 +354,10 @@ function Checkout() {
           clear();
           clearStoredPix();
         } else if (res.status === "pending" && isStillValid(stored.expiresAt)) {
-          setPix(stored);
+          // Prioridade é o pedido já gerado: se o carrinho não mudou, volta
+          // direto pro Pix. Se mudou, pergunta em vez de forçar/perder o pedido.
+          if (matchesCurrentCart(stored, items)) setPix(stored);
+          else setPendingResume(stored);
         } else {
           // Cancelado/expirado/reembolsado, ou passou da validade local — não faz
           // sentido reexibir um QR que não vai mais ser aceito pelo banco.
@@ -329,8 +367,10 @@ function Checkout() {
         console.error("checkout: falha ao revalidar Pix salvo", e);
         // Sem confirmar no servidor (rede instável) — só reexibe se ainda
         // não passou da validade local, pra não travar o cliente sem Pix.
-        if (isStillValid(stored.expiresAt)) setPix(stored);
-        else clearStoredPix();
+        if (isStillValid(stored.expiresAt)) {
+          if (matchesCurrentCart(stored, items)) setPix(stored);
+          else setPendingResume(stored);
+        } else clearStoredPix();
       } finally {
         if (!cancelled) setRestoring(false);
       }
@@ -340,6 +380,20 @@ function Checkout() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /** Cliente decidiu abandonar o Pix pendente (mesmo instante) para gerar
+   * um novo pedido. Não cancela nada no gateway — só destrava a tela local. */
+  const abandonPendingAndStartNew = async (orderId: string, confirmMessage?: string) => {
+    if (confirmMessage && !window.confirm(confirmMessage)) return;
+    clearStoredPix();
+    setPix(null);
+    setPendingResume(null);
+    try {
+      await abandonOrder({ data: { orderId } });
+    } catch (e) {
+      console.error("abandonPendingOrder falhou (não bloqueia o cliente)", e);
+    }
+  };
 
   useEffect(() => {
     if (!pix || paid) return;
@@ -363,7 +417,7 @@ function Checkout() {
 
   // Ao gerar Pix / confirmar pagamento, sobe a tela (mobile costuma ficar no rodapé do formulário).
   useEffect(() => {
-    if (!pix && !paid) return;
+    if (!pix && !paid && !pendingResume) return;
     const jump = () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       document.documentElement.scrollTop = 0;
@@ -372,7 +426,7 @@ function Checkout() {
     jump();
     const t = window.setTimeout(jump, 50);
     return () => window.clearTimeout(t);
-  }, [pix?.orderId, paid?.orderId]);
+  }, [pix?.orderId, paid?.orderId, pendingResume?.orderId]);
 
   if (paid) {
     return (
@@ -394,6 +448,45 @@ function Checkout() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (pendingResume) {
+    return (
+      <div className="mx-auto max-w-md px-4 py-16 text-center">
+        <QrCode className="mx-auto h-10 w-10 text-primary" />
+        <h1 className="mt-4 font-serif text-2xl font-bold text-primary">Você tem um pagamento pendente</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Pedido #{pendingResume.orderNumber} · {brl(pendingResume.total)}
+        </p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          O carrinho atual está diferente do que gerou esse Pix. Você pode continuar pagando esse pedido ou seguir com os itens que estão no carrinho agora.
+        </p>
+        {pendingResume.expiresAt && (
+          <p className="mt-1 text-xs text-muted-foreground">
+            Esse Pix expira em {new Date(pendingResume.expiresAt).toLocaleString("pt-BR")}
+          </p>
+        )}
+        <div className="mt-6 space-y-3">
+          <button
+            type="button"
+            onClick={() => {
+              setPix(pendingResume);
+              setPendingResume(null);
+            }}
+            className={btnPrimary}
+          >
+            Continuar pagamento pendente
+          </button>
+          <button
+            type="button"
+            onClick={() => abandonPendingAndStartNew(pendingResume.orderId)}
+            className={btnSecondary}
+          >
+            Fazer pedido com o carrinho atual
+          </button>
+        </div>
       </div>
     );
   }
@@ -456,6 +549,18 @@ function Checkout() {
           <p className="mt-2 text-xs text-muted-foreground">Expira em {new Date(pix.expiresAt).toLocaleString("pt-BR")}</p>
         )}
         <PixReceiptUpload orderId={pix.orderId} token={pix.receiptToken} />
+        <button
+          type="button"
+          onClick={() =>
+            abandonPendingAndStartNew(
+              pix.orderId,
+              `Seu Pix do pedido #${pix.orderNumber} continua válido até expirar — se você já pagou, pode ficar tranquilo. Esta ação só libera a tela para você fazer um novo pedido agora. Continuar?`,
+            )
+          }
+          className="mt-6 text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground"
+        >
+          Prefiro fazer um pedido diferente
+        </button>
       </div>
     );
   }
@@ -544,6 +649,7 @@ function Checkout() {
           expiresAt: pixRes.expiresAt,
           receiptToken: pixRes.receiptToken ?? null,
           total: baseData.total,
+          cartSignature: cartSignatureOf(items),
         };
         setPix(nextPix);
         writeStoredPix(nextPix);
@@ -558,9 +664,6 @@ function Checkout() {
       setLoading(false);
     }
   }
-
-  const inp = "w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 transition focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary";
-  const btnPrimary = "w-full rounded-md bg-[color:var(--buy)] py-3.5 text-sm font-semibold uppercase tracking-wider text-[color:var(--buy-foreground)] transition hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed";
 
   return (
     <div className="min-h-screen bg-[oklch(0.985_0.003_70)]">

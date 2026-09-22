@@ -441,3 +441,33 @@ export const getPayoutStatus = createServerFn({ method: "POST" })
 
     return { status: mapped, orderStatus: (update.status as string) ?? order.status };
   });
+
+/**
+ * Cliente optou por fazer um novo pedido em vez de continuar pagando um Pix
+ * pendente. Só anota o pedido antigo para o admin entender o histórico —
+ * NUNCA cancela a cobrança no gateway nem muda o status: se o cliente ainda
+ * assim pagar aquele Pix esquecido, o webhook confirma normalmente.
+ */
+export const abandonPendingOrder = createServerFn({ method: "POST" })
+  .inputValidator((d) => z.object({ orderId: z.string().uuid() }).parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const marker = "cliente_optou_novo_pedido";
+
+    const { data: order } = await supabaseAdmin
+      .from("orders")
+      .select("id, notes, status")
+      .eq("id", data.orderId)
+      .maybeSingle();
+
+    if (!order || order.status !== "pending" || order.notes?.includes(marker)) {
+      return { ok: true };
+    }
+
+    await supabaseAdmin
+      .from("orders")
+      .update({ notes: [order.notes, marker].filter(Boolean).join(" | ") })
+      .eq("id", data.orderId);
+
+    return { ok: true };
+  });
