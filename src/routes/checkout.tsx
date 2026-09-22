@@ -40,20 +40,77 @@ export const Route = createFileRoute("/checkout")({
   component: Checkout,
 });
 
+/**
+ * Persistência do Pix pendente no navegador (localStorage).
+ *
+ * Objetivo: se o cliente saiu para pagar (app do banco, outra aba, fechou o
+ * navegador) e voltou depois, ele encontra o MESMO pedido/QR — em vez de cair
+ * de novo no formulário e gerar um segundo pedido/cobrança para a mesma compra.
+ *
+ * Sempre revalidamos o status no servidor antes de mostrar o QR de volta
+ * (nunca exibimos um Pix como "aguardando pagamento" sem confirmar que ele
+ * ainda está válido — evita mostrar algo que já expirou/foi cancelado).
+ */
+type StoredPix = {
+  orderId: string;
+  orderNumber: string;
+  qrCode: string | null;
+  qrImage: string | null;
+  expiresAt: string | null;
+  receiptToken: string | null;
+  total: number;
+};
+
+const PENDING_PIX_KEY = "checkout:pendingPix:v1";
+
+function readStoredPix(): StoredPix | null {
+  try {
+    const raw = localStorage.getItem(PENDING_PIX_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<StoredPix>;
+    if (!parsed?.orderId || typeof parsed.total !== "number") return null;
+    return {
+      orderId: parsed.orderId,
+      orderNumber: parsed.orderNumber ?? "",
+      qrCode: parsed.qrCode ?? null,
+      qrImage: parsed.qrImage ?? null,
+      expiresAt: parsed.expiresAt ?? null,
+      receiptToken: parsed.receiptToken ?? null,
+      total: parsed.total,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredPix(pix: StoredPix) {
+  try {
+    localStorage.setItem(PENDING_PIX_KEY, JSON.stringify(pix));
+  } catch {
+    /* localStorage indisponível (modo privado etc.) — segue sem persistir */
+  }
+}
+
+function clearStoredPix() {
+  try {
+    localStorage.removeItem(PENDING_PIX_KEY);
+  } catch {}
+}
+
+function isStillValid(expiresAt: string | null): boolean {
+  if (!expiresAt) return true;
+  const t = new Date(expiresAt).getTime();
+  return Number.isFinite(t) && t > Date.now();
+}
+
 function Checkout() {
   const { items, subtotal, clear, count } = useCart();
   const { data: settings } = useStoreSettings();
   const { user } = useAuth();
   const nav = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [pix, setPix] = useState<{
-    orderId: string;
-    orderNumber: string;
-    qrCode: string | null;
-    qrImage: string | null;
-    expiresAt: string | null;
-    receiptToken: string | null;
-  } | null>(null);
+  const [restoring, setRestoring] = useState(true);
+  const [pix, setPix] = useState<StoredPix | null>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [paid, setPaid] = useState<{ orderId: string; order_number: string; total: number } | null>(null);
   const [method, setMethod] = useState<"pix" | "credit_card">("pix");
@@ -243,17 +300,61 @@ function Checkout() {
   }, [settings?.shipping]);
 
 
+  // Restaura um Pix pendente ao (re)carregar a página — evita que o cliente,
+  // ao voltar (app do banco, outra aba, navegador fechado), encontre o
+  // formulário vazio e gere um segundo pedido para a mesma compra.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const stored = readStoredPix();
+      if (!stored) {
+        setRestoring(false);
+        return;
+      }
+      try {
+        const res = await pollStatus({ data: { orderId: stored.orderId } });
+        if (cancelled) return;
+        if (res.status === "confirmed") {
+          setPaid({ orderId: stored.orderId, order_number: stored.orderNumber, total: stored.total });
+          clear();
+          clearStoredPix();
+        } else if (res.status === "pending" && isStillValid(stored.expiresAt)) {
+          setPix(stored);
+        } else {
+          // Cancelado/expirado/reembolsado, ou passou da validade local — não faz
+          // sentido reexibir um QR que não vai mais ser aceito pelo banco.
+          clearStoredPix();
+        }
+      } catch (e) {
+        console.error("checkout: falha ao revalidar Pix salvo", e);
+        // Sem confirmar no servidor (rede instável) — só reexibe se ainda
+        // não passou da validade local, pra não travar o cliente sem Pix.
+        if (isStillValid(stored.expiresAt)) setPix(stored);
+        else clearStoredPix();
+      } finally {
+        if (!cancelled) setRestoring(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (!pix || paid) return;
     const id = setInterval(async () => {
       try {
         const res = await pollStatus({ data: { orderId: pix.orderId } });
         if (res.status === "confirmed") {
-          setPaid({ orderId: pix.orderId, order_number: pix.orderNumber, total });
+          setPaid({ orderId: pix.orderId, order_number: pix.orderNumber, total: pix.total });
           clear();
+          clearStoredPix();
         } else if (res.status === "cancelled") {
-          toast.error("Pagamento cancelado ou expirado.");
+          toast.error("Pagamento cancelado ou expirado. Gere um novo Pix para continuar.");
           clearInterval(id);
+          clearStoredPix();
+          setPix(null);
         }
       } catch (e) { console.error(e); }
     }, 4000);
@@ -289,12 +390,19 @@ function Checkout() {
     );
   }
 
+  if (restoring) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
   if (pix) {
     return (
       <div className="mx-auto max-w-xl px-4 py-12 text-center">
-        <GoogleAdsConversion orderId={pix.orderId} value={total} />
         <h1 className="font-serif text-3xl font-bold text-primary">Pague com Pix</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Pedido #{pix.orderNumber} · {brl(total)}</p>
+        <p className="mt-2 text-sm text-muted-foreground">Pedido #{pix.orderNumber} · {brl(pix.total)}</p>
         <div className="mx-auto mt-6 inline-block rounded-2xl border border-border bg-white p-4 shadow-sm">
           {qrDataUrl ? (
             <img src={qrDataUrl} alt="QR Code Pix" className="h-72 w-72" />
@@ -428,14 +536,17 @@ function Checkout() {
     try {
       if (method === "pix") {
         const pixRes = await createPix({ data: baseData });
-        setPix({
+        const nextPix: StoredPix = {
           orderId: pixRes.orderId,
           orderNumber: pixRes.orderNumber,
           qrCode: pixRes.qrCode,
           qrImage: pixRes.qrImage,
           expiresAt: pixRes.expiresAt,
           receiptToken: pixRes.receiptToken ?? null,
-        });
+          total: baseData.total,
+        };
+        setPix(nextPix);
+        writeStoredPix(nextPix);
       } else {
         toast.error("Pagamento por cartão indisponível no momento. Use Pix.");
         setMethod("pix");
