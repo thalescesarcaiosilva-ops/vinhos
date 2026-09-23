@@ -431,7 +431,6 @@ function Checkout() {
   if (paid) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <GoogleAdsConversion orderId={paid.orderId} value={paid.total} />
         <CheckCircle2 className="mx-auto h-20 w-20 text-[oklch(0.6_0.18_150)]" strokeWidth={1.5} />
         <h1 className="mt-6 font-serif text-3xl font-bold text-primary">Pagamento confirmado!</h1>
         <p className="mt-2 text-sm text-muted-foreground">Número do pedido</p>
@@ -494,6 +493,7 @@ function Checkout() {
   if (pix) {
     return (
       <div className="mx-auto max-w-xl px-4 py-12 text-center">
+        <GoogleAdsConversion orderId={pix.orderId} value={pix.total} />
         <h1 className="font-serif text-3xl font-bold text-primary">Pague com Pix</h1>
         <p className="mt-2 text-sm text-muted-foreground">Pedido #{pix.orderNumber} · {brl(pix.total)}</p>
         <div className="mx-auto mt-6 inline-block rounded-2xl border border-border bg-white p-4 shadow-sm">

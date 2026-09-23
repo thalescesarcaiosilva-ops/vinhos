@@ -23,8 +23,9 @@
 | 2 | Valor exibido recalculado do carrinho em vez de travado no pedido | Pode mostrar valor errado ao restaurar a tela | ✅ Corrigido |
 | 3 | Tela não reage quando o gateway cancela/expira o Pix | Cliente vê "aguardando pagamento" pra sempre em uma cobrança morta | ✅ Corrigido |
 | 4 | Sem checagem de duplicidade no servidor (idempotência) | Se o cliente mudar de dispositivo/navegador, ainda duplica | ⚠️ Não implementado — gap conhecido |
-| 5 | Conversão do Google Ads disparada ao **gerar** o Pix, não ao confirmar pagamento | Conversões infladas/falsas distorcem métricas de anúncio | ✅ Corrigido |
+| 5 | Conversão do Google Ads disparada ao **gerar** o Pix, não ao confirmar pagamento | Conversões infladas/falsas distorcem métricas de anúncio | ⚠️ **Revertido** (por decisão de negócio) |
 | 6 | (Bônus, fora do checkout) E-mails perdendo acentuação (`Olá` → `Ol�`) | E-mail transacional com aparência de spam/corrompido | ✅ Corrigido |
+| 7 | Ao restaurar o Pix persistido (Problema 1), não havia tratamento para o carrinho ter mudado nesse meio-tempo | Cliente que quer comprar algo diferente ficava "preso" tendo que esperar o Pix antigo expirar | ✅ Corrigido |
 
 ---
 
@@ -177,6 +178,15 @@ Comentário adicionado no componente para deixar essa regra explícita:
  */
 ```
 
+> **⚠️ ATUALIZAÇÃO FINAL (22/09/2026):** A correção foi **totalmente revertida**
+> por decisão de negócio. O comportamento voltou ao estado original: o pixel
+> dispara **apenas ao gerar o Pix** (pedido criado), não na confirmação de
+> pagamento. Isso significa que pedidos gerados mas não pagos contam como
+> conversões nas métricas do Google Ads, refletindo a intenção de compra no
+> topo do funil. Com a correção do Problema 1 (persistência do Pix), a
+> duplicação de pedidos foi eliminada, então cada intenção de compra dispara
+> apenas uma vez.
+
 **Nota sobre deduplicação:** ao restaurar uma tela de confirmação para o mesmo
 pedido (ex.: cliente recarrega a página de obrigado), o mesmo `transaction_id`
 é reenviado — isso é seguro, pois o Google Ads deduplica automaticamente
@@ -212,6 +222,80 @@ diferentes.
 
 ---
 
+## Problema 7 — Restaurar Pix persistido sem tratar mudança de carrinho ("Opção D")
+
+> Este problema só existe **depois** de implementar a correção do Problema 1
+> (persistência do Pix em `localStorage`). Se a outra loja ainda não tem essa
+> persistência, implemente o Problema 1 primeiro e trate este junto.
+
+**Sintoma observado:** depois de persistir o Pix pendente e restaurá-lo
+automaticamente ao voltar na loja, surge uma nova pergunta: **e se o cliente
+voltou querendo comprar outra coisa**, diferente do que gerou aquele Pix? Sem
+tratamento, ele ficaria "preso" na tela do QR antigo até o pagamento expirar,
+sem conseguir fazer um pedido novo com o carrinho atual — o que piora a
+conversão para esse caso (raro, mas real).
+
+**Requisito de negócio (decisão consciente, não bug):** a prioridade deve
+continuar sendo o pedido já gerado — resumir automaticamente sempre que
+possível — mas sem bloquear o cliente que genuinamente mudou de ideia.
+
+**Solução aplicada — resumida em 3 partes:**
+
+1. **Comparação de carrinho (silenciosa).** Ao salvar o Pix no `localStorage`
+   (Problema 1), grava-se também uma assinatura simples do carrinho no momento
+   da criação, por exemplo:
+   ```
+   function cartSignatureOf(items) {
+     return items.map(i => `${i.id}:${i.quantity}`).sort().join("|");
+   }
+   ```
+   Ao restaurar, essa assinatura é comparada com o carrinho atual:
+   - **Igual** (ou Pix salvo em formato antigo, sem assinatura ainda) →
+     resume automático, direto na tela do Pix, sem perguntar nada. Esse é o
+     caminho feliz e deve ser silencioso — não incomodar quem só saiu para
+     pagar e voltou.
+   - **Diferente** → mostra uma tela de decisão intermediária (item 2).
+
+2. **Tela de decisão (só quando o carrinho mudou).** Mensagem curta com o
+   número do pedido pendente e o valor, e duas opções claras:
+   - Botão primário (visualmente prioritário): **"Continuar pagamento
+     pendente"** → volta pra tela do Pix existente.
+   - Botão secundário: **"Fazer pedido com o carrinho atual"** → abandona o
+     Pix antigo (ver item 3) e libera o formulário normal.
+
+3. **"Abandonar" é só uma ação local + anotação — nunca cancelamento.**
+   Ao clicar em "fazer pedido com o carrinho atual" (ou no link de escape do
+   item 4), o app:
+   - Limpa o `localStorage` local (Problema 1) e libera a tela.
+   - Best-effort, chama o servidor para **anotar** o pedido antigo (ex.: campo
+     `notes` com um marcador como `cliente_optou_novo_pedido`) — só para o
+     time de atendimento entender o histórico depois.
+   - **Nunca** cancela a cobrança no gateway nem muda o `status` do pedido
+     antigo para `cancelled`. Se o cliente, por qualquer motivo, ainda pagar
+     aquele Pix "abandonado", o webhook/polling de confirmação deve continuar
+     funcionando normalmente e confirmar o pedido — evita perder uma venda por
+     uma decisão de UI.
+
+4. **Link de escape discreto na própria tela do Pix.** Mesmo quando o resumo é
+   automático (carrinho igual), adicionar um link de baixa ênfase do tipo
+   *"Prefiro fazer um pedido diferente"* embaixo da tela do Pix, com uma
+   confirmação (`window.confirm` ou modal) explicando que o Pix antigo
+   continua válido até expirar — é só uma via de escape, não um cancelamento.
+
+**Onde procurar/replicar na outra loja:**
+- No mesmo lugar onde o Problema 1 foi corrigido (persistência do Pix),
+  verificar se existe qualquer comparação entre o carrinho salvo e o atual ao
+  restaurar.
+- Se não existir, ou se a restauração automática sempre reexibe o Pix antigo
+  sem nenhuma saída visível para o cliente, aplicar as 4 partes acima.
+
+**Como confirmar que existe o problema:** gerar um Pix, sem pagar, voltar pra
+loja, adicionar/remover um item diferente do carrinho, e tentar fechar o
+pedido — se a única opção visível for esperar o Pix antigo expirar, o problema
+existe.
+
+---
+
 ## Checklist rápido para rodar na outra loja
 
 - [ ] O estado do pagamento pendente é persistido em `localStorage`/
@@ -226,3 +310,6 @@ diferentes.
       na geração do pagamento ou só na confirmação?
 - [ ] Templates de e-mail transacional preservam acentuação em todos os
       clientes de e-mail?
+- [ ] Se o Pix pendente é restaurado automaticamente (Problema 1), existe
+      alguma saída para o cliente que voltou querendo comprar algo diferente
+      do carrinho original, ou ele fica preso até o Pix antigo expirar?

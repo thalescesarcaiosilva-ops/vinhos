@@ -3,10 +3,11 @@ import { useStoreSettings } from "@/lib/store-settings";
 import { fireGoogleAdsConversion, normalizeAdsSendTo } from "@/lib/analytics";
 
 /**
- * Dispara a conversão do Google Ads na página de obrigado (pagamento confirmado).
- * Gerar o Pix não é uma conversão — só a venda efetivada conta.
+ * Dispara a conversão do Google Ads ao gerar o Pix (pedido criado).
+ * Não dispara na página de obrigado — a conversão conta no momento da intenção
+ * de compra (Pix gerado), não no pagamento confirmado.
  * O dedupe por pedido (sessionStorage + memória) garante um único disparo por orderId,
- * mesmo que a página de obrigado seja revisitada/recarregada.
+ * mesmo que a tela do Pix seja revisitada/restaurada após reload.
  * Pageviews continuam automáticos via gtag — este é o único evento customizado.
  */
 export function GoogleAdsConversion({
