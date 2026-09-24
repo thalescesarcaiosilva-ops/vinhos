@@ -105,12 +105,35 @@ function methodKey(m: string | null) {
   return "other";
 }
 
+/** Dia civil em Brasília (YYYY-MM-DD), independente do fuso do navegador/UTC. */
+const SAO_PAULO_TZ = "America/Sao_Paulo";
+
+function dateKeyInSaoPaulo(input: Date | string): string {
+  const d = typeof input === "string" ? new Date(input) : input;
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: SAO_PAULO_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+}
+
+/** Meia-noite em Brasília para um YYYY-MM-DD (Brasil sem DST = UTC−3). */
+function saoPauloDayStartUtc(dateKey: string): Date {
+  return new Date(`${dateKey}T00:00:00-03:00`);
+}
+
+function addSaoPauloCalendarDays(dateKey: string, delta: number): string {
+  const d = saoPauloDayStartUtc(dateKey);
+  d.setUTCDate(d.getUTCDate() + delta);
+  return dateKeyInSaoPaulo(d);
+}
+
 function periodStart(days: number | null) {
   if (days == null) return null;
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() - (days - 1));
-  return d;
+  const todayKey = dateKeyInSaoPaulo(new Date());
+  const startKey = addSaoPauloCalendarDays(todayKey, -(days - 1));
+  return saoPauloDayStartUtc(startKey);
 }
 
 async function fetchAllOrders(fromIso: string | null): Promise<OrderRow[]> {
@@ -231,20 +254,18 @@ export function AdminDashboard() {
       }))
       .sort((a, b) => b.count - a.count);
 
-    // Daily sales (paid only)
+    // Daily sales (paid only) — dia civil America/Sao_Paulo (não UTC)
     const dayMap = new Map<string, { date: string; revenue: number; orders: number }>();
     const days = PERIODS.find((p) => p.id === period)?.days;
+    const todayKey = dateKeyInSaoPaulo(new Date());
     if (days) {
       for (let i = days - 1; i >= 0; i--) {
-        const d = new Date();
-        d.setHours(0, 0, 0, 0);
-        d.setDate(d.getDate() - i);
-        const key = d.toISOString().slice(0, 10);
+        const key = addSaoPauloCalendarDays(todayKey, -i);
         dayMap.set(key, { date: key, revenue: 0, orders: 0 });
       }
     }
     for (const o of paid) {
-      const key = o.created_at.slice(0, 10);
+      const key = dateKeyInSaoPaulo(o.created_at);
       const row = dayMap.get(key) ?? { date: key, revenue: 0, orders: 0 };
       row.revenue += Number(o.total);
       row.orders += 1;
@@ -445,7 +466,11 @@ export function AdminDashboard() {
                   />
                   <YAxis tickFormatter={(v) => `R$${Math.round(Number(v) / 100) * 100}`} fontSize={11} width={56} />
                   <Tooltip
-                    labelFormatter={(v) => new Date(String(v) + "T12:00:00").toLocaleDateString("pt-BR")}
+                    labelFormatter={(v) =>
+                      new Date(String(v) + "T12:00:00-03:00").toLocaleDateString("pt-BR", {
+                        timeZone: SAO_PAULO_TZ,
+                      })
+                    }
                     formatter={(value: number, name) => [
                       name === "revenue" ? brl(value) : value,
                       name === "revenue" ? "Receita" : "Pedidos",
@@ -595,6 +620,7 @@ export function AdminDashboard() {
                   </td>
                   <td className="px-4 py-2 text-xs">
                     {new Date(o.created_at).toLocaleString("pt-BR", {
+                      timeZone: SAO_PAULO_TZ,
                       day: "2-digit",
                       month: "2-digit",
                       year: "numeric",
