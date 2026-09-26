@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Copy, LogIn, LogOut, MessageCircle, Phone, RefreshCw } from "lucide-react";
+import { Copy, Eye, LogIn, LogOut, MessageCircle, Phone, RefreshCw, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 import { brl } from "@/lib/format";
+import { buildPixQrDataUrl, isPixEmvPayload } from "@/lib/pix-qrcode";
 import { pageMeta } from "@/lib/seo";
 import { STORE } from "@/lib/settings";
 
@@ -105,7 +106,7 @@ function SupportPanel() {
     return <p className="px-4 py-16 text-center text-sm text-muted-foreground">Verificando acesso…</p>;
   }
   if (!allowed) return <Denied email={user.email} />;
-  return <Queue email={user.email} />;
+  return <Queue email={user.email} userId={user.id} />;
 }
 
 function Login() {
@@ -184,12 +185,17 @@ function Denied({ email }: { email?: string }) {
   );
 }
 
-function Queue({ email }: { email?: string }) {
+type SentFilter = "all" | "open" | "sent";
+
+function Queue({ email, userId }: { email?: string; userId: string }) {
   const [orders, setOrders] = useState<AbandonedOrder[]>([]);
+  const [contactedAtByOrder, setContactedAtByOrder] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [windowId, setWindowId] = useState<WindowId>("24h");
+  const [sentFilter, setSentFilter] = useState<SentFilter>("all");
+  const [details, setDetails] = useState<AbandonedOrder | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
   const requestSeq = useRef(0);
@@ -234,6 +240,20 @@ function Queue({ email }: { email?: string }) {
       }
       items = itemRows ?? [];
     }
+    let marks: { order_id: string; contacted_at: string }[] = [];
+    if (ids.length) {
+      const { data: markRows, error: marksError } = await supabase
+        .from("support_order_contacts")
+        .select("order_id, contacted_at")
+        .in("order_id", ids);
+      if (requestId !== requestSeq.current) return;
+      if (marksError) {
+        setError(marksError.message);
+        setLoading(false);
+        return;
+      }
+      marks = markRows ?? [];
+    }
     const byOrder = new Map<string, OrderItem[]>();
     for (const item of items) {
       const list = byOrder.get(item.order_id) ?? [];
@@ -242,6 +262,7 @@ function Queue({ email }: { email?: string }) {
     }
     if (requestId !== requestSeq.current) return;
     setOrders(rows.map((row) => ({ ...row, items: byOrder.get(row.id) ?? [] })));
+    setContactedAtByOrder(Object.fromEntries(marks.map((mark) => [mark.order_id, mark.contacted_at])));
     setError(null);
     setUpdatedAt(new Date());
     setNow(Date.now());
@@ -257,9 +278,12 @@ function Queue({ email }: { email?: string }) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return orders;
     const digits = q.replace(/\D/g, "");
     return orders.filter((order) => {
+      const sent = Boolean(contactedAtByOrder[order.id]);
+      if (sentFilter === "open" && sent) return false;
+      if (sentFilter === "sent" && !sent) return false;
+      if (!q) return true;
       const phone = (order.customer_phone ?? "").replace(/\D/g, "");
       const products = order.items.map((item) => item.product_name).join(" ").toLowerCase();
       return (
@@ -270,7 +294,39 @@ function Queue({ email }: { email?: string }) {
         (digits.length >= 4 && phone.includes(digits))
       );
     });
-  }, [orders, query]);
+  }, [orders, query, sentFilter, contactedAtByOrder]);
+
+  const pendingCount = orders.filter((order) => !contactedAtByOrder[order.id]).length;
+
+  async function setMessageSent(orderId: string, sent: boolean) {
+    if (sent) {
+      const contactedAt = new Date().toISOString();
+      const { error: saveError } = await supabase.from("support_order_contacts").upsert({
+        order_id: orderId,
+        user_id: userId,
+        contacted_at: contactedAt,
+      });
+      if (saveError) {
+        toast.error(saveError.message);
+        return;
+      }
+      setContactedAtByOrder((prev) => ({ ...prev, [orderId]: contactedAt }));
+      return;
+    }
+    const { error: deleteError } = await supabase
+      .from("support_order_contacts")
+      .delete()
+      .eq("order_id", orderId);
+    if (deleteError) {
+      toast.error(deleteError.message);
+      return;
+    }
+    setContactedAtByOrder((prev) => {
+      const next = { ...prev };
+      delete next[orderId];
+      return next;
+    });
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -325,8 +381,31 @@ function Queue({ email }: { email?: string }) {
         </button>
         <p className="text-sm text-muted-foreground">
           {filtered.length} pedido{filtered.length === 1 ? "" : "s"}
+          {` · ${pendingCount} sem mensagem`}
           {updatedAt ? ` · ${updatedAt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : ""}
         </p>
+      </div>
+      <div className="mb-4 flex flex-wrap gap-1">
+        {(
+          [
+            ["all", "Todos"],
+            ["open", "Ainda não enviei"],
+            ["sent", "Já enviei mensagem"],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setSentFilter(id)}
+            className={`rounded-sm border px-3 py-2 text-xs font-medium ${
+              sentFilter === id
+                ? "border-emerald-800 bg-emerald-800 text-white"
+                : "border-border text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
@@ -345,12 +424,19 @@ function Queue({ email }: { email?: string }) {
           </thead>
           <tbody>
             {filtered.map((order) => (
-              <OrderRow key={order.id} order={order} now={now} />
+              <OrderRow
+                key={order.id}
+                order={order}
+                now={now}
+                contactedAt={contactedAtByOrder[order.id] ?? null}
+                onOpen={() => setDetails(order)}
+                onToggleMessage={(sent) => void setMessageSent(order.id, sent)}
+              />
             ))}
             {!loading && filtered.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
-                  Nenhum pedido sem pagamento ou cancelado neste período.
+                  Nenhum pedido neste filtro.
                 </td>
               </tr>
             )}
@@ -364,11 +450,31 @@ function Queue({ email }: { email?: string }) {
           </tbody>
         </table>
       </div>
+      {details && (
+        <OrderDetails
+          order={details}
+          contactedAt={contactedAtByOrder[details.id] ?? null}
+          onClose={() => setDetails(null)}
+          onToggleMessage={(sent) => void setMessageSent(details.id, sent)}
+        />
+      )}
     </div>
   );
 }
 
-function OrderRow({ order, now }: { order: AbandonedOrder; now: number }) {
+function OrderRow({
+  order,
+  now,
+  contactedAt,
+  onOpen,
+  onToggleMessage,
+}: {
+  order: AbandonedOrder;
+  now: number;
+  contactedAt: string | null;
+  onOpen: () => void;
+  onToggleMessage: (sent: boolean) => void;
+}) {
   const address = formatAddress(order.shipping_address);
   const phoneDigits = toWhatsappDigits(order.customer_phone);
   const message = whatsappMessage(order);
@@ -384,7 +490,7 @@ function OrderRow({ order, now }: { order: AbandonedOrder; now: number }) {
   }
 
   return (
-    <tr className="border-t border-border align-top hover:bg-cream/30">
+    <tr className={`border-t border-border align-top hover:bg-cream/30 ${contactedAt ? "bg-emerald-50/70" : ""}`}>
       <td className="px-4 py-3">
         <div className="font-mono text-xs font-semibold">#{order.order_number}</div>
         <div className="mt-1 text-xs text-muted-foreground">{created.toLocaleString("pt-BR")}</div>
@@ -406,6 +512,15 @@ function OrderRow({ order, now }: { order: AbandonedOrder; now: number }) {
       <td className="px-4 py-3">
         <div className="font-medium">{order.customer_name}</div>
         <div className="text-xs text-muted-foreground">{order.customer_email}</div>
+        {contactedAt ? (
+          <span className="mt-2 inline-block rounded bg-emerald-800 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+            Mensagem enviada · {new Date(contactedAt).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+          </span>
+        ) : (
+          <span className="mt-2 inline-block rounded bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-950">
+            Sem mensagem
+          </span>
+        )}
       </td>
       <td className="px-4 py-3">
         <div className="font-medium">{order.customer_phone || "Sem telefone"}</div>
@@ -422,6 +537,9 @@ function OrderRow({ order, now }: { order: AbandonedOrder; now: number }) {
                 href={`https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => {
+                  if (!contactedAt) onToggleMessage(true);
+                }}
                 className="inline-flex items-center gap-1 rounded-sm bg-emerald-700 px-2 py-1 text-xs font-medium text-white hover:bg-emerald-800"
               >
                 <MessageCircle className="h-3 w-3" /> WhatsApp
@@ -475,8 +593,200 @@ function OrderRow({ order, now }: { order: AbandonedOrder; now: number }) {
         >
           <Copy className="h-3 w-3" /> Copiar dados
         </button>
+        <button
+          type="button"
+          onClick={onOpen}
+          className="mt-2 flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+        >
+          <Eye className="h-3 w-3" /> Ver detalhes
+        </button>
+        <button
+          type="button"
+          onClick={() => onToggleMessage(!contactedAt)}
+          className="mt-1 block text-left text-[11px] text-muted-foreground hover:text-primary"
+        >
+          {contactedAt ? "Desmarcar mensagem" : "Marcar mensagem enviada"}
+        </button>
       </td>
     </tr>
+  );
+}
+
+function OrderDetails({
+  order,
+  contactedAt,
+  onClose,
+  onToggleMessage,
+}: {
+  order: AbandonedOrder;
+  contactedAt: string | null;
+  onClose: () => void;
+  onToggleMessage: (sent: boolean) => void;
+}) {
+  const [pixCode, setPixCode] = useState<string | null>(null);
+  const [pixExpires, setPixExpires] = useState<string | null>(null);
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const address = formatAddress(order.shipping_address);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setLoadError(null);
+    void supabase
+      .from("orders")
+      .select("pix_qr_code, pix_expiration")
+      .eq("id", order.id)
+      .maybeSingle()
+      .then(async ({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          setLoadError(error.message);
+          setLoading(false);
+          return;
+        }
+        const code = data?.pix_qr_code?.trim() || null;
+        setPixCode(code);
+        setPixExpires(data?.pix_expiration ?? null);
+        const nextQr = code && isPixEmvPayload(code) ? await buildPixQrDataUrl(code) : null;
+        if (cancelled) return;
+        setQrUrl(nextQr);
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [order.id]);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const expired = pixExpires ? new Date(pixExpires).getTime() < Date.now() : false;
+
+  async function copyCode() {
+    if (!pixCode) return;
+    try {
+      await navigator.clipboard.writeText(pixCode);
+      toast.success("Pix copia e cola copiado");
+    } catch {
+      toast.error("Não foi possível copiar");
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
+      role="presentation"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="support-order-details-title"
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-sm border border-border bg-card p-5 shadow-lg"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div>
+            <h2 id="support-order-details-title" className="font-serif text-2xl font-bold text-primary">
+              Pedido #{order.order_number}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {order.customer_name} · {brl(order.total)}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-sm p-1 text-muted-foreground hover:text-primary"
+            aria-label="Fechar"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {loading && <p className="text-sm text-muted-foreground">Carregando Pix…</p>}
+        {loadError && <p className="text-sm text-destructive">{loadError}</p>}
+
+        {!loading && !pixCode && (
+          <p className="rounded-sm border border-border bg-cream px-3 py-3 text-sm text-muted-foreground">
+            Este pedido não tem Pix copia e cola. Pode ter sido cancelado antes de gerar o código.
+          </p>
+        )}
+
+        {!loading && pixCode && (
+          <div className="space-y-4">
+            <div className="mx-auto w-fit rounded-sm border border-border bg-white p-3">
+              {qrUrl ? (
+                <img src={qrUrl} alt="QR Code Pix do pedido" className="h-64 w-64" />
+              ) : (
+                <p className="flex h-64 w-64 items-center justify-center text-center text-sm text-muted-foreground">
+                  Não foi possível gerar o QR Code. Use o copia e cola.
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="pix-copy"
+                className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+              >
+                Pix copia e cola
+              </label>
+              <textarea
+                id="pix-copy"
+                readOnly
+                value={pixCode}
+                rows={4}
+                className="w-full rounded-sm border border-border bg-background px-3 py-2 font-mono text-xs"
+              />
+              <button
+                type="button"
+                onClick={() => void copyCode()}
+                className="mt-2 inline-flex items-center gap-1 rounded-sm bg-primary px-3 py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground hover:bg-primary/90"
+              >
+                <Copy className="h-3.5 w-3.5" /> Copiar código
+              </button>
+            </div>
+            {pixExpires && (
+              <p className={`text-xs ${expired ? "text-destructive" : "text-muted-foreground"}`}>
+                {expired ? "Este Pix venceu em" : "Válido até"} {new Date(pixExpires).toLocaleString("pt-BR")}.
+                {expired ? " O cliente pode precisar gerar outro pagamento no site." : ""}
+              </p>
+            )}
+          </div>
+        )}
+
+        <div className="mt-5 border-t border-border pt-4 text-sm">
+          <p>{order.customer_phone || "Sem telefone"}</p>
+          <p className="text-muted-foreground">{order.customer_email}</p>
+          {address && (
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+              {[address.line1, address.line2, address.zip].filter(Boolean).join(" · ")}
+            </p>
+          )}
+          <ul className="mt-2 space-y-1 text-xs">
+            {order.items.map((item, index) => (
+              <li key={`${item.product_name}-${index}`}>
+                {item.quantity}× {item.product_name}
+              </li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            onClick={() => onToggleMessage(!contactedAt)}
+            className="mt-4 rounded-sm border border-border px-3 py-2 text-xs font-medium hover:bg-cream"
+          >
+            {contactedAt ? "Desmarcar mensagem enviada" : "Marcar mensagem enviada"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

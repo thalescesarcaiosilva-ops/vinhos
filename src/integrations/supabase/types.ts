@@ -963,6 +963,32 @@ export type Database = {
           },
         ]
       }
+      support_order_contacts: {
+        Row: {
+          contacted_at: string
+          order_id: string
+          user_id: string
+        }
+        Insert: {
+          contacted_at?: string
+          order_id: string
+          user_id: string
+        }
+        Update: {
+          contacted_at?: string
+          order_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_order_contacts_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: true
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       store_settings: {
         Row: {
           data: Json
