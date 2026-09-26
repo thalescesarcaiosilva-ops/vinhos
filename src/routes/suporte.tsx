@@ -298,6 +298,26 @@ function Queue({ email, userId }: { email?: string; userId: string }) {
 
   const pendingCount = orders.filter((order) => !contactedAtByOrder[order.id]).length;
 
+  async function cancelOrder(orderId: string) {
+    if (!window.confirm("Marcar este pedido como cancelado?")) return;
+    const { error: cancelError } = await supabase
+      .from("orders")
+      .update({ status: "cancelled", payment_status: "cancelled" })
+      .eq("id", orderId)
+      .eq("status", "pending");
+    if (cancelError) {
+      toast.error(cancelError.message);
+      return;
+    }
+    setOrders((prev) =>
+      prev.map((order) => (order.id === orderId ? { ...order, status: "cancelled" } : order)),
+    );
+    setDetails((current) =>
+      current?.id === orderId ? { ...current, status: "cancelled" } : current,
+    );
+    toast.success("Pedido cancelado");
+  }
+
   async function setMessageSent(orderId: string, sent: boolean) {
     if (sent) {
       const contactedAt = new Date().toISOString();
@@ -430,6 +450,7 @@ function Queue({ email, userId }: { email?: string; userId: string }) {
                 now={now}
                 contactedAt={contactedAtByOrder[order.id] ?? null}
                 onOpen={() => setDetails(order)}
+                onCancel={() => void cancelOrder(order.id)}
                 onToggleMessage={(sent) => void setMessageSent(order.id, sent)}
               />
             ))}
@@ -455,6 +476,7 @@ function Queue({ email, userId }: { email?: string; userId: string }) {
           order={details}
           contactedAt={contactedAtByOrder[details.id] ?? null}
           onClose={() => setDetails(null)}
+          onCancel={() => void cancelOrder(details.id)}
           onToggleMessage={(sent) => void setMessageSent(details.id, sent)}
         />
       )}
@@ -467,12 +489,14 @@ function OrderRow({
   now,
   contactedAt,
   onOpen,
+  onCancel,
   onToggleMessage,
 }: {
   order: AbandonedOrder;
   now: number;
   contactedAt: string | null;
   onOpen: () => void;
+  onCancel: () => void;
   onToggleMessage: (sent: boolean) => void;
 }) {
   const address = formatAddress(order.shipping_address);
@@ -600,6 +624,15 @@ function OrderRow({
         >
           <Eye className="h-3 w-3" /> Ver detalhes
         </button>
+        {order.status === "pending" && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="mt-1 block text-left text-[11px] text-destructive hover:underline"
+          >
+            Cancelar pedido
+          </button>
+        )}
         <button
           type="button"
           onClick={() => onToggleMessage(!contactedAt)}
@@ -616,11 +649,13 @@ function OrderDetails({
   order,
   contactedAt,
   onClose,
+  onCancel,
   onToggleMessage,
 }: {
   order: AbandonedOrder;
   contactedAt: string | null;
   onClose: () => void;
+  onCancel: () => void;
   onToggleMessage: (sent: boolean) => void;
 }) {
   const [pixCode, setPixCode] = useState<string | null>(null);
@@ -720,7 +755,15 @@ function OrderDetails({
           </p>
         )}
 
-        {!loading && pixCode && (
+        {!loading && pixCode && expired && (
+          <p className="rounded-sm border border-border bg-cream px-3 py-3 text-sm text-muted-foreground">
+            O Pix deste pedido venceu
+            {pixExpires ? ` em ${new Date(pixExpires).toLocaleString("pt-BR")}` : ""}. O QR Code e o copia e
+            cola não cobram mais. O cliente precisa gerar um novo pagamento no site.
+          </p>
+        )}
+
+        {!loading && pixCode && !expired && (
           <div className="space-y-4">
             <div className="mx-auto w-fit rounded-sm border border-border bg-white p-3">
               {qrUrl ? (
@@ -754,9 +797,8 @@ function OrderDetails({
               </button>
             </div>
             {pixExpires && (
-              <p className={`text-xs ${expired ? "text-destructive" : "text-muted-foreground"}`}>
-                {expired ? "Este Pix venceu em" : "Válido até"} {new Date(pixExpires).toLocaleString("pt-BR")}.
-                {expired ? " O cliente pode precisar gerar outro pagamento no site." : ""}
+              <p className="text-xs text-muted-foreground">
+                Válido até {new Date(pixExpires).toLocaleString("pt-BR")}.
               </p>
             )}
           </div>
@@ -784,6 +826,15 @@ function OrderDetails({
           >
             {contactedAt ? "Desmarcar mensagem enviada" : "Marcar mensagem enviada"}
           </button>
+          {order.status === "pending" && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="mt-2 block rounded-sm border border-destructive px-3 py-2 text-xs font-medium text-destructive hover:bg-destructive/10"
+            >
+              Cancelar pedido
+            </button>
+          )}
         </div>
       </div>
     </div>
