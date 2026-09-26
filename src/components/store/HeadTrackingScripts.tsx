@@ -12,12 +12,12 @@ const MARKER = "data-galvao-analytics";
 
 /**
  * Carrega Tag Manager, gtag.js e Clarity apenas nas páginas públicas da vitrine.
- * IDs vêm de store_settings (admin) — nunca de env. Admin não recebe esses scripts.
+ * IDs vêm de store_settings (admin) — nunca de env. Admin e o painel de suporte não recebem esses scripts.
  */
 export function HeadTrackingScripts() {
   const { data: settings } = useStoreSettings();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isAdmin = pathname.startsWith("/admin");
+  const isPrivate = pathname.startsWith("/admin") || pathname.startsWith("/suporte");
   const tracking = settings?.tracking ? normalizeTrackingSettings(settings.tracking) : null;
   const trackingKey = tracking
     ? [
@@ -30,7 +30,7 @@ export function HeadTrackingScripts() {
     : "";
 
   useEffect(() => {
-    if (isAdmin || !tracking) return;
+    if (isPrivate || !tracking) return;
 
     const googleIds = uniqueGoogleConfigIds(tracking);
     const loaderId = firstGoogleLoaderId(tracking);
@@ -124,7 +124,7 @@ export function HeadTrackingScripts() {
     };
     // trackingKey cobre mudanças relevantes dos IDs; tracking é derivado na mesma render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAdmin, trackingKey]);
+  }, [isPrivate, trackingKey]);
 
   return null;
 }

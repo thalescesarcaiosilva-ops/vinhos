@@ -130,6 +130,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isCheckout = pathname.startsWith("/checkout");
+  const isSupport = pathname.startsWith("/suporte");
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
@@ -137,9 +138,9 @@ function RootComponent() {
           <HeadTrackingScripts />
           <ThemeStyle />
           <div className="flex min-h-screen flex-col">
-            {!isCheckout && <Header />}
+            {!isCheckout && !isSupport && <Header />}
             <main className="flex-1"><Outlet /></main>
-            <Footer />
+            {!isSupport && <Footer />}
           </div>
           <CartDrawer />
           <Toaster position="top-right" />

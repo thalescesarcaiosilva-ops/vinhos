@@ -255,38 +255,57 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function Admin() {
+  const [sessionReady, setSessionReady] = useState(false);
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [accessFor, setAccessFor] = useState<string | null>(null);
+  const [access, setAccess] = useState<"admin" | "support" | "none">("none");
   const [tab, setTab] = useState<TabId>("dashboard");
 
   useEffect(() => {
+    const apply = (u: { id: string; email?: string } | null) => {
+      setUser(u);
+      setSessionReady(true);
+    };
     supabase.auth.getSession().then(({ data }) => {
       const u = data.session?.user;
-      setUser(u ? { id: u.id, email: u.email } : null);
+      apply(u ? { id: u.id, email: u.email } : null);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       const u = session?.user;
-      setUser(u ? { id: u.id, email: u.email } : null);
+      apply(u ? { id: u.id, email: u.email } : null);
     });
     return () => sub.subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (!user) {
-      setIsAdmin(false);
-      return;
-    }
+    if (!user) return;
+    let cancelled = false;
     supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle()
-      .then(({ data }) => setIsAdmin(!!data));
+      .then(({ data }) => {
+        if (cancelled) return;
+        const roles = new Set((data ?? []).map((row) => row.role));
+        if (roles.has("admin")) setAccess("admin");
+        else if (roles.has("support")) setAccess("support");
+        else setAccess("none");
+        setAccessFor(user.id);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
+  if (!sessionReady) {
+    return <p className="px-4 py-16 text-center text-sm text-muted-foreground">Carregando…</p>;
+  }
   if (!user) return <Login />;
-  if (!isAdmin) return <NotAdmin email={user.email} />;
+  if (accessFor !== user.id) {
+    return <p className="px-4 py-16 text-center text-sm text-muted-foreground">Verificando acesso…</p>;
+  }
+  if (access === "support") return <SupportOnly email={user.email} />;
+  if (access !== "admin") return <NotAdmin email={user.email} />;
 
   const tabs: { id: TabId; label: string; Icon: typeof Package }[] = [
     { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
@@ -428,6 +447,29 @@ function Login() {
           ← Voltar à loja
         </Link>
       </div>
+    </div>
+  );
+}
+
+function SupportOnly({ email }: { email?: string }) {
+  return (
+    <div className="mx-auto max-w-md px-4 py-16 text-center">
+      <h1 className="font-serif text-2xl font-bold text-primary">Painel de suporte</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        A conta {email} acessa apenas os pedidos sem pagamento ou cancelados.
+      </p>
+      <Link
+        to="/suporte"
+        className="mt-6 inline-flex items-center justify-center rounded-sm bg-primary px-4 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:bg-primary/90"
+      >
+        Abrir fila de pedidos
+      </Link>
+      <button
+        onClick={() => supabase.auth.signOut()}
+        className="mt-4 flex w-full items-center justify-center gap-2 text-sm text-muted-foreground hover:text-primary"
+      >
+        <LogOut className="h-4 w-4" /> Sair
+      </button>
     </div>
   );
 }

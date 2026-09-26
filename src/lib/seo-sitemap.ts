@@ -54,12 +54,16 @@ export function buildRobotsTxt(): string {
 # https://support.google.com/merchants/answer/12467444
 
 User-agent: Googlebot
-Disallow:
+Disallow: /admin
+Disallow: /suporte
 User-agent: Googlebot-image
-Disallow:
+Disallow: /admin
+Disallow: /suporte
 
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /suporte
 
 Sitemap: ${sitemap}
 `;
