@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Mail, MapPin } from "lucide-react";
 import type { ReactNode } from "react";
 import { StoreContainer } from "@/components/store/StoreContainer";
+import { StoreContactNumbers } from "@/components/store/StoreContactNumbers";
 import { STORE } from "@/lib/settings";
-import { mailtoHref, telHref } from "@/lib/contact-links";
+import { mailtoHref } from "@/lib/contact-links";
 import { absoluteSiteUrl, getSiteUrl } from "@/lib/site-url";
 import { pageMeta, buildStoreSchema } from "@/lib/seo";
 
@@ -52,7 +53,6 @@ function QuemSomosPage() {
     .replace(/^https?:\/\//i, "")
     .replace(/\/+$/, "");
   const emailHref = mailtoHref(STORE.email);
-  const phoneHref = telHref(STORE.phone);
 
   const infoRows: { label: string; value: ReactNode }[] = [
     { label: "Razão social", value: STORE.legalName },
@@ -69,14 +69,8 @@ function QuemSomosPage() {
     },
     { label: "Site", value: siteHost },
     {
-      label: "Telefone",
-      value: phoneHref ? (
-        <a href={phoneHref} className="text-primary hover:underline">
-          {STORE.phone}
-        </a>
-      ) : (
-        STORE.phone
-      ),
+      label: "WhatsApp",
+      value: <StoreContactNumbers phone={STORE.phone} showIcon />,
     },
     { label: "Endereço", value: STORE.address },
   ];
@@ -228,14 +222,9 @@ function QuemSomosPage() {
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
                 <p className="text-muted-foreground">{STORE.address}</p>
               </div>
-              {phoneHref && (
-                <div className="flex items-center gap-3">
-                  <Phone className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                  <a href={phoneHref} className="text-muted-foreground hover:text-primary hover:underline">
-                    {STORE.phone}
-                  </a>
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                <StoreContactNumbers phone={STORE.phone} showIcon />
+              </div>
               {emailHref && (
                 <div className="flex items-center gap-3">
                   <Mail className="h-4 w-4 shrink-0 text-primary" aria-hidden />

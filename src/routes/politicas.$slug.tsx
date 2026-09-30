@@ -1,4 +1,5 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { StoreContactNumbers } from "@/components/store/StoreContactNumbers";
 import { fetchStoreSettings } from "@/lib/store-settings";
 import { STORE } from "@/lib/settings";
 import { descriptionFromContent, pageMeta } from "@/lib/seo";
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/politicas/$slug")({
     const settings = await fetchStoreSettings();
     const page = settings.footer.institutional.find((p) => p.slug === params.slug);
     if (!page) throw notFound();
-    return { page };
+    return { page, phone: settings.footer.phone };
   },
   head: ({ loaderData, params }) => {
     const label = loaderData?.page.label ?? "Política";
@@ -50,15 +51,21 @@ export const Route = createFileRoute("/politicas/$slug")({
 });
 
 function PolicyPage() {
-  const { page } = Route.useLoaderData();
+  const { page, phone } = Route.useLoaderData();
   const html = sanitizeProductHtml(linkifyContactHtml(page.content));
+  const showsWhatsapp = html.includes(STORE.whatsappDisplay);
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
       <h1 className="font-serif text-3xl font-bold text-primary">{page.label}</h1>
       <div
-        className="prose prose-sm mt-6 max-w-none whitespace-pre-wrap text-foreground [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:opacity-80"
+        className="prose prose-sm mt-6 max-w-none whitespace-pre-wrap text-foreground [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:opacity-80 [&_a[href*='wa.me']]:font-semibold"
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      {!showsWhatsapp && (
+        <div className="mt-10 border-t border-border pt-6 text-sm">
+          <StoreContactNumbers phone={phone} showIcon />
+        </div>
+      )}
     </div>
   );
 }

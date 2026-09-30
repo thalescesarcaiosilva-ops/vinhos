@@ -18,8 +18,9 @@ export const STORE = {
   get url() {
     return getSiteUrl();
   },
-  /** Sem WhatsApp comercial no momento. */
-  whatsappNumber: "",
+  /** Sem alterar o telefone da loja. WhatsApp de atendimento no rodapé e nas políticas. */
+  whatsappNumber: "553175549668",
+  whatsappDisplay: "(31) 7554-9668",
   freeShippingFrom: 200,
   flatShipping: 15.2,
   expressShipping: 15.2,

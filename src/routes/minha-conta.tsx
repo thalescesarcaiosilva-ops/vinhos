@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useStoreSettings } from "@/lib/store-settings";
-import { telHref } from "@/lib/contact-links";
+import { StoreContactNumbers } from "@/components/store/StoreContactNumbers";
 import { PixReceiptUpload } from "@/components/store/PixReceiptUpload";
 import { TrackOrderPanel } from "@/components/store/TrackOrderPanel";
 import { pageMeta } from "@/lib/seo";
@@ -642,22 +642,17 @@ function SupportTab() {
   const { data: settings } = useStoreSettings();
   const phoneDisplay = settings?.footer?.phone?.trim() ?? "";
   const email = settings?.footer?.email ?? "";
-  const phoneHref = telHref(phoneDisplay);
 
   return (
     <div className="max-w-xl space-y-4">
       <p className="text-muted-foreground">Nossa equipe está pronta para te ajudar. Escolha um canal de atendimento:</p>
       <div className="grid gap-3 sm:grid-cols-2">
-        {phoneHref ? (
-          <a href={phoneHref} className="rounded-lg border border-border p-4 hover:border-primary">
-            <p className="font-semibold text-primary">Telefone</p>
-            <p className="text-sm text-muted-foreground">{phoneDisplay}</p>
-          </a>
-        ) : (
-          <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
-            Telefone não configurado no painel admin.
+        <div className="rounded-lg border border-border p-4">
+          <p className="text-sm text-muted-foreground">WhatsApp</p>
+          <div className="mt-1">
+            <StoreContactNumbers phone={phoneDisplay} showIcon />
           </div>
-        )}
+        </div>
         {email ? (
           <a href={`mailto:${email}`} className="rounded-lg border border-border p-4 hover:border-primary">
             <p className="font-semibold text-primary">E-mail</p>

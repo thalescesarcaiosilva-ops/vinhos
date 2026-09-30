@@ -12,7 +12,7 @@ Pedidos gerados há mais de 15 minutos que ainda não foram pagos. Também entra
 
 Não entra pedido com menos de 15 minutos, mesmo que a pessoa ainda esteja pagando. Não entra pedido pago, confirmado, enviado, entregue ou reembolsado. Pedido cancelado continua na lista. Pedido pago sai sozinho, sem o suporte marcar nada.
 
-Essa regra vale de verdade, também se alguém tentar ver outros pedidos pela conta de suporte. O suporte não consegue alterar nada.
+Essa regra vale de verdade, também se alguém tentar ver outros pedidos pela conta de suporte. O suporte não muda preço, cliente, endereço nem marca pedido como pago. A única alteração permitida é cancelar um pedido que ainda está aguardando pagamento.
 
 ## O que mostrar
 
@@ -29,11 +29,27 @@ Em cada pedido:
 - botão de WhatsApp com a mensagem já escrita, usando o primeiro nome, o nome da loja, o número do pedido e o valor. Se o pedido estiver cancelado, a mensagem diz que ele foi cancelado antes do pagamento. Se ainda estiver em aberto, diz que o pagamento não foi confirmado. Nos dois casos, oferece ajuda para concluir
 - botão para copiar o telefone
 - botão para copiar os dados do pedido
+- botão Ver detalhes
+- botão Cancelar pedido, só enquanto ainda está aguardando pagamento. Peça confirmação. Depois disso o pedido continua na lista, marcado como cancelado. Pedido que já está cancelado não mostra esse botão de novo
 - endereço completo de entrega
 - produtos, com quantidade, nome e valor
 - total, e em texto menor o valor dos produtos, o desconto se houver, e o frete
 
-Não mostre documento, código de pagamento, comprovante nem senha. Se não houver telefone, escreva “Sem telefone”.
+Não mostre documento, comprovante nem senha. Se não houver telefone, escreva “Sem telefone”.
+
+## Detalhes do pedido
+
+O botão Ver detalhes abre os dados daquele pedido: nome, telefone, e-mail, endereço, produtos e total. Também dá para marcar ou desmarcar que a mensagem já foi enviada.
+
+Pix, QR Code e copia e cola só aparecem se o código ainda estiver válido:
+
+- mostre o QR Code
+- mostre o copia e cola, com botão para copiar
+- mostre até quando esse código vale
+
+Se o código já venceu, não mostre o QR Code nem o copia e cola. Avise que o Pix venceu, que aquele código não cobra mais, e que o cliente precisa gerar um novo pagamento no site. Inclua a data e a hora em que venceu, se a loja tiver essa informação.
+
+Se o pedido não tiver código nenhum, avise isso. Não invente um QR Code. O prazo de validade é o que o pagamento da loja já usa. Não diga que vale 24 horas se o código vence antes.
 
 ## Acesso
 
@@ -60,8 +76,11 @@ A página não leva o menu, o rodapé nem o carrinho da loja. O visual segue o p
 - Pedido de menos de 15 minutos não aparece para o suporte.
 - Pedido de mais de 15 minutos sem pagamento aparece, com nome, telefone, endereço, produtos e total.
 - Pedido cancelado de mais de 15 minutos também aparece, marcado como cancelado.
+- O botão Cancelar pedido só aparece em pedido aguardando pagamento, pede confirmação e passa esse pedido para cancelado. O suporte não consegue mudar mais nada.
+- Com o código ainda válido, Ver detalhes mostra o QR Code, o copia e cola e até quando vale.
+- Com o código vencido, Ver detalhes não mostra QR Code nem copia e cola. Mostra o aviso de que venceu e que o cliente precisa gerar outro pagamento no site.
 - Pedido pago, enviado ou reembolsado não aparece.
-- O suporte não altera pedido e não entra no resto do administrador.
+- O suporte não entra no resto do administrador.
 - Cliente comum não vê a fila.
 - O WhatsApp abre com a mensagem pronta e o telefone do Brasil com o código do país.
 - /suporte fica fora do Google e fora do mapa do site, igual ao admin.
