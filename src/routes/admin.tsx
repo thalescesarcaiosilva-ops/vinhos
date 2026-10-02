@@ -2227,7 +2227,9 @@ function CouponsAdmin() {
               {items.map((c) => (
                 <tr key={c.id} className="border-t border-border">
                   <td className="px-4 py-3 font-mono font-bold">{c.code}</td>
-                  <td className="px-4 py-3 text-xs">{c.type}</td>
+                  <td className="px-4 py-3 text-xs">
+                    {c.type === "percent" ? "Porcentagem" : "Valor fixo"}
+                  </td>
                   <td className="px-4 py-3">
                     {c.type === "percent" ? `${c.value}%` : brl(c.value)}
                   </td>
@@ -2272,7 +2274,7 @@ function CouponForm({ initial, onClose }: { initial: any; onClose: () => void })
   const [f, setF] = useState<any>({
     code: "",
     description: "",
-    type: "percent",
+    type: initial?.type === "fixed" ? "fixed" : "percent",
     value: 10,
     min_order_value: null,
     max_uses: null,
@@ -2291,13 +2293,14 @@ function CouponForm({ initial, onClose }: { initial: any; onClose: () => void })
 
   async function save() {
     if (!f.code) {
-      toast.error("Código obrigatório");
+      toast.error("Informe o nome do cupom");
       return;
     }
     setSaving(true);
     const payload = {
       ...f,
       code: String(f.code).toUpperCase().trim(),
+      type: f.type === "fixed" ? "fixed" : "percent",
       value: Number(f.value),
       min_order_value: f.min_order_value ? Number(f.min_order_value) : null,
       max_uses: f.max_uses ? Number(f.max_uses) : null,
@@ -2306,6 +2309,8 @@ function CouponForm({ initial, onClose }: { initial: any; onClose: () => void })
       expires_at: f.expires_at || null,
     };
     delete payload.uses_count;
+    delete payload.created_at;
+    delete payload.id;
     const { error } = initial?.id
       ? await supabase.from("coupons").update(payload).eq("id", initial.id)
       : await supabase.from("coupons").insert(payload);
@@ -2330,29 +2335,29 @@ function CouponForm({ initial, onClose }: { initial: any; onClose: () => void })
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <label>
-          <span className="text-xs uppercase text-muted-foreground">Código</span>
+          <span className="text-xs uppercase text-muted-foreground">Nome do cupom</span>
           <input
             className={inp + " font-mono uppercase"}
             value={f.code}
             onChange={upd("code")}
-            placeholder="BEMVINDO10"
+            placeholder="VINHO10"
           />
         </label>
         <label>
-          <span className="text-xs uppercase text-muted-foreground">Tipo</span>
-          <select className={inp} value={f.type} onChange={upd("type")}>
+          <span className="text-xs uppercase text-muted-foreground">Tipo de desconto</span>
+          <select className={inp} value={f.type === "fixed" ? "fixed" : "percent"} onChange={upd("type")}>
             <option value="percent">Porcentagem (%)</option>
             <option value="fixed">Valor fixo (R$)</option>
-            <option value="free_shipping">Frete grátis</option>
-            <option value="first_purchase">Primeira compra</option>
           </select>
         </label>
         <label className="md:col-span-2">
-          <span className="text-xs uppercase text-muted-foreground">Descrição</span>
+          <span className="text-xs uppercase text-muted-foreground">Observação interna</span>
           <input className={inp} value={f.description ?? ""} onChange={upd("description")} />
         </label>
         <label>
-          <span className="text-xs uppercase text-muted-foreground">Valor</span>
+          <span className="text-xs uppercase text-muted-foreground">
+            {f.type === "fixed" ? "Desconto (R$)" : "Desconto (%)"}
+          </span>
           <input
             type="number"
             step="0.01"

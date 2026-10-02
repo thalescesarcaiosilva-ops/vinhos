@@ -11,6 +11,7 @@ import {
   venoCreatePix,
   venoPaymentStatus,
 } from "@/lib/veno";
+import { registerCouponUse, resolveCouponDiscount } from "@/lib/coupon.functions";
 
 type SupabaseAdmin = Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"];
 
@@ -232,7 +233,7 @@ async function createOrderWithItems(
       payment_status: "pending",
       user_id: userId,
     })
-    .select("id, order_number")
+    .select("id, order_number, user_id")
     .single();
   if (error) throw new Error(error.message);
 
@@ -298,10 +299,33 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
   .inputValidator((d) => CheckoutInput.parse(d))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const order = await createOrderWithItems(supabaseAdmin, { ...data, payment_method: "pix" });
+    const subtotal = Math.round(data.items.reduce((sum, item) => sum + item.price * item.quantity, 0) * 100) / 100;
+    const coupon = await resolveCouponDiscount(supabaseAdmin, data.couponCode, subtotal);
+    if (!coupon.ok) throw new Error(coupon.error);
 
-    const description = paymentDescription(order.id, data.total);
-    const amountCents = Math.round(data.total * 100);
+    const { data: settingsRow } = await supabaseAdmin
+      .from("store_settings")
+      .select("data")
+      .eq("id", "singleton")
+      .maybeSingle();
+    const pixPercent = Number((settingsRow?.data as { payments?: { pixDiscount?: number } } | null)?.payments?.pixDiscount ?? 0);
+    const pixDiscount = Math.round(Math.max(0, subtotal - coupon.discount) * (pixPercent / 100) * 100) / 100;
+    const discount = Math.round((coupon.discount + pixDiscount) * 100) / 100;
+    const total = Math.round((Math.max(0, subtotal - discount) + data.shipping) * 100) / 100;
+    if (total <= 0) throw new Error("O valor do pedido ficou inválido depois do cupom.");
+
+    const priced = {
+      ...data,
+      subtotal,
+      discount,
+      total,
+      couponCode: coupon.code,
+      payment_method: "pix" as const,
+    };
+    const order = await createOrderWithItems(supabaseAdmin, priced);
+
+    const description = paymentDescription(order.id, priced.total);
+    const amountCents = Math.round(priced.total * 100);
     const cellphone = (data.customer.phone || "").replace(/\D/g, "");
     const taxId = data.customer.document.replace(/\D/g, "");
     if (cellphone.length < 10) {
@@ -377,6 +401,15 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
         notes: encodeVenoProviderNote(data.notes),
       })
       .eq("id", order.id);
+
+    if (coupon.couponId && coupon.discount > 0) {
+      await registerCouponUse(supabaseAdmin, {
+        couponId: coupon.couponId,
+        orderId: order.id,
+        userId: order.user_id,
+        discount: coupon.discount,
+      });
+    }
 
     return {
       orderId: order.id,

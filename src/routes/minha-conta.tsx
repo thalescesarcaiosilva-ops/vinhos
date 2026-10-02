@@ -11,7 +11,7 @@ import { maskCEP, maskPhone, fetchAddressByCEP } from "@/lib/validation";
 import { brl } from "@/lib/format";
 import { toSiteImageUrl } from "@/lib/image-url";
 import {
-  Trash2, Plus, Heart, Package, MapPin, User as UserIcon, Ticket,
+  Trash2, Plus, Heart, Package, MapPin, User as UserIcon,
   Shield, LogOut, Headphones, ChevronRight, Home, PackageSearch,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,6 @@ import { STORE } from "@/lib/settings";
 type SectionKey =
   | "pedidos"
   | "rastreio"
-  | "cupons"
   | "cadastro"
   | "enderecos"
   | "favoritos"
@@ -46,7 +45,6 @@ export const Route = createFileRoute("/minha-conta")({
 const NAV: { key: SectionKey; icon: any; title: string; desc: string }[] = [
   { key: "pedidos", icon: Package, title: "Pedidos", desc: "Confira o andamento dos seus pedidos." },
   { key: "rastreio", icon: PackageSearch, title: "Rastrear pedido", desc: "Acompanhe a entrega com o código de rastreio." },
-  { key: "cupons", icon: Ticket, title: "Créditos e descontos", desc: "Confira os cupons disponíveis." },
   { key: "cadastro", icon: UserIcon, title: "Cadastro", desc: "Altere seus dados cadastrais, e-mail e senha." },
   { key: "enderecos", icon: Home, title: "Endereços", desc: "Altere e gerencie seus endereços salvos." },
   { key: "favoritos", icon: Heart, title: "Favoritos", desc: "Veja seus itens favoritados." },
@@ -146,7 +144,6 @@ function AccountPage() {
               />
             )}
             {active === "rastreio" && <TrackOrderPanel initialCode={trackCode} embedded />}
-            {active === "cupons" && <CouponsTab />}
             {active === "cadastro" && <ProfileTab userId={user.id} />}
             {active === "enderecos" && <AddressesTab userId={user.id} />}
             {active === "favoritos" && <FavoritesTab userId={user.id} />}
@@ -574,33 +571,6 @@ function FavoritesTab({ userId }: { userId: string }) {
     </div>
   );
 }
-
-function CouponsTab() {
-  const { data = [] } = useQuery({
-    queryKey: ["coupons-active"],
-    queryFn: async () => {
-      const { listActiveCouponsFn } = await import("@/lib/coupon.functions");
-      return await listActiveCouponsFn();
-    },
-  });
-
-  if (data.length === 0) {
-    return <EmptyState title="Nenhum cupom disponível" description="Fique de olho — em breve novos cupons e descontos especiais para você." />;
-  }
-
-  return (
-    <div className="grid gap-3 sm:grid-cols-2">
-      {data.map((c: any) => (
-        <div key={c.code} className="rounded-lg border-2 border-dashed border-primary/40 bg-primary/5 p-4">
-          <p className="font-mono text-lg font-bold text-primary">{c.code}</p>
-          <p className="text-sm">{c.description}</p>
-          {c.expires_at && <p className="mt-1 text-xs text-muted-foreground">Válido até {new Date(c.expires_at).toLocaleDateString("pt-BR")}</p>}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 
 function SecurityTab({ email }: { email: string }) {
   const [newEmail, setNewEmail] = useState(email);
