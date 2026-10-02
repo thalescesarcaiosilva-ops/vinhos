@@ -184,7 +184,7 @@ export async function syncOrderToTrack7(orderId: string): Promise<SyncResult> {
     }
 
     const total = Math.round(items.reduce((s, i) => s + i.price * i.quantity, 0) * 100) / 100;
-    const transactionId = normalizeTrack7TransactionId(row.order_number, row.id);
+    const transactionId = normalizeTrack7TransactionId(row.id, row.order_number);
 
     const body = {
       transaction_id: transactionId,
@@ -238,7 +238,22 @@ export async function syncOrderToTrack7(orderId: string): Promise<SyncResult> {
       return { ok: false, reason: "invalid_response" };
     }
 
-    const trackingCode = extractTrackingCode(json);
+    const trackingCode =
+      extractTrackingCode(json) ||
+      (await (async () => {
+        const tracked = await fetch(`${track7ApiBase()}/orders/${encodeURIComponent(transactionId)}/tracking`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "X-API-Key": apiKey,
+          },
+          cache: "no-store",
+        }).catch(() => null);
+        if (!tracked?.ok) return null;
+        const body = await tracked.json().catch(() => null);
+        return extractTrackingCode(body);
+      })());
+
     if (!trackingCode) {
       console.error("[track7] resposta sem tracking_code", orderId, json);
       return { ok: false, reason: "no_tracking_code" };

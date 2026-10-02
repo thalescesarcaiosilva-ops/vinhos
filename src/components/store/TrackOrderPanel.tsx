@@ -1,38 +1,57 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2, Loader2, MapPin, Search } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  FileText,
+  Loader2,
+  MapPin,
+  Package,
+  RefreshCw,
+  Search,
+  Truck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { lookupTrack7Tracking } from "@/lib/track7.functions";
 import type { Track7TrackingData } from "@/lib/track7";
+import { resolveTrack7StageIndex, TRACK7_STAGES } from "@/lib/track7";
 import { cn } from "@/lib/utils";
 
 type Props = {
   initialCode?: string;
+  initialPedido?: string;
   /** Quando true, ajusta os espaços para uso dentro da área da conta. */
   embedded?: boolean;
 };
 
-export function TrackOrderPanel({ initialCode = "", embedded = false }: Props) {
+const STAGE_ICONS = [FileText, ArrowRight, RefreshCw, Truck, MapPin, Clock] as const;
+
+export function TrackOrderPanel({
+  initialCode = "",
+  initialPedido = "",
+  embedded = false,
+}: Props) {
   const lookup = useServerFn(lookupTrack7Tracking);
-  const [codigo, setCodigo] = useState(initialCode.trim());
+  const [codigo, setCodigo] = useState((initialCode || initialPedido).trim());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Track7TrackingData | null>(null);
 
   useEffect(() => {
-    const code = initialCode.trim();
+    const code = (initialCode || initialPedido).trim();
     if (!code) return;
     setCodigo(code);
     void buscar(code);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- só quando initialCode muda
-  }, [initialCode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- só quando query muda
+  }, [initialCode, initialPedido]);
 
   async function buscar(raw?: string) {
     const value = (raw ?? codigo).trim();
     if (!value || value.length < 2) {
-      setError("Digite um código de rastreio válido.");
+      setError("Informe um código de rastreio válido");
       setResult(null);
       return;
     }
@@ -41,18 +60,24 @@ export function TrackOrderPanel({ initialCode = "", embedded = false }: Props) {
     setError(null);
 
     try {
-      const res = await lookup({
-        data: { trackingCode: value.toUpperCase() },
-      });
+      const res = await lookup({ data: { query: value } });
       if (!res.ok) {
         setResult(null);
         setError(res.error);
         return;
       }
       setResult(res.data);
-    } catch (error: unknown) {
+
+      if (typeof window !== "undefined" && !embedded) {
+        const params = new URLSearchParams();
+        const code = res.data.tracking_code || value;
+        params.set("codigo", code);
+        const next = `/rastreio?${params.toString()}`;
+        window.history.replaceState(null, "", next);
+      }
+    } catch (err: unknown) {
       setResult(null);
-      setError(error instanceof Error ? error.message : "Não foi possível consultar o rastreio.");
+      setError(err instanceof Error ? err.message : "Não foi possível consultar o rastreio.");
     } finally {
       setLoading(false);
     }
@@ -64,13 +89,17 @@ export function TrackOrderPanel({ initialCode = "", embedded = false }: Props) {
   }
 
   const timeline = result?.events ?? [];
+  const stageIndex = useMemo(
+    () => (result ? resolveTrack7StageIndex(result) : 0),
+    [result],
+  );
   const sectionSpacing = embedded ? "mt-6" : "mt-8";
 
   return (
     <div aria-busy={loading}>
       <form onSubmit={onSubmit}>
         <Label htmlFor="codigoRastreamento" className="text-sm text-foreground">
-          Código de rastreamento
+          Código de rastreio ou ID do pedido
         </Label>
         <div className="mt-2 flex flex-col gap-3 sm:flex-row">
           <Input
@@ -78,12 +107,12 @@ export function TrackOrderPanel({ initialCode = "", embedded = false }: Props) {
             type="text"
             value={codigo}
             onChange={(e) => setCodigo(e.target.value)}
-            placeholder="Ex.: PQA5961518202BR"
+            placeholder="Ex.: PQA1234567890BR"
             autoComplete="off"
             spellCheck={false}
             aria-invalid={Boolean(error)}
             aria-describedby={error ? "tracking-error" : "tracking-help"}
-            className="h-11 rounded-sm bg-background text-sm uppercase tracking-wide shadow-none placeholder:normal-case placeholder:tracking-normal"
+            className="h-11 rounded-sm bg-background text-sm tracking-wide shadow-none"
           />
           <Button
             type="submit"
@@ -136,83 +165,129 @@ export function TrackOrderPanel({ initialCode = "", embedded = false }: Props) {
               <div>
                 <p className="text-xs uppercase tracking-wider text-muted-foreground">Código</p>
                 <p className="mt-1 font-mono text-lg font-semibold tracking-wide text-foreground">
-                  {result.tracking_code || codigo.toUpperCase()}
+                  {result.tracking_code || codigo}
                 </p>
+                {result.transaction_id && (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Pedido: {result.transaction_id}
+                  </p>
+                )}
               </div>
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-primary">
                 <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-                {result.current_status || result.status || "Em andamento"}
+                {result.current_status || result.status || "Aguardando atualização"}
               </span>
             </div>
-            {result.transaction_id && (
-              <p className="mt-3 text-xs text-muted-foreground">
-                Pedido: <span className="font-medium text-foreground">{result.transaction_id}</span>
-              </p>
-            )}
+          </section>
+
+          <section className={sectionSpacing} aria-labelledby="tracking-progress-title">
+            <h2
+              id="tracking-progress-title"
+              className="font-serif text-lg font-semibold text-foreground"
+            >
+              Progresso da Entrega
+            </h2>
+            <ol className="mt-6 grid grid-cols-3 gap-y-8 sm:grid-cols-6">
+              {TRACK7_STAGES.map((stage, idx) => {
+                const Icon = STAGE_ICONS[idx] ?? Package;
+                const done = idx < stageIndex;
+                const current = idx === stageIndex;
+                const reached = done || current;
+                return (
+                  <li key={stage.id} className="relative flex flex-col items-center text-center">
+                    {idx < TRACK7_STAGES.length - 1 && (
+                      <span
+                        className={cn(
+                          "absolute left-[calc(50%+1.1rem)] top-5 hidden h-0.5 w-[calc(100%-2.2rem)] sm:block",
+                          idx < stageIndex ? "bg-emerald-500" : "bg-border",
+                        )}
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span
+                      className={cn(
+                        "relative z-[1] flex h-10 w-10 items-center justify-center rounded-full border-2 bg-background",
+                        current && "border-primary text-primary shadow-[0_0_0_4px_hsl(var(--primary)/0.12)]",
+                        done && "border-emerald-500 text-emerald-600",
+                        !reached && "border-border text-muted-foreground",
+                      )}
+                    >
+                      <Icon className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    <span
+                      className={cn(
+                        "mt-2 text-[11px] font-medium leading-tight sm:text-xs",
+                        current ? "text-primary" : reached ? "text-foreground" : "text-muted-foreground",
+                      )}
+                    >
+                      {stage.label}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
           </section>
 
           <section className={sectionSpacing} aria-labelledby="tracking-history-title">
             <div className="flex items-baseline justify-between gap-4">
               <h2
                 id="tracking-history-title"
-                className="font-serif text-xl font-semibold text-foreground"
+                className="font-serif text-lg font-semibold text-foreground"
               >
-                Histórico
+                Histórico de Movimentações
               </h2>
               <span className="text-xs text-muted-foreground">
                 {timeline.length} {timeline.length === 1 ? "atualização" : "atualizações"}
               </span>
             </div>
+
             {timeline.length === 0 ? (
               <p className="mt-3 text-sm text-muted-foreground">
-                Ainda não há movimentações registradas para este código.
+                Ainda não há movimentações registradas para este envio.
               </p>
             ) : (
-              <ol className="mt-4 divide-y divide-border border-b border-t border-border">
-                {timeline.map((ev, idx) => {
-                  const isLatest = idx === 0;
-                  return (
-                    <li
-                      key={`${ev.date}-${ev.status}-${idx}`}
-                      className="grid gap-2 py-5 sm:grid-cols-[10rem_1fr]"
-                    >
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span
+              <div className="mt-4 overflow-x-auto rounded-sm border border-border">
+                <table className="w-full min-w-[36rem] text-left text-sm">
+                  <thead className="bg-muted/40 text-xs uppercase tracking-wider text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-3 font-medium">Data/Hora</th>
+                      <th className="px-4 py-3 font-medium">Local</th>
+                      <th className="px-4 py-3 font-medium">Status</th>
+                      <th className="px-4 py-3 font-medium">Detalhes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {timeline.map((ev, idx) => {
+                      const isLatest = idx === 0;
+                      return (
+                        <tr
+                          key={`${ev.date}-${ev.status}-${idx}`}
                           className={cn(
-                            "h-2 w-2 shrink-0 rounded-full",
-                            isLatest ? "bg-primary" : "bg-muted-foreground/40",
-                          )}
-                          aria-hidden="true"
-                        />
-                        {ev.date && <span>{ev.date}</span>}
-                      </div>
-                      <div>
-                        <p
-                          className={cn(
-                            "text-sm font-semibold",
-                            isLatest ? "text-primary" : "text-foreground",
+                            "border-t border-border",
+                            isLatest && "bg-primary/5",
                           )}
                         >
-                          {ev.status}
-                        </p>
-                        {ev.description && (
-                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                            {ev.description}
-                          </p>
-                        )}
-                        <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                          {ev.location && (
-                            <span className="inline-flex items-center gap-1">
-                              <MapPin className="h-3 w-3" aria-hidden="true" />
-                              {ev.location}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ol>
+                          <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                            {ev.date || "—"}
+                          </td>
+                          <td className="px-4 py-3 text-muted-foreground">{ev.location || "—"}</td>
+                          <td
+                            className={cn(
+                              "px-4 py-3 font-medium",
+                              isLatest ? "text-primary" : "text-foreground",
+                            )}
+                          >
+                            {ev.status}
+                          </td>
+                          <td className="px-4 py-3 text-muted-foreground">
+                            {ev.description && ev.description !== ev.status ? ev.description : "—"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
           </section>
         </div>

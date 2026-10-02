@@ -7,6 +7,9 @@ import { pageMeta } from "@/lib/seo";
 
 const searchSchema = z.object({
   codigo: z.string().optional(),
+  pedido: z.string().optional(),
+  code: z.string().optional(),
+  order: z.string().optional(),
 });
 
 export const Route = createFileRoute("/rastreio")({
@@ -21,7 +24,9 @@ export const Route = createFileRoute("/rastreio")({
 });
 
 function TrackingPage() {
-  const { codigo: codigoQuery } = Route.useSearch();
+  const search = Route.useSearch();
+  const codigoQuery = (search.codigo || search.code || "").trim();
+  const pedidoQuery = (search.pedido || search.order || "").trim();
 
   return (
     <div className="min-h-[70vh] bg-background">
@@ -47,7 +52,7 @@ function TrackingPage() {
         </header>
 
         <section className="pt-8 sm:pt-10" aria-label="Consulta de rastreio">
-          <TrackOrderPanel initialCode={codigoQuery?.trim() ?? ""} />
+          <TrackOrderPanel initialCode={codigoQuery} initialPedido={pedidoQuery} />
         </section>
 
         <p className="mt-10 border-t border-border pt-6 text-sm text-muted-foreground">
