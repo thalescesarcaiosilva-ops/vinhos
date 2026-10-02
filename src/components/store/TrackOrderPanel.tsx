@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { lookupTrack7Tracking } from "@/lib/track7.functions";
 import type { Track7TrackingData } from "@/lib/track7";
-import { resolveTrack7StageIndex, TRACK7_STAGES } from "@/lib/track7";
+import { resolveTrack7StageIndex, sortTrack7EventsNewestFirst, TRACK7_STAGES } from "@/lib/track7";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -88,10 +88,16 @@ export function TrackOrderPanel({
     void buscar();
   }
 
-  const timeline = result?.events ?? [];
-  const stageIndex = useMemo(
-    () => (result ? resolveTrack7StageIndex(result) : 0),
+  const timeline = useMemo(
+    () => sortTrack7EventsNewestFirst(result?.events ?? []),
     [result],
+  );
+  const stageIndex = useMemo(
+    () =>
+      result
+        ? resolveTrack7StageIndex({ ...result, events: timeline })
+        : 0,
+    [result, timeline],
   );
   const sectionSpacing = embedded ? "mt-6" : "mt-8";
 
@@ -234,7 +240,7 @@ export function TrackOrderPanel({
                 id="tracking-history-title"
                 className="font-serif text-lg font-semibold text-foreground"
               >
-                Histórico de Movimentações
+                Histórico
               </h2>
               <span className="text-xs text-muted-foreground">
                 {timeline.length} {timeline.length === 1 ? "atualização" : "atualizações"}
@@ -246,48 +252,54 @@ export function TrackOrderPanel({
                 Ainda não há movimentações registradas para este envio.
               </p>
             ) : (
-              <div className="mt-4 overflow-x-auto rounded-sm border border-border">
-                <table className="w-full min-w-[36rem] text-left text-sm">
-                  <thead className="bg-muted/40 text-xs uppercase tracking-wider text-muted-foreground">
-                    <tr>
-                      <th className="px-4 py-3 font-medium">Data/Hora</th>
-                      <th className="px-4 py-3 font-medium">Local</th>
-                      <th className="px-4 py-3 font-medium">Status</th>
-                      <th className="px-4 py-3 font-medium">Detalhes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {timeline.map((ev, idx) => {
-                      const isLatest = idx === 0;
-                      return (
-                        <tr
-                          key={`${ev.date}-${ev.status}-${idx}`}
+              <ol className="mt-4 divide-y divide-border border-b border-t border-border">
+                {timeline.map((ev, idx) => {
+                  const isLatest = idx === 0;
+                  return (
+                    <li
+                      key={`${ev.date}-${ev.status}-${idx}`}
+                      className={cn(
+                        "grid gap-2 py-5 sm:grid-cols-[10rem_1fr]",
+                        isLatest && "bg-primary/5",
+                      )}
+                    >
+                      <div className="flex items-center gap-2 px-1 text-xs text-muted-foreground sm:px-0">
+                        <span
                           className={cn(
-                            "border-t border-border",
-                            isLatest && "bg-primary/5",
+                            "h-2 w-2 shrink-0 rounded-full",
+                            isLatest ? "bg-primary" : "bg-muted-foreground/40",
+                          )}
+                          aria-hidden="true"
+                        />
+                        {ev.date && <span>{ev.date}</span>}
+                      </div>
+                      <div className="px-1 sm:px-0">
+                        <p
+                          className={cn(
+                            "text-sm font-semibold",
+                            isLatest ? "text-primary" : "text-foreground",
                           )}
                         >
-                          <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
-                            {ev.date || "—"}
-                          </td>
-                          <td className="px-4 py-3 text-muted-foreground">{ev.location || "—"}</td>
-                          <td
-                            className={cn(
-                              "px-4 py-3 font-medium",
-                              isLatest ? "text-primary" : "text-foreground",
-                            )}
-                          >
-                            {ev.status}
-                          </td>
-                          <td className="px-4 py-3 text-muted-foreground">
-                            {ev.description && ev.description !== ev.status ? ev.description : "—"}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                          {ev.status}
+                        </p>
+                        {ev.description && ev.description !== ev.status && (
+                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                            {ev.description}
+                          </p>
+                        )}
+                        {ev.location && (
+                          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                            <span className="inline-flex items-center gap-1">
+                              <MapPin className="h-3 w-3" aria-hidden="true" />
+                              {ev.location}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
             )}
           </section>
         </div>

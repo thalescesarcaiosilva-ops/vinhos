@@ -1,4 +1,5 @@
 import type { Track7Event, Track7TrackingData, Track7TrackingResult } from "@/lib/track7";
+import { sortTrack7EventsNewestFirst } from "@/lib/track7";
 
 type NodeProcessEnv = { env?: Record<string, string | undefined> };
 
@@ -35,30 +36,6 @@ export function isUuid(value: string): boolean {
 export function looksLikeTrackingCode(value: string): boolean {
   const v = value.trim().toUpperCase();
   return /^[A-Z]{2}\d{9}[A-Z]{2}$/.test(v) || /^[A-Z0-9]{8,24}$/.test(v);
-}
-
-/**
- * Interpreta datas Track7: ISO, "DD/MM/YYYY", "DD/MM/YYYY - HH:mm", "DD/MM/YYYY HH:mm".
- * Retorna timestamp ms ou 0 se inválido.
- */
-export function parseTrack7Date(raw: string): number {
-  const s = String(raw ?? "").trim();
-  if (!s) return 0;
-  const iso = Date.parse(s);
-  if (!Number.isNaN(iso)) return iso;
-
-  const m = s.match(
-    /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s*[-–]?\s*(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/,
-  );
-  if (!m) return 0;
-  const day = Number(m[1]);
-  const month = Number(m[2]);
-  const year = Number(m[3]);
-  const hour = Number(m[4] ?? 0);
-  const minute = Number(m[5] ?? 0);
-  const second = Number(m[6] ?? 0);
-  const ts = Date.UTC(year, month - 1, day, hour + 3, minute, second); // BR ≈ UTC−3
-  return Number.isNaN(ts) ? 0 : ts;
 }
 
 function pickString(...values: unknown[]): string {
@@ -100,12 +77,10 @@ export function normalizeTrackingPayload(raw: unknown): Track7TrackingData | nul
           ? root.events
           : [];
 
-  const events = eventsRaw
-    .map((e) => (e && typeof e === "object" ? normalizeEvent(e as Record<string, unknown>) : null))
-    .filter(Boolean) as Track7Event[];
-
   // Mais recente primeiro (igual ao histórico da Track7).
-  events.sort((a, b) => parseTrack7Date(b.date) - parseTrack7Date(a.date));
+  const events = sortTrack7EventsNewestFirst(eventsRaw
+    .map((e) => (e && typeof e === "object" ? normalizeEvent(e as Record<string, unknown>) : null))
+    .filter(Boolean) as Track7Event[]);
 
   const tracking_code = pickString(
     data.tracking_code,

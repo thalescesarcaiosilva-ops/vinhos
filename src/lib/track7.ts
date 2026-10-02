@@ -17,6 +17,46 @@ export type Track7TrackingResult =
   | { ok: true; data: Track7TrackingData }
   | { ok: false; error: string; status?: number };
 
+/**
+ * Interpreta datas Track7: ISO, "DD/MM/YYYY", "DD/MM/YYYY - HH:mm".
+ * Retorna timestamp ms ou 0 se inválido.
+ */
+export function parseTrack7Date(raw: string): number {
+  const s = String(raw ?? "")
+    .trim()
+    .replace(/\u00a0/g, " ")
+    .replace(/[–—]/g, "-");
+  if (!s) return 0;
+
+  const iso = Date.parse(s);
+  if (!Number.isNaN(iso)) return iso;
+
+  const m = s.match(
+    /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s*-?\s*(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/,
+  );
+  if (!m) return 0;
+  const day = Number(m[1]);
+  const month = Number(m[2]);
+  const year = Number(m[3]);
+  const hour = Number(m[4] ?? 0);
+  const minute = Number(m[5] ?? 0);
+  const second = Number(m[6] ?? 0);
+  // Meio-dia UTC evita virar o dia anterior por fuso; com hora, assume horário de Brasília (UTC−3).
+  const utcHour = m[4] != null ? hour + 3 : 12;
+  const ts = Date.UTC(year, month - 1, day, utcHour, minute, second);
+  return Number.isNaN(ts) ? 0 : ts;
+}
+
+/** Mais recente primeiro. Se as datas não parsearem, inverte a ordem da API (costuma vir antiga→nova). */
+export function sortTrack7EventsNewestFirst<T extends { date: string }>(events: T[]): T[] {
+  if (events.length <= 1) return [...events];
+  const scored = events.map((e, index) => ({ e, index, t: parseTrack7Date(e.date) }));
+  const anyParsed = scored.some((s) => s.t > 0);
+  if (!anyParsed) return [...events].reverse();
+  scored.sort((a, b) => (b.t !== a.t ? b.t - a.t : a.index - b.index));
+  return scored.map((s) => s.e);
+}
+
 /** Estágios do progresso Track7 (mesma ordem da página oficial). */
 export const TRACK7_STAGES = [
   { id: "posted", label: "Postado", match: /postad/i },
