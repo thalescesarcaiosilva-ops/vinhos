@@ -26,6 +26,10 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { brl } from "@/lib/format";
 
+/** Taxa do gateway sobre cada pedido pago: 8% do valor + R$ 1,50. */
+const GATEWAY_PERCENT = 0.08;
+const GATEWAY_FIXED_BRL = 1.5;
+
 const PAID_STATUSES = new Set([
   "confirmed",
   "paid",
@@ -224,6 +228,10 @@ export function AdminDashboard() {
     const cancelled = orders.filter((o) => o.status === "cancelled" || o.status === "refunded");
     const revenue = paid.reduce((s, o) => s + Number(o.total), 0);
     const aov = paid.length ? revenue / paid.length : 0;
+    const gatewayPercentFee = revenue * GATEWAY_PERCENT;
+    const gatewayFixedFee = paid.length * GATEWAY_FIXED_BRL;
+    const gatewayFees = gatewayPercentFee + gatewayFixedFee;
+    const netRevenue = revenue - gatewayFees;
 
     const byMethod = {
       pix: { count: 0, revenue: 0, paidCount: 0, paidRevenue: 0 },
@@ -321,6 +329,10 @@ export function AdminDashboard() {
       cancelledCount: cancelled.length,
       revenue,
       aov,
+      gatewayPercentFee,
+      gatewayFixedFee,
+      gatewayFees,
+      netRevenue,
       byMethod,
       byStatus,
       daily,
@@ -396,6 +408,42 @@ export function AdminDashboard() {
           </div>
         ))}
       </div>
+
+      <section className="rounded-sm border border-border bg-card p-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h3 className="font-medium">Receita / gateway</h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Quanto entra depois da taxa do gateway: 8% do valor + {brl(GATEWAY_FIXED_BRL)} por transação paga.
+            </p>
+          </div>
+          <p className="text-xs text-muted-foreground">{stats.paidCount} transações no período</p>
+        </div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Receita bruta</p>
+            <p className="mt-1 font-serif text-2xl font-bold text-primary">{brl(stats.revenue)}</p>
+            <p className="mt-1 text-xs text-muted-foreground">Antes das taxas</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Taxa de 8%</p>
+            <p className="mt-1 font-serif text-2xl font-bold text-primary">{brl(stats.gatewayPercentFee)}</p>
+            <p className="mt-1 text-xs text-muted-foreground">Sobre a receita bruta</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Taxa fixa</p>
+            <p className="mt-1 font-serif text-2xl font-bold text-primary">{brl(stats.gatewayFixedFee)}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {stats.paidCount} × {brl(GATEWAY_FIXED_BRL)}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Líquido</p>
+            <p className="mt-1 font-serif text-2xl font-bold text-primary">{brl(stats.netRevenue)}</p>
+            <p className="mt-1 text-xs text-muted-foreground">Taxas totais: {brl(stats.gatewayFees)}</p>
+          </div>
+        </div>
+      </section>
 
       {/* PIX vs Cartão */}
       <div className="grid gap-4 lg:grid-cols-3">
