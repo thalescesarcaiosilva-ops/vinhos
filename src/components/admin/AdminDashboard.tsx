@@ -312,7 +312,7 @@ export function AdminDashboard() {
       const p = productMap.get(key);
       if (p) p.orders = set.size;
     }
-    const topProducts = [...productMap.values()].sort((a, b) => b.qty - a.qty);
+    const topProducts = [...productMap.values()].sort((a, b) => b.revenue - a.revenue);
 
     const methodPie = [
       { name: "PIX", key: "pix", value: byMethod.pix.paidCount, revenue: byMethod.pix.paidRevenue, color: "#2f9e4f" },
@@ -344,7 +344,7 @@ export function AdminDashboard() {
 
   const filteredProducts = useMemo(() => {
     const q = productQuery.trim().toLowerCase();
-    if (!q) return stats.topProducts.slice(0, 10);
+    if (!q) return stats.topProducts.slice(0, 25);
     return stats.topProducts.filter((p) => p.name.toLowerCase().includes(q));
   }, [stats.topProducts, productQuery]);
 
@@ -557,7 +557,9 @@ export function AdminDashboard() {
         <div className="flex flex-col gap-3 border-b border-border px-5 py-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h3 className="font-medium">Produtos mais comprados</h3>
-            <p className="text-xs text-muted-foreground">Com base em pedidos confirmados / pagos no período</p>
+            <p className="text-xs text-muted-foreground">
+              Top 25 por receita em pedidos confirmados / pagos no período
+            </p>
           </div>
           <div className="w-full sm:max-w-xs">
             <label className="mb-1 block text-xs text-muted-foreground" htmlFor="product-sales-search">
@@ -630,9 +632,9 @@ export function AdminDashboard() {
             </tbody>
           </table>
         </div>
-        {!productQuery.trim() && stats.topProducts.length > 10 && (
+        {!productQuery.trim() && stats.topProducts.length > 25 && (
           <p className="border-t border-border px-5 py-2 text-xs text-muted-foreground">
-            Mostrando o top 10. Use a busca para encontrar qualquer produto vendido no período ({stats.topProducts.length} no total).
+            Mostrando o top 25 por receita. Use a busca para encontrar qualquer produto vendido no período ({stats.topProducts.length} no total).
           </p>
         )}
       </div>
