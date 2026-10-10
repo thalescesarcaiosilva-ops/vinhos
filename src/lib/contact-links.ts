@@ -15,7 +15,7 @@ export function mailtoHref(email: string | null | undefined): string | undefined
 }
 
 const EMAIL_RE = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
-/** Telefone BR comum: (71) 99937-4325 ou variantes. */
+/** Telefone BR comum: (31) 97554-9668 ou variantes. */
 const PHONE_RE = /(?<!\d)\(?\d{2}\)?\s*\d{4,5}[-\s]?\d{4}(?!\d)/g;
 
 /**

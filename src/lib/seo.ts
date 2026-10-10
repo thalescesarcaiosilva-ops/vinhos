@@ -83,6 +83,8 @@ export function buildStoreSchema() {
     url: getSiteUrl(),
     taxID: STORE.cnpj,
     description: STORE.description,
+    telephone: STORE.phone,
+    email: STORE.email,
     address: {
       "@type": "PostalAddress",
       streetAddress: STORE.streetAddress,

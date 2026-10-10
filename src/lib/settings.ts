@@ -6,8 +6,8 @@ export const STORE = {
   legalName: "66.645.637 Ana Clara Sena Galvao",
   cnpj: "66.645.637/0001-43",
   email: "atendimento@galvaovinhos.com.br",
-  phone: "(71) 99937-4325",
-  phoneDigits: "71999374325",
+  phone: "(31) 97554-9668",
+  phoneDigits: "31975549668",
   address: "Avenida Dom João VI, 342 - Brotas, Salvador - BA, CEP: 40285-001",
   streetAddress: "Avenida Dom João VI, 342",
   addressLocality: "Salvador",
@@ -18,9 +18,9 @@ export const STORE = {
   get url() {
     return getSiteUrl();
   },
-  /** Sem alterar o telefone da loja. WhatsApp de atendimento no rodapé e nas políticas. */
-  whatsappNumber: "553175549668",
-  whatsappDisplay: "(31) 7554-9668",
+  /** Mesmo número da loja (WhatsApp / tel). */
+  whatsappNumber: "5531975549668",
+  whatsappDisplay: "(31) 97554-9668",
   freeShippingFrom: 200,
   flatShipping: 15.2,
   expressShipping: 15.2,

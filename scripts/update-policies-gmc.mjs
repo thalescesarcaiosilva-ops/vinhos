@@ -24,7 +24,7 @@ Em arrependimento (Art. 49 do CDC), o frete de devolução é de responsabilidad
 const PRIVACY_LGPD_BLOCK = `Encarregado pelo tratamento de dados (LGPD)
 Para assuntos relacionados à Lei Geral de Proteção de Dados (Lei nº 13.709/2018), incluindo exercício de direitos do titular, utilize:
 E-mail: atendimento@galvaovinhos.com.br
-Telefone: (71) 99937-4325
+Telefone: (31) 97554-9668
 
 `;
 
