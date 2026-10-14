@@ -53,8 +53,13 @@ export function CartDrawer() {
                         {i.name}
                       </Link>
                       <div className="text-sm font-semibold text-[color:var(--product-price)]">
-                        {brl(i.price * i.quantity)}
+                        {i.isGift ? "Grátis" : brl(i.price * i.quantity)}
                       </div>
+                      {i.isGift ? (
+                        <p className="mt-auto text-[11px] font-medium uppercase tracking-wider text-primary">
+                          Brinde
+                        </p>
+                      ) : (
                       <div className="mt-auto flex items-center justify-between">
                         <div className="inline-flex items-center rounded-sm border border-border">
                           <button
@@ -81,6 +86,7 @@ export function CartDrawer() {
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
+                      )}
                     </div>
                   </li>
                 ))}

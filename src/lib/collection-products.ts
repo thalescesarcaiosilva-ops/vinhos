@@ -17,7 +17,11 @@ export const PRICE_RANGES: Record<string, { min?: number; max?: number; label: s
 type CollectionProductQuery = ReturnType<typeof createCollectionProductQuery>;
 
 function createCollectionProductQuery(client: typeof supabase) {
-  return client.from("products").select(COLLECTION_PRODUCT_COLUMNS).eq("is_active", true);
+  return client
+    .from("products")
+    .select(COLLECTION_PRODUCT_COLUMNS)
+    .eq("is_active", true)
+    .eq("is_purchase_gift", false);
 }
 
 type VFilter = {
@@ -129,6 +133,7 @@ export async function fetchCollectionProducts(
           ", product_categories!inner(category_id, categories!inner(slug))",
       )
       .eq("is_active", true)
+      .eq("is_purchase_gift", false)
       .eq("product_categories.categories.slug", slug);
   }
 

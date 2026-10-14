@@ -74,10 +74,10 @@ function buildOrderEmailHtml(order: OrderEmailPayload): string {
       <tr>
         <td style="padding:10px 0;border-bottom:1px solid #eee;font-size:14px;color:#1a1a1a;">
           ${escapeHtml(i.product_name)}
-          <div style="color:#777;font-size:12px;">Qtd: ${i.quantity}</div>
+          <div style="color:#777;font-size:12px;">${Number(i.unit_price) === 0 ? "Brinde · " : ""}Qtd: ${i.quantity}</div>
         </td>
         <td style="padding:10px 0;border-bottom:1px solid #eee;font-size:14px;text-align:right;white-space:nowrap;">
-          ${escapeHtml(brl(Number(i.total)))}
+          ${escapeHtml(Number(i.total) === 0 ? "Grátis" : brl(Number(i.total)))}
         </td>
       </tr>`,
     )

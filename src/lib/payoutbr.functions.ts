@@ -190,6 +190,46 @@ function mapStatus(s?: string): "pending" | "confirmed" | "cancelled" | "refunde
   }
 }
 
+type CheckoutLine = {
+  productId?: string | null;
+  name: string;
+  image?: string | null;
+  price: number;
+  quantity: number;
+};
+
+async function attachPurchaseGift(
+  supabaseAdmin: SupabaseAdmin,
+  items: CheckoutLine[],
+): Promise<CheckoutLine[]> {
+  const { data: gifts, error } = await supabaseAdmin
+    .from("products")
+    .select("id, name, image_url, stock")
+    .eq("is_purchase_gift", true)
+    .eq("is_active", true)
+    .order("stock", { ascending: false })
+    .limit(8);
+  if (error) throw new Error(error.message);
+
+  const giftIds = new Set((gifts ?? []).map((g) => g.id));
+  const paid = items
+    .filter((item) => !item.productId || !giftIds.has(item.productId))
+    .map((item) => ({ ...item, price: Math.max(0, item.price) }));
+  const gift = (gifts ?? []).find((g) => Number(g.stock) > 0) ?? null;
+  if (!gift || paid.length === 0) return paid;
+
+  return [
+    ...paid,
+    {
+      productId: gift.id,
+      name: gift.name,
+      image: gift.image_url,
+      price: 0,
+      quantity: 1,
+    },
+  ];
+}
+
 function siteOrigin(): string {
   return (serverEnv("PUBLIC_SITE_URL") || serverEnv("VITE_PUBLIC_SITE_URL") || "https://www.galvaovinhos.com.br").replace(
     /\/+$/,
@@ -299,7 +339,8 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
   .inputValidator((d) => CheckoutInput.parse(d))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const subtotal = Math.round(data.items.reduce((sum, item) => sum + item.price * item.quantity, 0) * 100) / 100;
+    const items = await attachPurchaseGift(supabaseAdmin, data.items);
+    const subtotal = Math.round(items.reduce((sum, item) => sum + item.price * item.quantity, 0) * 100) / 100;
     const coupon = await resolveCouponDiscount(supabaseAdmin, data.couponCode, subtotal);
     if (!coupon.ok) throw new Error(coupon.error);
 
@@ -316,6 +357,7 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
 
     const priced = {
       ...data,
+      items,
       subtotal,
       discount,
       total,

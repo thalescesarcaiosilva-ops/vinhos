@@ -1017,9 +1017,13 @@ function Checkout() {
                       )}
                       <div className="min-w-0 flex-1">
                         <div className="line-clamp-2 text-xs font-medium text-foreground">{i.name}</div>
-                        <div className="mt-1 text-xs text-muted-foreground">Qtd: {i.quantity}</div>
+                        <div className="mt-1 text-xs text-muted-foreground">
+                          {i.isGift ? "Brinde · 1 unidade" : `Qtd: ${i.quantity}`}
+                        </div>
                       </div>
-                      <div className="text-sm font-semibold text-foreground">{brl(i.price * i.quantity)}</div>
+                      <div className="text-sm font-semibold text-foreground">
+                        {i.isGift ? "Grátis" : brl(i.price * i.quantity)}
+                      </div>
                     </div>
                   ))}
                 </div>
