@@ -1366,7 +1366,7 @@ function ProductForm({
                 }));
               }}
             />{" "}
-            Brinde grátis em qualquer compra (1 un., R$ 0 no pedido)
+            Brinde de primeira compra (vendável pelo preço; grátis só no 1º pedido com outro item)
           </label>
         </Section>
       </div>

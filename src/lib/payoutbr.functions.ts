@@ -34,12 +34,8 @@ function toBase64(value: string): string {
  * 3) e-mail novo / sem conta → null (pedido fica só com customer_email;
  *    ao cadastrar/entrar depois, link_guest_orders_to_user vincula)
  */
-async function resolveCheckoutUserId(
-  supabaseAdmin: SupabaseAdmin,
-  customerEmail: string,
-): Promise<string | null> {
+async function getCheckoutSessionUserId(supabaseAdmin: SupabaseAdmin): Promise<string | null> {
   try {
-    // Import dinâmico: este módulo é importado pelo checkout no client via createServerFn.
     const { getRequest } = await import("@tanstack/react-start/server");
     const request = getRequest();
     const authHeader = request?.headers?.get("authorization");
@@ -51,8 +47,17 @@ async function resolveCheckoutUserId(
       }
     }
   } catch (e) {
-    console.warn("resolveCheckoutUserId: sessão opcional falhou", e);
+    console.warn("getCheckoutSessionUserId: sessão opcional falhou", e);
   }
+  return null;
+}
+
+async function resolveCheckoutUserId(
+  supabaseAdmin: SupabaseAdmin,
+  customerEmail: string,
+): Promise<string | null> {
+  const sessionUserId = await getCheckoutSessionUserId(supabaseAdmin);
+  if (sessionUserId) return sessionUserId;
 
   const email = customerEmail.trim().toLowerCase();
   if (!email) return null;
@@ -213,10 +218,28 @@ async function attachPurchaseGift(
 
   const giftIds = new Set((gifts ?? []).map((g) => g.id));
   const paid = items
-    .filter((item) => !item.productId || !giftIds.has(item.productId))
+    .filter((item) => !(item.productId && giftIds.has(item.productId) && item.price === 0))
     .map((item) => ({ ...item, price: Math.max(0, item.price) }));
+
+  const sessionUserId = await getCheckoutSessionUserId(supabaseAdmin);
+  if (sessionUserId) {
+    const { count, error: countError } = await supabaseAdmin
+      .from("orders")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", sessionUserId)
+      .or(
+        "payment_status.eq.paid,status.in.(confirmed,paid,shipped,delivered,separating,invoiced,out_for_delivery)",
+      );
+    if (countError) throw new Error(countError.message);
+    if ((count ?? 0) > 0) return paid;
+  }
+
   const gift = (gifts ?? []).find((g) => Number(g.stock) > 0) ?? null;
-  if (!gift || paid.length === 0) return paid;
+  const hasPaidGiftSku = Boolean(
+    gift && paid.some((item) => item.productId === gift.id && item.price > 0),
+  );
+  const hasOtherPaid = paid.some((item) => !gift || item.productId !== gift.id);
+  if (!gift || !hasOtherPaid || hasPaidGiftSku) return paid;
 
   return [
     ...paid,

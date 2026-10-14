@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { usePurchaseGift, type PurchaseGiftProduct } from "@/lib/purchase-gift";
+import {
+  useFirstPurchaseEligible,
+  usePurchaseGift,
+  type PurchaseGiftProduct,
+} from "@/lib/purchase-gift";
 
 export type CartItem = {
   id: string;
@@ -9,6 +13,7 @@ export type CartItem = {
   image: string | null;
   quantity: number;
   isGift?: boolean;
+  catalogPrice?: number;
 };
 
 type CartContextValue = {
@@ -28,13 +33,18 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "vinoteca_cart_v1";
 
-function isGiftLine(item: CartItem, giftId?: string | null): boolean {
-  return Boolean(item.isGift) || Boolean(giftId && item.id === giftId);
-}
+function applyPurchaseGiftLine(
+  items: CartItem[],
+  gift: PurchaseGiftProduct | null,
+  eligible: boolean,
+): CartItem[] {
+  const paid = items.filter((item) => !item.isGift);
+  const hasPaidGiftSku = Boolean(gift && paid.some((item) => item.id === gift.id));
+  const hasOtherPaid = paid.some((item) => !gift || item.id !== gift.id);
 
-function applyPurchaseGiftLine(items: CartItem[], gift: PurchaseGiftProduct | null): CartItem[] {
-  const paid = items.filter((item) => !isGiftLine(item, gift?.id));
-  if (!gift || gift.stock <= 0 || paid.length === 0) return paid;
+  if (!eligible || !gift || gift.stock <= 0 || !hasOtherPaid || hasPaidGiftSku) {
+    return paid;
+  }
 
   const giftItem: CartItem = {
     id: gift.id,
@@ -44,16 +54,16 @@ function applyPurchaseGiftLine(items: CartItem[], gift: PurchaseGiftProduct | nu
     image: gift.image_url,
     quantity: 1,
     isGift: true,
+    catalogPrice: Number(gift.price) || undefined,
   };
 
   const current = items[items.length - 1];
   if (
     items.length === paid.length + 1 &&
-    current &&
-    isGiftLine(current, gift.id) &&
+    current?.isGift &&
+    current.id === gift.id &&
     current.price === 0 &&
-    current.quantity === 1 &&
-    current.isGift
+    current.quantity === 1
   ) {
     return items;
   }
@@ -77,6 +87,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { data: gift, isFetched } = usePurchaseGift();
+  const { eligible, ready } = useFirstPurchaseEligible();
 
   useEffect(() => {
     try {
@@ -86,12 +97,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!isFetched) return;
+    if (!isFetched || !ready) return;
     setItems((prev) => {
-      const next = applyPurchaseGiftLine(prev, gift ?? null);
+      const next = applyPurchaseGiftLine(prev, gift ?? null, eligible);
       return cartItemsEqual(prev, next) ? prev : next;
     });
-  }, [gift, isFetched, items]);
+  }, [gift, isFetched, items, eligible, ready]);
 
   useEffect(() => {
     if (typeof window !== "undefined")
@@ -102,37 +113,44 @@ export function CartProvider({ children }: { children: ReactNode }) {
     items,
     add: (item, qty = 1) => {
       setItems((prev) => {
-        const withPaid = prev.filter((p) => !isGiftLine(p, gift?.id));
-        const idx = withPaid.findIndex((p) => p.id === item.id);
+        const paid = prev.filter((p) => !p.isGift);
+        const idx = paid.findIndex((p) => p.id === item.id);
         let nextPaid: CartItem[];
-        if (gift && item.id === gift.id) {
-          nextPaid = withPaid;
-        } else if (idx >= 0) {
-          nextPaid = [...withPaid];
-          nextPaid[idx] = { ...nextPaid[idx], quantity: nextPaid[idx].quantity + qty };
+        if (idx >= 0) {
+          nextPaid = [...paid];
+          nextPaid[idx] = {
+            ...nextPaid[idx],
+            ...item,
+            quantity: nextPaid[idx].quantity + qty,
+            isGift: false,
+          };
         } else {
-          nextPaid = [...withPaid, { ...item, quantity: qty }];
+          nextPaid = [...paid, { ...item, quantity: qty, isGift: false }];
         }
-        return applyPurchaseGiftLine(nextPaid, gift ?? null);
+        return applyPurchaseGiftLine(nextPaid, gift ?? null, eligible);
       });
       setDrawerOpen(true);
     },
     remove: (id) =>
       setItems((prev) => {
-        const target = prev.find((p) => p.id === id);
-        if (target && isGiftLine(target, gift?.id)) return prev;
+        const target = prev.find((p) => p.id === id && !p.isGift) ?? prev.find((p) => p.id === id);
+        if (target?.isGift) return prev;
         return applyPurchaseGiftLine(
-          prev.filter((p) => p.id !== id),
+          prev.filter((p) => !(p.id === id && !p.isGift)),
           gift ?? null,
+          eligible,
         );
       }),
     setQty: (id, qty) =>
       setItems((prev) => {
-        const target = prev.find((p) => p.id === id);
-        if (target && isGiftLine(target, gift?.id)) return prev;
+        const target = prev.find((p) => p.id === id && !p.isGift);
+        if (!target) return prev;
         return applyPurchaseGiftLine(
-          prev.map((p) => (p.id === id ? { ...p, quantity: Math.max(1, qty) } : p)),
+          prev.map((p) =>
+            p.id === id && !p.isGift ? { ...p, quantity: Math.max(1, qty) } : p,
+          ),
           gift ?? null,
+          eligible,
         );
       }),
     clear: () => setItems([]),
@@ -142,7 +160,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     openDrawer: () => setDrawerOpen(true),
     closeDrawer: () => setDrawerOpen(false),
     setDrawerOpen,
-  }), [items, drawerOpen, gift]);
+  }), [items, drawerOpen, gift, eligible]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

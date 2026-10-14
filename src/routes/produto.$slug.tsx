@@ -191,7 +191,6 @@ export const Route = createFileRoute("/produto/$slug")({
     const metaDesc = truncateAtWord(schemaDesc, 160);
     const pageTitle = `${p.name} — ${STORE.name}`;
     const inStock = (p.stock ?? 0) > 0;
-    const isPurchaseGift = Boolean(p.is_purchase_gift);
     const priceValidUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
       .toISOString()
       .slice(0, 10);
@@ -213,20 +212,16 @@ export const Route = createFileRoute("/produto/$slug")({
       ...(gtin ? { gtin } : {}),
       ...(skuId ? { sku: skuId, mpn: skuId } : {}),
       ...(brandName ? { brand: { "@type": "Brand", name: brandName } } : {}),
-      ...(isPurchaseGift
-        ? {}
-        : {
-            offers: {
-              "@type": "Offer",
-              url,
-              priceCurrency: "BRL",
-              price,
-              priceValidUntil,
-              itemCondition: "https://schema.org/NewCondition",
-              availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-              seller: buildSellerOrganization(),
-            },
-          }),
+      offers: {
+        "@type": "Offer",
+        url,
+        priceCurrency: "BRL",
+        price,
+        priceValidUntil,
+        itemCondition: "https://schema.org/NewCondition",
+        availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        seller: buildSellerOrganization(),
+      },
     };
 
     const approvedReviewCount = Number(p.approved_review_count ?? 0);
@@ -270,7 +265,6 @@ export const Route = createFileRoute("/produto/$slug")({
       meta: [
         { title: pageTitle },
         { name: "description", content: metaDesc },
-        ...(isPurchaseGift ? [{ name: "robots", content: "noindex, nofollow" }] : []),
         { property: "og:type", content: "product" },
         { property: "og:title", content: pageTitle },
         { property: "og:description", content: metaDesc },
@@ -278,13 +272,9 @@ export const Route = createFileRoute("/produto/$slug")({
         { property: "og:site_name", content: STORE.name },
         { property: "og:locale", content: "pt_BR" },
         ...(mainImage ? [{ property: "og:image", content: mainImage }] : []),
-        ...(!isPurchaseGift
-          ? [
-              { property: "product:price:amount", content: price },
-              { property: "product:price:currency", content: "BRL" },
-              { property: "product:availability", content: inStock ? "in stock" : "out of stock" },
-            ]
-          : []),
+        { property: "product:price:amount", content: price },
+        { property: "product:price:currency", content: "BRL" },
+        { property: "product:availability", content: inStock ? "in stock" : "out of stock" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: pageTitle },
         { name: "twitter:description", content: metaDesc },
@@ -295,9 +285,7 @@ export const Route = createFileRoute("/produto/$slug")({
         ...(mainImage ? [{ rel: "preload", as: "image", href: mainImage }] : []),
       ],
       scripts: [
-        ...(!isPurchaseGift
-          ? [{ type: "application/ld+json", children: JSON.stringify(productSchema) }]
-          : []),
+        { type: "application/ld+json", children: JSON.stringify(productSchema) },
         { type: "application/ld+json", children: JSON.stringify(breadcrumb) },
       ],
     };
@@ -653,28 +641,28 @@ function ProductPage() {
           {/* Compra e frete */}
           <aside className="min-w-0 space-y-6 xl:sticky xl:top-32">
             <div className="space-y-1">
-              {compare > price && !p.is_purchase_gift && (
+              {compare > price && (
                 <div className="text-sm text-muted-foreground line-through">de {brl(compare)}</div>
               )}
 
               <div className="flex items-baseline gap-2 pt-1">
                 <span className="font-serif text-3xl font-bold text-[color:var(--primary)] xl:text-4xl">
-                  {p.is_purchase_gift ? "Grátis" : brl(hasPixDiscount ? pixPrice : price)}
+                  {brl(hasPixDiscount ? pixPrice : price)}
                 </span>
-                {!p.is_purchase_gift && hasPixDiscount && (
+                {hasPixDiscount && (
                   <span className="text-sm font-medium text-muted-foreground">no PIX</span>
                 )}
               </div>
 
-              {!p.is_purchase_gift && hasPixDiscount && <PixDiscountBanner percent={pixDiscountPct} />}
+              {hasPixDiscount && <PixDiscountBanner percent={pixDiscountPct} />}
 
-              {!p.is_purchase_gift && hasPixDiscount && (
+              {hasPixDiscount && (
                 <div className="text-sm text-muted-foreground">
                   ou <strong className="text-foreground">{brl(price)}</strong> no cartão
                 </div>
               )}
 
-              {pay.cardEnabled && featuredInstallment && !p.is_purchase_gift && (
+              {pay.cardEnabled && featuredInstallment && (
                 <div className="mt-3 flex items-start gap-3 border-y border-border/70 py-3">
                   <CreditCard
                     className="mt-0.5 h-5 w-5 shrink-0 text-primary"
@@ -727,14 +715,6 @@ function ProductPage() {
             />
 
             <div className="space-y-3">
-              {p.is_purchase_gift ? (
-                <p className="rounded-sm border border-primary/25 bg-primary/[0.06] px-3 py-3 text-sm text-foreground">
-                  Este jogo de taças sai <strong>grátis</strong> automaticamente em qualquer
-                  compra da loja.
-                </p>
-              ) : null}
-              {!p.is_purchase_gift && (
-                <>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-foreground">Quantidade</span>
                 <div className="inline-flex h-10 items-center rounded-sm bg-muted/60">
@@ -767,8 +747,6 @@ function ProductPage() {
               >
                 {p.stock > 0 ? "Comprar agora" : "Produto indisponível"}
               </button>
-                </>
-              )}
             </div>
 
             <SuggestedProducts productId={p.id} />
@@ -946,7 +924,6 @@ function ProductPage() {
         {/* Produtos relacionados */}
         <RelatedProducts productId={p.id} country={p.country} wineType={p.wine_type} />
       </StoreContainer>
-      {!p.is_purchase_gift && (
       <ProductMobileBuyBar
         image={p.image_url}
         name={p.name}
@@ -955,7 +932,6 @@ function ProductPage() {
         disabled={p.stock <= 0}
         onBuy={addToCart}
       />
-      )}
     </div>
   );
 }
@@ -977,8 +953,7 @@ function SuggestedProducts({ productId }: { productId: string }) {
         .from("products")
         .select("id, name, slug, price, compare_at_price, image_url, country, grape, rating")
         .in("id", ids)
-        .eq("is_active", true)
-        .eq("is_purchase_gift", false);
+        .eq("is_active", true);
       if (pErr) throw pErr;
 
       const byId = new Map((products ?? []).map((p) => [p.id, p]));
@@ -1051,7 +1026,6 @@ function RelatedProducts({
         .from("products")
         .select("id, name, slug, price, compare_at_price, image_url, country, grape, rating")
         .eq("is_active", true)
-        .eq("is_purchase_gift", false)
         .neq("id", productId)
         .limit(8);
       if (wineType) query = query.eq("wine_type", wineType);

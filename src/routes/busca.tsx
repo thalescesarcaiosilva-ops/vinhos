@@ -89,7 +89,6 @@ function SearchPage() {
         .from("products")
         .select("country,grape,wine_type")
         .eq("is_active", true)
-        .eq("is_purchase_gift", false)
         .limit(1000);
       const countries = new Set<string>();
       const grapes = new Set<string>();

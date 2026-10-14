@@ -93,10 +93,9 @@ async function collectionSlugsWithProducts(
 ): Promise<Array<{ slug: string; updated_at: string | null }>> {
   const { data, error } = await supabase
     .from("product_categories")
-    .select("categories!inner(slug, updated_at, is_active), products!inner(is_active, is_purchase_gift)")
+    .select("categories!inner(slug, updated_at, is_active), products!inner(is_active)")
     .eq("categories.is_active", true)
-    .eq("products.is_active", true)
-    .eq("products.is_purchase_gift", false);
+    .eq("products.is_active", true);
   if (error) throw error;
 
   const bySlug = new Map<string, string | null>();
@@ -108,8 +107,7 @@ async function collectionSlugsWithProducts(
   const { count, error: todosErr } = await supabase
     .from("products")
     .select("id", { count: "exact", head: true })
-    .eq("is_active", true)
-    .eq("is_purchase_gift", false);
+    .eq("is_active", true);
   if (todosErr) throw todosErr;
   if ((count ?? 0) > 0) bySlug.set("todos", null);
 
@@ -136,7 +134,6 @@ export async function collectSitemapUrls(): Promise<SitemapUrl[]> {
       .from("products")
       .select("slug, updated_at")
       .eq("is_active", true)
-      .eq("exclude_from_feed", false)
       .order("updated_at", { ascending: false })
       .range(from, from + 999);
     if (error) throw error;

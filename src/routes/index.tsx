@@ -93,12 +93,11 @@ async function fetchCategoryTiles(): Promise<CategoryTile[]> {
     const { data, error } = await supabase
       .from("categories")
       .select(
-        "slug, name, banner_image, product_categories(product_id, products!inner(is_active, is_purchase_gift))",
+        "slug, name, banner_image, product_categories(product_id, products!inner(is_active))",
       )
       .in("slug", [...HOME_CATEGORY_SLUGS])
       .eq("is_active", true)
-      .eq("product_categories.products.is_active", true)
-      .eq("product_categories.products.is_purchase_gift", false);
+      .eq("product_categories.products.is_active", true);
     if (error) throw error;
     return data;
   });
@@ -133,9 +132,8 @@ async function fetchHomeProducts(filter?: {
           .from("products")
           .select(baseCols + ", product_categories!inner(category_id, categories!inner(slug))")
           .eq("is_active", true)
-          .eq("is_purchase_gift", false)
           .eq("product_categories.categories.slug", filter.categorySlug)
-      : supabase.from("products").select(baseCols).eq("is_active", true).eq("is_purchase_gift", false);
+      : supabase.from("products").select(baseCols).eq("is_active", true);
     if (filter?.bestSeller) q = q.eq("best_seller", true);
     q = q.limit(filter?.limit ?? 8);
     const { data, error } = await q;

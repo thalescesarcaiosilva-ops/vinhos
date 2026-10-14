@@ -34,7 +34,7 @@ export function CartDrawer() {
             <div className="flex-1 overflow-y-auto px-5 py-4">
               <ul className="space-y-4">
                 {items.map((i) => (
-                  <li key={i.id} className="flex gap-3 border-b border-border pb-4">
+                  <li key={`${i.id}-${i.isGift ? "gift" : "paid"}`} className="flex gap-3 border-b border-border pb-4">
                     <Link
                       to="/produto/$slug"
                       params={{ slug: i.slug }}
@@ -53,11 +53,22 @@ export function CartDrawer() {
                         {i.name}
                       </Link>
                       <div className="text-sm font-semibold text-[color:var(--product-price)]">
-                        {i.isGift ? "Grátis" : brl(i.price * i.quantity)}
+                        {i.isGift ? (
+                          <span className="flex flex-col items-start gap-0.5">
+                            {i.catalogPrice ? (
+                              <span className="text-xs font-normal text-muted-foreground line-through">
+                                {brl(i.catalogPrice)}
+                              </span>
+                            ) : null}
+                            Grátis
+                          </span>
+                        ) : (
+                          brl(i.price * i.quantity)
+                        )}
                       </div>
                       {i.isGift ? (
                         <p className="mt-auto text-[11px] font-medium uppercase tracking-wider text-primary">
-                          Brinde
+                          Brinde de primeira compra
                         </p>
                       ) : (
                       <div className="mt-auto flex items-center justify-between">

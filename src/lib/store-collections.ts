@@ -17,11 +17,10 @@ export async function fetchStoreCategoriesWithProducts(): Promise<StoreCategory[
   const { data, error } = await supabase
     .from("categories")
     .select(
-      "id, slug, name, kind, sort_order, banner_image, parent_id, product_categories!inner(product_id, products!inner(is_active, is_purchase_gift))",
+      "id, slug, name, kind, sort_order, banner_image, parent_id, product_categories!inner(product_id, products!inner(is_active))",
     )
     .eq("is_active", true)
-    .eq("product_categories.products.is_active", true)
-    .eq("product_categories.products.is_purchase_gift", false);
+    .eq("product_categories.products.is_active", true);
   if (error) throw error;
 
   const byId = new Map<string, StoreCategory>();
