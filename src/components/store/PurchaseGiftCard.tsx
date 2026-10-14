@@ -27,30 +27,26 @@ export function FirstPurchaseGiftHighlight({
         <Gift className="h-3.5 w-3.5 shrink-0" aria-hidden />
         Brinde de primeira compra
       </p>
-      {!compact && (
-        <p className="mt-1 text-sm font-medium leading-snug text-foreground">{gift.name}</p>
-      )}
+      <p
+        className={
+          compact
+            ? "mt-1 line-clamp-2 text-sm font-medium leading-snug text-foreground"
+            : "mt-1 text-sm font-medium leading-snug text-foreground"
+        }
+      >
+        {gift.name}
+      </p>
       {inStock ? (
-        <div className={compact ? "mt-1" : "mt-3"}>
-          {catalog > 0 && (
-            <p
-              className={
-                compact
-                  ? "text-xs text-muted-foreground line-through"
-                  : "text-base text-muted-foreground line-through"
-              }
-            >
-              de {brl(catalog)}
-            </p>
-          )}
-          <p
-            className={
-              compact
-                ? "font-serif text-2xl font-bold leading-none text-primary"
-                : "font-serif text-4xl font-bold leading-none text-primary"
-            }
-          >
-            {brl(0)}
+        <div className="mt-2">
+          <p className={compact ? "text-sm leading-snug" : "text-base leading-snug"}>
+            {catalog > 0 && (
+              <>
+                <span className="text-muted-foreground">de </span>
+                <span className="text-muted-foreground line-through">{brl(catalog)}</span>
+                <span className="text-muted-foreground"> por </span>
+              </>
+            )}
+            <span className="font-serif text-xl font-bold text-primary">{brl(0)}</span>
           </p>
           <p
             className={
@@ -61,11 +57,11 @@ export function FirstPurchaseGiftHighlight({
           >
             Grátis
           </p>
-          <p className={compact ? "mt-0.5 text-xs text-muted-foreground" : "mt-1 text-sm text-foreground"}>
-            {isReturningCustomer && !eligible
-              ? "Exclusivo do primeiro pedido desta conta"
-              : "na primeira compra na loja"}
-          </p>
+          {isReturningCustomer && !eligible && (
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              Exclusivo do primeiro pedido desta conta
+            </p>
+          )}
         </div>
       ) : (
         <p className="mt-1 text-xs text-muted-foreground">Brinde temporariamente indisponível</p>
@@ -82,16 +78,16 @@ export function PurchaseGiftCard({ hideForProductId }: { hideForProductId?: stri
     <Link
       to="/produto/$slug"
       params={{ slug: gift.slug }}
-      className="flex gap-3 rounded-sm border-2 border-primary/35 bg-primary/[0.07] p-3 transition hover:border-primary/55"
+      className="flex items-stretch gap-2 overflow-hidden rounded-sm border-2 border-primary/35 bg-primary/[0.07] py-2 pr-3 pl-1 transition hover:border-primary/55"
     >
-      <div className="h-20 w-14 shrink-0 overflow-hidden rounded-sm bg-background">
+      <div className="h-[7.5rem] w-[5.25rem] shrink-0 overflow-hidden">
         <ProductImage
           src={gift.image_url}
           alt={gift.name}
-          displaySize={80}
-          width={56}
-          height={80}
-          className="h-full w-full object-contain p-0.5"
+          displaySize={160}
+          width={84}
+          height={120}
+          className="h-full w-full object-contain object-center"
         />
       </div>
       <FirstPurchaseGiftHighlight gift={gift} compact />
