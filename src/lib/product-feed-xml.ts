@@ -22,7 +22,6 @@ type FeedProduct = {
   gtin: string | null;
   product_type: Database["public"]["Enums"]["product_type_enum"] | null;
   is_zero_alcohol: boolean | null;
-  exclude_from_feed: boolean | null;
   product_categories: Array<{ categories: { name: string } | null }> | null;
 };
 
@@ -209,10 +208,9 @@ export async function buildProductFeedXml(): Promise<string> {
     const { data, error } = await supabase
       .from("products")
       .select(
-        "id, sku, slug, name, description, short_description, price, stock, brand, country, wine_type, image_url, gallery, gtin, product_type, is_zero_alcohol, exclude_from_feed, product_categories(categories(name))",
+        "id, sku, slug, name, description, short_description, price, stock, brand, country, wine_type, image_url, gallery, gtin, product_type, is_zero_alcohol, product_categories(categories(name))",
       )
       .eq("is_active", true)
-      .eq("exclude_from_feed", false)
       .order("name")
       .range(from, from + 499);
     if (error) throw error;

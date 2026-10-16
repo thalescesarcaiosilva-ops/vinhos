@@ -121,30 +121,11 @@ function Cart() {
       <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
         <div className="space-y-4">
           {items.map(it => (
-            <div key={`${it.id}-${it.isGift ? "gift" : "paid"}`} className="flex gap-4 rounded-sm border border-border bg-muted/50 p-4">
+            <div key={it.id} className="flex gap-4 rounded-sm border border-border bg-muted/50 p-4">
               {it.image && <img src={toSiteImageUrl(it.image)} alt={it.name} className="h-28 w-24 object-contain" />}
               <div className="flex flex-1 flex-col">
                 <Link to="/produto/$slug" params={{ slug: it.slug }} className="text-sm font-medium hover:text-primary">{it.name}</Link>
-                {it.isGift ? (
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-primary">Brinde de primeira compra · 1 unidade</p>
-                ) : null}
-                <div className="mt-1 text-sm font-bold text-[color:var(--buy)]">
-                  {it.isGift ? (
-                    <span className="flex flex-col gap-0.5">
-                      {it.catalogPrice ? (
-                        <span className="text-xs font-normal text-muted-foreground line-through">
-                          {brl(it.catalogPrice)}
-                        </span>
-                      ) : null}
-                      Grátis
-                    </span>
-                  ) : (
-                    brl(it.price)
-                  )}
-                </div>
-                {it.isGift ? (
-                  <p className="mt-auto text-xs text-muted-foreground">Incluído no primeiro pedido</p>
-                ) : (
+                <div className="mt-1 text-sm font-bold text-[color:var(--buy)]">{brl(it.price)}</div>
                 <div className="mt-auto flex items-center justify-between">
                   <div className="inline-flex items-center rounded-sm border border-border bg-background">
                     <button onClick={() => setQty(it.id, it.quantity - 1)} className="px-2 py-1"><Minus className="h-3 w-3" /></button>
@@ -155,22 +136,8 @@ function Cart() {
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-                )}
               </div>
-              <div className="text-right font-serif text-lg font-bold text-[color:var(--buy)]">
-                {it.isGift ? (
-                  <span className="flex flex-col items-end gap-0.5">
-                    {it.catalogPrice ? (
-                      <span className="text-xs font-normal text-muted-foreground line-through">
-                        {brl(it.catalogPrice)}
-                      </span>
-                    ) : null}
-                    Grátis
-                  </span>
-                ) : (
-                  brl(it.price * it.quantity)
-                )}
-              </div>
+              <div className="text-right font-serif text-lg font-bold text-[color:var(--buy)]">{brl(it.price * it.quantity)}</div>
             </div>
           ))}
 

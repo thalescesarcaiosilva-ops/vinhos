@@ -1008,7 +1008,7 @@ function Checkout() {
               <div className="space-y-4 p-5">
                 <div className="space-y-3">
                   {items.map(i => (
-                    <div key={`${i.id}-${i.isGift ? "gift" : "paid"}`} className="flex items-start gap-3 text-sm">
+                    <div key={i.id} className="flex items-start gap-3 text-sm">
                       {i.image && (
                         <div className="relative h-16 w-14 shrink-0 overflow-hidden rounded border border-border bg-muted/40">
                           <img src={toSiteImageUrl(i.image)} alt="" className="h-full w-full object-contain p-1" />
@@ -1017,24 +1017,9 @@ function Checkout() {
                       )}
                       <div className="min-w-0 flex-1">
                         <div className="line-clamp-2 text-xs font-medium text-foreground">{i.name}</div>
-                        <div className="mt-1 text-xs text-muted-foreground">
-                          {i.isGift ? "Brinde de primeira compra · 1 unidade" : `Qtd: ${i.quantity}`}
-                        </div>
+                        <div className="mt-1 text-xs text-muted-foreground">Qtd: {i.quantity}</div>
                       </div>
-                      <div className="text-right text-sm font-semibold text-foreground">
-                        {i.isGift ? (
-                          <span className="flex flex-col items-end gap-0.5">
-                            {i.catalogPrice ? (
-                              <span className="text-xs font-normal text-muted-foreground line-through">
-                                {brl(i.catalogPrice)}
-                              </span>
-                            ) : null}
-                            Grátis
-                          </span>
-                        ) : (
-                          brl(i.price * i.quantity)
-                        )}
-                      </div>
+                      <div className="text-sm font-semibold text-foreground">{brl(i.price * i.quantity)}</div>
                     </div>
                   ))}
                 </div>

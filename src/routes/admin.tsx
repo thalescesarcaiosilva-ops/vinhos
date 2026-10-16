@@ -741,8 +741,6 @@ function ProductForm({
     featured: false,
     best_seller: false,
     is_active: true,
-    exclude_from_feed: false,
-    is_purchase_gift: false,
     ...initial,
     short_description: toEditableDescription(initial?.short_description),
     description: toEditableDescription(initial?.description),
@@ -1344,29 +1342,6 @@ function ProductForm({
           </label>
           <label className="flex items-center gap-2">
             <input type="checkbox" checked={!!f.is_active} onChange={upd("is_active")} /> Ativo
-          </label>
-          <label className="flex items-center gap-2 md:col-span-2">
-            <input
-              type="checkbox"
-              checked={!!f.exclude_from_feed}
-              onChange={upd("exclude_from_feed")}
-            />{" "}
-            Excluir do feed Google / sitemap
-          </label>
-          <label className="flex items-center gap-2 md:col-span-2">
-            <input
-              type="checkbox"
-              checked={!!f.is_purchase_gift}
-              onChange={(e) => {
-                const checked = e.target.checked;
-                setF((prev: any) => ({
-                  ...prev,
-                  is_purchase_gift: checked,
-                  exclude_from_feed: checked ? true : prev.exclude_from_feed,
-                }));
-              }}
-            />{" "}
-            Brinde de primeira compra (vendável pelo preço; grátis só no 1º pedido com outro item)
           </label>
         </Section>
       </div>

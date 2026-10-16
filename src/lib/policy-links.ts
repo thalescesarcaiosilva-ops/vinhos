@@ -6,7 +6,6 @@ export const POLICY_SLUGS = {
   shipping: "politica-de-frete",
   payment: "formas-de-pagamento",
   legal: "aviso-legal",
-  firstPurchaseGift: "brinde-de-primeira-compra",
 } as const;
 
 export type PolicySlug = (typeof POLICY_SLUGS)[keyof typeof POLICY_SLUGS];

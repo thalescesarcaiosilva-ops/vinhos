@@ -65,9 +65,7 @@ import { StoreContainer } from "@/components/store/StoreContainer";
 import { ProductHtmlContent } from "@/components/store/ProductHtmlContent";
 import { PixDiscountBanner } from "@/components/store/PixDiscountBanner";
 import { BenefitsBar } from "@/components/store/BenefitsBar";
-import { PurchaseGiftCard } from "@/components/store/PurchaseGiftCard";
 import { withRetry } from "@/lib/with-retry";
-import { fetchPurchaseGift } from "@/lib/purchase-gift";
 
 type VideoInfo = {
   kind: "youtube" | "vimeo" | "file";
@@ -163,12 +161,6 @@ export const Route = createFileRoute("/produto/$slug")({
 
     if (!product) throw notFound();
     context.queryClient.setQueryData(["product", params.slug], product);
-    try {
-      const gift = await fetchPurchaseGift();
-      context.queryClient.setQueryData(["purchase-gift"], gift);
-    } catch {
-      /* brinde é opcional na PDP */
-    }
     return { product };
   },
   head: ({ params, loaderData }) => {
@@ -702,8 +694,6 @@ function ProductPage() {
                 </div>
               )}
             </div>
-
-            {!p.is_purchase_gift && <PurchaseGiftCard hideForProductId={p.id} />}
 
             <PaymentMethodsDialog
               open={payOpen}

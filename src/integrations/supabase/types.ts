@@ -693,7 +693,6 @@ export type Database = {
           created_at: string
           decanting: string | null
           description: string | null
-          exclude_from_feed: boolean
           featured: boolean
           gallery: Json
           glass_type: string | null
@@ -703,7 +702,6 @@ export type Database = {
           id: string
           image_url: string | null
           is_active: boolean
-          is_purchase_gift: boolean
           is_zero_alcohol: boolean
           name: string
           nose_notes: string | null
@@ -743,7 +741,6 @@ export type Database = {
           created_at?: string
           decanting?: string | null
           description?: string | null
-          exclude_from_feed?: boolean
           featured?: boolean
           gallery?: Json
           glass_type?: string | null
@@ -754,7 +751,6 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
-          is_purchase_gift?: boolean
           is_zero_alcohol?: boolean
           name: string
           nose_notes?: string | null
@@ -793,7 +789,6 @@ export type Database = {
           created_at?: string
           decanting?: string | null
           description?: string | null
-          exclude_from_feed?: boolean
           featured?: boolean
           gallery?: Json
           glass_type?: string | null
@@ -804,7 +799,6 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
-          is_purchase_gift?: boolean
           is_zero_alcohol?: boolean
           name?: string
           nose_notes?: string | null
