@@ -72,11 +72,16 @@ function googleProductCategoryId(p: FeedProduct): string {
     return GPC.foodItems;
   }
 
-  // Fallback: catálogo majoritariamente de bebidas alcoólicas
+  // Fallback por nome (inclui product_type=outro)
   if (/cerveja|beer|ipa|lager|pilsen/.test(name)) return GPC.beer;
-  if (/whisky|whiskey|vodka|gin|rum|tequila|cacha[cç]a|conhaque|cognac/.test(name)) return GPC.liquor;
+  if (/whisky|whiskey|vodka|\bgin\b|\brum\b|tequila|cacha[cç]a|conhaque|cognac|licor|pisco|brandy/.test(name)) {
+    return GPC.liquor;
+  }
+  if (/ta[cç]a|copo|decanter|saca.?rolha|abridor|dosador|coqueteleira/.test(name)) return GPC.barware;
+  if (/azeite|xarope|monin/.test(name)) return GPC.foodItems;
   if (/suco|juice/.test(name)) return GPC.juice;
-  return GPC.wine;
+  if (/vinho|espumante|champagne|prosecco|cava/.test(name)) return GPC.wine;
+  return GPC.alcoholicBeverages;
 }
 
 function getPublicSupabase() {
@@ -114,13 +119,85 @@ function productDescription(p: FeedProduct): string {
   return buildProductPlainDescription(p);
 }
 
+/** Breadcrumb estável para g:product_type (Google Merchant). */
 function productType(p: FeedProduct): string {
-  const names = (p.product_categories ?? [])
-    .map((pc) => pc.categories?.name)
-    .filter(Boolean) as string[];
-  if (names.length > 0) return names.join(" > ");
+  const name = (p.name ?? "").toLowerCase();
+  const type = p.product_type;
+  const catNames = new Set(
+    (p.product_categories ?? [])
+      .map((pc) => pc.categories?.name?.trim())
+      .filter(Boolean) as string[],
+  );
+
+  const pick = (...candidates: string[]) => candidates.find((c) => catNames.has(c));
+
+  if (type === "vinho") {
+    const color = pick("Tintos", "Brancos", "Rosés") || p.wine_type || "Vinhos";
+    return `Bebidas > Vinhos > ${color}`;
+  }
+  if (type === "espumante") {
+    const color = pick("Brancos", "Rosés") || "Espumantes";
+    return `Bebidas > Espumantes > ${color}`;
+  }
+  if (type === "sangria") return "Bebidas > Sangrias";
+  if (type === "cerveja") return "Bebidas > Cervejas";
+  if (type === "suco") return "Bebidas > Sucos";
+  if (type === "kit") return "Bebidas > Kits e Combos";
+  if (type === "destilado") {
+    const sub =
+      pick(
+        "Whisky",
+        "Gin",
+        "Vodka",
+        "Rum",
+        "Tequila",
+        "Cachaça",
+        "Licor",
+        "Conhaque e Brandy",
+        "Pisco",
+        "Outros destilados",
+      ) ||
+      (/whisky|whiskey|bourbon|scotch/.test(name)
+        ? "Whisky"
+        : /\bgin\b/.test(name)
+          ? "Gin"
+          : /vodka/.test(name)
+            ? "Vodka"
+            : /\brum\b|rhum/.test(name)
+              ? "Rum"
+              : /tequila|mezcal/.test(name)
+                ? "Tequila"
+                : /cacha[cç]a/.test(name)
+                  ? "Cachaça"
+                  : /licor|liqueur/.test(name)
+                    ? "Licor"
+                    : /conhaque|cognac|brandy/.test(name)
+                      ? "Conhaque e Brandy"
+                      : /pisco/.test(name)
+                        ? "Pisco"
+                        : "Outros destilados");
+    return `Bebidas > Destilados > ${sub}`;
+  }
+  if (type === "acessorio") {
+    if (pick("Taças") || /ta[cç]a|copo|stemware/.test(name)) {
+      return "Casa e Jardim > Bar e Adega > Taças";
+    }
+    return "Casa e Jardim > Bar e Adega > Acessórios";
+  }
+  if (type === "gourmet") {
+    if (/azeite/.test(name)) return "Alimentos > Azeites";
+    if (/xarope|monin|pure monin/.test(name)) return "Alimentos > Xaropes";
+    return "Alimentos > Gourmet";
+  }
+
+  if (catNames.size > 0) {
+    const ordered = ["Destilados", "Só Vinhos", "Só Espumantes", "Combos", "Acessórios", "Gourmet", "Cervejas"]
+      .filter((c) => catNames.has(c));
+    if (ordered.length) return ordered.join(" > ");
+  }
+
   const parts = [p.wine_type, p.country].filter(Boolean);
-  return parts.length > 0 ? parts.join(" > ") : "Vinhos";
+  return parts.length > 0 ? parts.join(" > ") : "Bebidas > Vinhos";
 }
 
 function resolveGtin(p: FeedProduct): string | null {
@@ -171,13 +248,17 @@ function feedItemXml(p: FeedProduct): string {
     lines.push(` <g:brand>${escapeXml(brand.slice(0, 70))}</g:brand>`);
   }
 
+  // Google: identifier_exists=yes quando há GTIN e/ou (MPN + brand).
+  // Com MPN+brand e identifier_exists=no o Merchant marca conflito.
   if (gtin) {
     lines.push(` <g:gtin>${escapeXml(gtin)}</g:gtin>`);
+    if (skuId) lines.push(` <g:mpn>${escapeXml(skuId)}</g:mpn>`);
     lines.push(` <g:identifier_exists>yes</g:identifier_exists>`);
-  } else if (skuId) {
+  } else if (skuId && brand) {
     lines.push(` <g:mpn>${escapeXml(skuId)}</g:mpn>`);
-    lines.push(` <g:identifier_exists>no</g:identifier_exists>`);
+    lines.push(` <g:identifier_exists>yes</g:identifier_exists>`);
   } else {
+    // Sem GTIN e sem par MPN+marca: declarar explicitamente que não há identificador.
     lines.push(` <g:identifier_exists>no</g:identifier_exists>`);
   }
 
