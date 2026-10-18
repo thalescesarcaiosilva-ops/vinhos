@@ -1,0 +1,1 @@
+{"name": "clone_t19", "query": "-- >>> 20260603162646_f69d4933-7f2c-4daa-8f10-7ab3bb400a88.sql\nALTER TABLE public.products\n  ADD COLUMN IF NOT EXISTS aging text,\n  ADD COLUMN IF NOT EXISTS alcohol_content text;\n\n\n", "files": ["t19"]}

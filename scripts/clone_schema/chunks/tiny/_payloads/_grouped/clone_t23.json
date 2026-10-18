@@ -1,0 +1,1 @@
+{"name": "clone_t23", "query": "-- >>> 20260604000904_ad3c6fd7-c14b-4363-8662-7c7c81060be2.sql\nALTER TABLE public.categories RENAME COLUMN banner_url TO banner_image;\n\n\n", "files": ["t23"]}

@@ -12,6 +12,7 @@ import {
   venoPaymentStatus,
 } from "@/lib/veno";
 import { registerCouponUse, resolveCouponDiscount } from "@/lib/coupon.functions";
+import { isValidCpfOrCnpj } from "@/lib/validation";
 
 type SupabaseAdmin = Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"];
 
@@ -262,7 +263,10 @@ const CheckoutInput = z.object({
     name: z.string().min(1),
     email: z.string().email(),
     phone: z.string().optional().nullable(),
-    document: z.string().min(11),
+    document: z
+      .string()
+      .min(11)
+      .refine((v) => isValidCpfOrCnpj(v), { message: "CPF ou CNPJ inválido" }),
   }),
   shippingAddress: z.record(z.string(), z.any()),
   items: z
@@ -319,6 +323,17 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
     const total = Math.round((Math.max(0, subtotal - discount) + data.shipping) * 100) / 100;
     if (total <= 0) throw new Error("O valor do pedido ficou inválido depois do cupom.");
 
+    const cellphone = (data.customer.phone || "").replace(/\D/g, "");
+    const taxId = data.customer.document.replace(/\D/g, "");
+    // Validar ANTES de criar o pedido — evita lixo de "cancelados" por CPF inválido
+    // (a Veno rejeita o Pix e o fluxo antigo marcava o order como cancelled).
+    if (cellphone.length < 10) {
+      throw new Error("Informe um celular válido com DDD para pagar com Pix.");
+    }
+    if (!isValidCpfOrCnpj(taxId)) {
+      throw new Error("Informe um CPF ou CNPJ válido para pagar com Pix.");
+    }
+
     const priced = {
       ...data,
       subtotal,
@@ -331,30 +346,6 @@ export const createCheckoutPix = createServerFn({ method: "POST" })
 
     const description = paymentDescription(order.id, priced.total);
     const amountCents = Math.round(priced.total * 100);
-    const cellphone = (data.customer.phone || "").replace(/\D/g, "");
-    const taxId = data.customer.document.replace(/\D/g, "");
-    if (cellphone.length < 10) {
-      await supabaseAdmin
-        .from("orders")
-        .update({
-          payment_status: "cancelled",
-          status: "cancelled",
-          notes: [data.notes, "Telefone inválido para Pix (DDD + número)"].filter(Boolean).join(" | "),
-        })
-        .eq("id", order.id);
-      throw new Error("Informe um celular válido com DDD para pagar com Pix.");
-    }
-    if (taxId.length !== 11 && taxId.length !== 14) {
-      await supabaseAdmin
-        .from("orders")
-        .update({
-          payment_status: "cancelled",
-          status: "cancelled",
-          notes: [data.notes, "CPF/CNPJ inválido para Pix"].filter(Boolean).join(" | "),
-        })
-        .eq("id", order.id);
-      throw new Error("Informe um CPF ou CNPJ válido para pagar com Pix.");
-    }
 
     const addr = data.shippingAddress ?? {};
     let pix: Awaited<ReturnType<typeof venoCreatePix>>;

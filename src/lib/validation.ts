@@ -13,12 +13,47 @@ export function isValidCPF(cpf: string): boolean {
   return d2 === parseInt(c[10]);
 }
 
+export function isValidCNPJ(cnpj: string): boolean {
+  const c = cnpj.replace(/\D/g, "");
+  if (c.length !== 14 || /^(\d)\1{13}$/.test(c)) return false;
+  const w1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  const w2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  let sum = 0;
+  for (let i = 0; i < 12; i++) sum += parseInt(c[i]) * w1[i];
+  let d1 = sum % 11;
+  d1 = d1 < 2 ? 0 : 11 - d1;
+  if (d1 !== parseInt(c[12])) return false;
+  sum = 0;
+  for (let i = 0; i < 13; i++) sum += parseInt(c[i]) * w2[i];
+  let d2 = sum % 11;
+  d2 = d2 < 2 ? 0 : 11 - d2;
+  return d2 === parseInt(c[13]);
+}
+
+/** Aceita CPF (11) ou CNPJ (14) com dígitos verificadores válidos. */
+export function isValidCpfOrCnpj(doc: string): boolean {
+  const d = doc.replace(/\D/g, "");
+  if (d.length <= 11) return isValidCPF(d);
+  return isValidCNPJ(d);
+}
+
 export function maskCPF(v: string): string {
   const d = v.replace(/\D/g, "").slice(0, 11);
   return d
     .replace(/(\d{3})(\d)/, "$1.$2")
     .replace(/(\d{3})(\d)/, "$1.$2")
     .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+}
+
+/** Máscara de digitação CPF ou CNPJ (até 14 dígitos). */
+export function maskCpfCnpj(v: string): string {
+  const d = v.replace(/\D/g, "").slice(0, 14);
+  if (d.length <= 11) return maskCPF(d);
+  return d
+    .replace(/^(\d{2})(\d)/, "$1.$2")
+    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/\.(\d{3})(\d)/, ".$1/$2")
+    .replace(/(\d{4})(\d)/, "$1-$2");
 }
 
 export function maskPhone(v: string): string {

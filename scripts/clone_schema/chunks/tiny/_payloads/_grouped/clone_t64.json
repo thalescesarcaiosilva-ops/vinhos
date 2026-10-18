@@ -1,0 +1,1 @@
+{"name": "clone_t64", "query": "-- >>> clone_storage_extras\nINSERT INTO storage.buckets (id, name, public)\nVALUES ('product-videos', 'product-videos', false)\nON CONFLICT (id) DO NOTHING;\n", "files": ["t64"]}

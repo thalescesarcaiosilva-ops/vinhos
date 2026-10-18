@@ -1,0 +1,109 @@
+[
+  {
+    "name": "clone_t14_t22",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\_batches\\clone_t14_t22.json",
+    "len": 11940,
+    "files": [
+      "t14",
+      "t15",
+      "t16",
+      "t17",
+      "t18",
+      "t19",
+      "t20",
+      "t21",
+      "t22"
+    ]
+  },
+  {
+    "name": "clone_t23_t35",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\_batches\\clone_t23_t35.json",
+    "len": 11265,
+    "files": [
+      "t23",
+      "t24",
+      "t25",
+      "t26",
+      "t27",
+      "t28",
+      "t29",
+      "t30",
+      "t31",
+      "t32",
+      "t33",
+      "t34",
+      "t35"
+    ]
+  },
+  {
+    "name": "clone_t36_t43",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\_batches\\clone_t36_t43.json",
+    "len": 11656,
+    "files": [
+      "t36",
+      "t37",
+      "t38",
+      "t39",
+      "t40",
+      "t41",
+      "t42",
+      "t43"
+    ]
+  },
+  {
+    "name": "clone_t44_t48",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\_batches\\clone_t44_t48.json",
+    "len": 7973,
+    "files": [
+      "t44",
+      "t45",
+      "t46",
+      "t47",
+      "t48"
+    ]
+  },
+  {
+    "name": "clone_t49_t54",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\_batches\\clone_t49_t54.json",
+    "len": 11267,
+    "files": [
+      "t49",
+      "t50",
+      "t51",
+      "t52",
+      "t53",
+      "t54"
+    ]
+  },
+  {
+    "name": "clone_t55_t59",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\_batches\\clone_t55_t59.json",
+    "len": 11720,
+    "files": [
+      "t55",
+      "t56",
+      "t57",
+      "t58",
+      "t59"
+    ]
+  },
+  {
+    "name": "clone_t60_t61",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\_batches\\clone_t60_t61.json",
+    "len": 3177,
+    "files": [
+      "t60",
+      "t61"
+    ]
+  },
+  {
+    "name": "clone_t62_t64",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\_batches\\clone_t62_t64.json",
+    "len": 10908,
+    "files": [
+      "t62",
+      "t63",
+      "t64"
+    ]
+  }
+]

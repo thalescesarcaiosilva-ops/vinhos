@@ -1,0 +1,425 @@
+[
+  {
+    "name": "clone_t06_t08",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t06_t08.json",
+    "files": [
+      "t06",
+      "t07",
+      "t08"
+    ],
+    "len": 16337
+  },
+  {
+    "name": "clone_t09",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t09.json",
+    "files": [
+      "t09"
+    ],
+    "len": 355
+  },
+  {
+    "name": "clone_t10",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t10.json",
+    "files": [
+      "t10"
+    ],
+    "len": 5624
+  },
+  {
+    "name": "clone_t11_t12",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t11_t12.json",
+    "files": [
+      "t11",
+      "t12"
+    ],
+    "len": 8712
+  },
+  {
+    "name": "clone_t13",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t13.json",
+    "files": [
+      "t13"
+    ],
+    "len": 6495
+  },
+  {
+    "name": "clone_t14",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t14.json",
+    "files": [
+      "t14"
+    ],
+    "len": 6854
+  },
+  {
+    "name": "clone_t15",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t15.json",
+    "files": [
+      "t15"
+    ],
+    "len": 928
+  },
+  {
+    "name": "clone_t16",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t16.json",
+    "files": [
+      "t16"
+    ],
+    "len": 1770
+  },
+  {
+    "name": "clone_t17",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t17.json",
+    "files": [
+      "t17"
+    ],
+    "len": 135
+  },
+  {
+    "name": "clone_t18",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t18.json",
+    "files": [
+      "t18"
+    ],
+    "len": 244
+  },
+  {
+    "name": "clone_t19",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t19.json",
+    "files": [
+      "t19"
+    ],
+    "len": 181
+  },
+  {
+    "name": "clone_t20",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t20.json",
+    "files": [
+      "t20"
+    ],
+    "len": 575
+  },
+  {
+    "name": "clone_t21",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t21.json",
+    "files": [
+      "t21"
+    ],
+    "len": 862
+  },
+  {
+    "name": "clone_t22",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t22.json",
+    "files": [
+      "t22"
+    ],
+    "len": 391
+  },
+  {
+    "name": "clone_t23",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t23.json",
+    "files": [
+      "t23"
+    ],
+    "len": 137
+  },
+  {
+    "name": "clone_t24",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t24.json",
+    "files": [
+      "t24"
+    ],
+    "len": 389
+  },
+  {
+    "name": "clone_t25",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t25.json",
+    "files": [
+      "t25"
+    ],
+    "len": 2261
+  },
+  {
+    "name": "clone_t26",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t26.json",
+    "files": [
+      "t26"
+    ],
+    "len": 419
+  },
+  {
+    "name": "clone_t27",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t27.json",
+    "files": [
+      "t27"
+    ],
+    "len": 2617
+  },
+  {
+    "name": "clone_t28",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t28.json",
+    "files": [
+      "t28"
+    ],
+    "len": 1120
+  },
+  {
+    "name": "clone_t29",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t29.json",
+    "files": [
+      "t29"
+    ],
+    "len": 1093
+  },
+  {
+    "name": "clone_t30",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t30.json",
+    "files": [
+      "t30"
+    ],
+    "len": 349
+  },
+  {
+    "name": "clone_t31",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t31.json",
+    "files": [
+      "t31"
+    ],
+    "len": 435
+  },
+  {
+    "name": "clone_t32",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t32.json",
+    "files": [
+      "t32"
+    ],
+    "len": 617
+  },
+  {
+    "name": "clone_t33",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t33.json",
+    "files": [
+      "t33"
+    ],
+    "len": 964
+  },
+  {
+    "name": "clone_t34",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t34.json",
+    "files": [
+      "t34"
+    ],
+    "len": 725
+  },
+  {
+    "name": "clone_t35",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t35.json",
+    "files": [
+      "t35"
+    ],
+    "len": 139
+  },
+  {
+    "name": "clone_t36",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t36.json",
+    "files": [
+      "t36"
+    ],
+    "len": 1705
+  },
+  {
+    "name": "clone_t37",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t37.json",
+    "files": [
+      "t37"
+    ],
+    "len": 837
+  },
+  {
+    "name": "clone_t38",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t38.json",
+    "files": [
+      "t38"
+    ],
+    "len": 6375
+  },
+  {
+    "name": "clone_t39",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t39.json",
+    "files": [
+      "t39"
+    ],
+    "len": 126
+  },
+  {
+    "name": "clone_t40",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t40.json",
+    "files": [
+      "t40"
+    ],
+    "len": 419
+  },
+  {
+    "name": "clone_t41",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t41.json",
+    "files": [
+      "t41"
+    ],
+    "len": 316
+  },
+  {
+    "name": "clone_t42",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t42.json",
+    "files": [
+      "t42"
+    ],
+    "len": 1498
+  },
+  {
+    "name": "clone_t43",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t43.json",
+    "files": [
+      "t43"
+    ],
+    "len": 380
+  },
+  {
+    "name": "clone_t44_t45",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t44_t45.json",
+    "files": [
+      "t44",
+      "t45"
+    ],
+    "len": 2584
+  },
+  {
+    "name": "clone_t46",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t46.json",
+    "files": [
+      "t46"
+    ],
+    "len": 1397
+  },
+  {
+    "name": "clone_t47",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t47.json",
+    "files": [
+      "t47"
+    ],
+    "len": 1731
+  },
+  {
+    "name": "clone_t48",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t48.json",
+    "files": [
+      "t48"
+    ],
+    "len": 2261
+  },
+  {
+    "name": "clone_t49_t50",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t49_t50.json",
+    "files": [
+      "t49",
+      "t50"
+    ],
+    "len": 8190
+  },
+  {
+    "name": "clone_t51",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t51.json",
+    "files": [
+      "t51"
+    ],
+    "len": 635
+  },
+  {
+    "name": "clone_t52_t53",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t52_t53.json",
+    "files": [
+      "t52",
+      "t53"
+    ],
+    "len": 602
+  },
+  {
+    "name": "clone_t54",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t54.json",
+    "files": [
+      "t54"
+    ],
+    "len": 1840
+  },
+  {
+    "name": "clone_t55",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t55.json",
+    "files": [
+      "t55"
+    ],
+    "len": 770
+  },
+  {
+    "name": "clone_t56",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t56.json",
+    "files": [
+      "t56"
+    ],
+    "len": 3078
+  },
+  {
+    "name": "clone_t57",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t57.json",
+    "files": [
+      "t57"
+    ],
+    "len": 2166
+  },
+  {
+    "name": "clone_t58",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t58.json",
+    "files": [
+      "t58"
+    ],
+    "len": 2239
+  },
+  {
+    "name": "clone_t59",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t59.json",
+    "files": [
+      "t59"
+    ],
+    "len": 3467
+  },
+  {
+    "name": "clone_t60",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t60.json",
+    "files": [
+      "t60"
+    ],
+    "len": 2336
+  },
+  {
+    "name": "clone_t61",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t61.json",
+    "files": [
+      "t61"
+    ],
+    "len": 841
+  },
+  {
+    "name": "clone_t62_t63",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t62_t63.json",
+    "files": [
+      "t62",
+      "t63"
+    ],
+    "len": 10753
+  },
+  {
+    "name": "clone_t64",
+    "path": "d:\\vinhos\\scripts\\clone_schema\\chunks\\tiny\\_payloads\\_grouped\\clone_t64.json",
+    "files": [
+      "t64"
+    ],
+    "len": 155
+  }
+]

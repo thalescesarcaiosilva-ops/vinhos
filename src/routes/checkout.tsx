@@ -8,12 +8,13 @@ import { CheckCircle2, Tag, X, Copy, Loader2, CreditCard, QrCode, Pencil, Check,
 import {
   maskCEP,
   maskPhone,
-  maskCPF,
+  maskCpfCnpj,
   maskBirthDate,
   formatBirthDateDisplay,
   fetchAddressByCEP,
   isAdultBirthDate,
   ageFromBirthDate,
+  isValidCpfOrCnpj,
 } from "@/lib/validation";
 import { calcShipping, type ShippingQuote } from "@/lib/shipping";
 import { validateCoupon } from "@/lib/coupon";
@@ -606,8 +607,8 @@ function Checkout() {
       setStep(1);
       return;
     }
-    if (!form.doc || form.doc.replace(/\D/g, "").length < 11) {
-      toast.error("CPF é obrigatório para o pagamento");
+    if (!form.doc || !isValidCpfOrCnpj(form.doc)) {
+      toast.error("Informe um CPF ou CNPJ válido para o pagamento");
       return;
     }
     const baseData = {
@@ -900,7 +901,7 @@ function Checkout() {
                       {method === "credit_card" && (
                         <div className="space-y-4 rounded-md border border-border bg-muted/30 p-5">
                           <Field label="CPF/CNPJ">
-                            <input required value={form.doc} onChange={e => setForm(f => ({ ...f, doc: maskCPF(e.target.value) }))} placeholder="000.000.000-00" className={inp} />
+                            <input required value={form.doc} onChange={e => setForm(f => ({ ...f, doc: maskCpfCnpj(e.target.value) }))} placeholder="000.000.000-00 ou 00.000.000/0000-00" className={inp} />
                           </Field>
                           <PayoutCardForm
                             installments={installments}
@@ -964,7 +965,7 @@ function Checkout() {
                             <span className="font-serif text-2xl font-bold text-[color:var(--buy)]">{brl(total)}</span>
                           </div>
                           <Field label="CPF/CNPJ">
-                            <input required value={form.doc} onChange={e => setForm(f => ({ ...f, doc: maskCPF(e.target.value) }))} placeholder="000.000.000-00" className={inp} />
+                            <input required value={form.doc} onChange={e => setForm(f => ({ ...f, doc: maskCpfCnpj(e.target.value) }))} placeholder="000.000.000-00 ou 00.000.000/0000-00" className={inp} />
                           </Field>
                           <button
                             type="submit"

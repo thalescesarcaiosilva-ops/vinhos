@@ -1,0 +1,1 @@
+{"name": "clone_t17", "query": "-- >>> 20260603160545_598d9114-ea33-483c-a5cb-6300098e9dfe.sql\nALTER TABLE public.products ADD COLUMN IF NOT EXISTS video_url text;\n\n\n\n", "files": ["t17"]}

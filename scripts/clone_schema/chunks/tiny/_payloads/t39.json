@@ -1,0 +1,1 @@
+{"name": "clone_t39", "query": "-- >>> 20260621000000_newsletter_phone.sql\nALTER TABLE public.newsletter_subscribers\n  ADD COLUMN IF NOT EXISTS phone TEXT;\n\n\n"}

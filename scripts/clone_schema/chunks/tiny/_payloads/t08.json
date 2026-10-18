@@ -1,0 +1,1 @@
+{"name": "clone_t08", "query": "  RETURN NEW;\nEND;\n$$;\n\nDROP TRIGGER IF EXISTS trg_products_sync_categories ON public.products;\nCREATE TRIGGER trg_products_sync_categories\n  AFTER INSERT OR UPDATE OF product_type, color, is_zero_alcohol, name\n  ON public.products\n  FOR EACH ROW EXECUTE FUNCTION public.trg_sync_product_categories();\n\n\n"}

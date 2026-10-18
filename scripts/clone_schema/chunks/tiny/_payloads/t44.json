@@ -1,0 +1,1 @@
+{"name": "clone_t44", "query": "-- >>> 20260711232200_dedupe_and_combo_discount.sql\n-- Desativar duplicatas exatas e aplicar 15% em combos (executado via scripts/fix-duplicates-and-combos.mjs)\n-- Registro apenas; alterações aplicadas em 2026-07-11.\n\n\n"}

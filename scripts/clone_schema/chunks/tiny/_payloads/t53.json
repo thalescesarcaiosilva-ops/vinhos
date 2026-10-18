@@ -1,0 +1,1 @@
+{"name": "clone_t53", "query": "-- >>> 20260926160500_add_support_app_role.sql\n-- Papel exclusivo do painel de suporte. Não concede acesso ao admin da loja.\n-- Novo valor de enum só pode ser usado depois deste comando estar commitado.\nALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'support';\n\n\n"}

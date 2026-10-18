@@ -73,16 +73,41 @@ export function isKitOrPackProductName(name: string | null | undefined): boolean
   return /^(kit|pack)\b/i.test((name ?? "").trim());
 }
 
+const BRAND_VOLUME_RE =
+  /\b(\d+[.,]?\d*\s*(ml|lt|l|cl)|magnum|garrafa|750|700|1000|1[,.]?5\s*l?t?)\b/i;
+const BRAND_NOISE_RE = /\b(kit|cx\.|combo|pack|unidades?|safra|r[oó]tulo|moderno e sofisticado)\b/i;
+
+/**
+ * Remove “marca” que na verdade é nome/variação do produto
+ * (ex.: "M De Minuty 15Lt Magnum", "Château Minuty; rótulo…").
+ */
+export function sanitizeProductBrand(
+  brand: string | null | undefined,
+  productName?: string | null,
+): string | null {
+  let b = (brand ?? "").trim().replace(/^[,;]+/, "").trim();
+  if (!b) return null;
+  if (b.includes(";")) b = b.split(";")[0]!.trim();
+  b = b.replace(BRAND_VOLUME_RE, "").replace(/\s{2,}/g, " ").trim().replace(/^[-–|,]+|[-–|,]+$/g, "");
+  if (!b || b.length > 40) return null;
+  if (BRAND_VOLUME_RE.test(b) || BRAND_NOISE_RE.test(b)) return null;
+  const name = (productName ?? "").trim();
+  if (name && b.toLowerCase() === name.toLowerCase()) return null;
+  if (name && name.toLowerCase().startsWith(b.toLowerCase()) && b.length > 22) return null;
+  return b;
+}
+
 /** Marca efetiva para schema/feed; Kit/Pack sem marca própria retornam null (sem fallback). */
 export function resolveProductBrandName(
   name: string | null | undefined,
   brand: string | null | undefined,
-  country?: string | null,
+  _country?: string | null,
   fallback = "Galvao Vinhos",
 ): string | null {
+  const clean = sanitizeProductBrand(brand, name);
   if (isKitOrPackProductName(name)) {
-    const own = brand?.trim();
-    return own || null;
+    return clean;
   }
-  return brand?.trim() || country?.trim() || fallback;
+  // Não usar país como marca (Merchant interpreta como fabricante).
+  return clean || fallback;
 }

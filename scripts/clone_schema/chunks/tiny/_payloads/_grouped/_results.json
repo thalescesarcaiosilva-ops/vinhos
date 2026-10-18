@@ -1,0 +1,10 @@
+{
+  "succeeded": [
+    "clone_t06_t08",
+    "clone_t09",
+    "clone_t10"
+  ],
+  "failed": [],
+  "fixed": [],
+  "pending": []
+}

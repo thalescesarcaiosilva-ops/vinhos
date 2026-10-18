@@ -1,0 +1,1 @@
+{"name": "clone_t41", "query": "-- >>> 20260630120000_add_products_gtin.sql\nALTER TABLE public.products\n  ADD COLUMN IF NOT EXISTS gtin text;\n\nCOMMENT ON COLUMN public.products.gtin IS 'GTIN/EAN-13 para Google Merchant e identificação do produto';\n\nCREATE INDEX IF NOT EXISTS idx_products_gtin ON public.products (gtin)\n  WHERE gtin IS NOT NULL;\n\n\n"}
