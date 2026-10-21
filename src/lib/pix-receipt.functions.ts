@@ -3,6 +3,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 
 const ALLOWED_MIME = new Set(["image/jpeg", "image/png", "image/webp"]);
+const RECOVERY_MIME = new Set(["image/jpeg", "image/png", "image/webp", "application/pdf"]);
 const MAX_BYTES = 5 * 1024 * 1024;
 const BUCKET = "pix-receipts";
 
@@ -67,6 +68,22 @@ async function assertAdmin(supabaseAdmin: SupabaseAdmin): Promise<string> {
   });
   if (error || !data) throw new Error("Acesso restrito a administradores.");
   return userId;
+}
+
+async function assertAdminOrSupport(supabaseAdmin: SupabaseAdmin): Promise<string> {
+  const userId = await getBearerUserId(supabaseAdmin);
+  if (!userId) throw new Error("Faça login para ver o comprovante.");
+  const { data: admin } = await supabaseAdmin.rpc("has_role", {
+    _user_id: userId,
+    _role: "admin",
+  });
+  if (admin) return userId;
+  const { data: support } = await supabaseAdmin.rpc("has_role", {
+    _user_id: userId,
+    _role: "support",
+  });
+  if (support) return userId;
+  throw new Error("Acesso restrito ao suporte.");
 }
 
 async function assertUploadAccess(
@@ -216,25 +233,105 @@ export const getPixReceiptSignedUrl = createServerFn({ method: "POST" })
   .inputValidator((d) => z.object({ orderId: z.string().uuid() }).parse(d))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    await assertAdmin(supabaseAdmin);
+    await assertAdminOrSupport(supabaseAdmin);
+
+    const { data: mark } = await supabaseAdmin
+      .from("support_order_contacts")
+      .select("recovery_receipt_path, recovery_receipt_mime")
+      .eq("order_id", data.orderId)
+      .maybeSingle();
 
     const { data: order, error } = await supabaseAdmin
       .from("orders")
       .select("id, pix_receipt_path, pix_receipt_mime")
       .eq("id", data.orderId)
       .maybeSingle();
-    if (error || !order?.pix_receipt_path) throw new Error("Comprovante não encontrado.");
+    const path = mark?.recovery_receipt_path || order?.pix_receipt_path;
+    const mime = mark?.recovery_receipt_mime || order?.pix_receipt_mime;
+    if (error || !path) throw new Error("Comprovante não encontrado.");
 
     const { data: signed, error: signErr } = await supabaseAdmin.storage
       .from(BUCKET)
-      .createSignedUrl(order.pix_receipt_path, 60 * 10);
+      .createSignedUrl(path, 60 * 10);
     if (signErr || !signed?.signedUrl) throw new Error(signErr?.message || "Falha ao gerar URL.");
 
     return {
       url: signed.signedUrl,
-      mime: order.pix_receipt_mime,
+      mime,
       expiresIn: 600,
     };
+  });
+
+export const uploadRecoveryReceipt = createServerFn({ method: "POST" })
+  .inputValidator((d) => UploadInput.omit({ token: true }).parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const userId = await assertAdminOrSupport(supabaseAdmin);
+
+    const mime = data.mime.toLowerCase().trim();
+    if (!RECOVERY_MIME.has(mime)) {
+      throw new Error("Envie uma imagem (JPEG, PNG ou WebP) ou um PDF.");
+    }
+
+    const base64 = data.dataBase64.replace(/^data:[^;]+;base64,/, "");
+    let bytes: Uint8Array;
+    try {
+      bytes = base64ToBytes(base64);
+    } catch {
+      throw new Error("Arquivo inválido.");
+    }
+    if (bytes.byteLength === 0) throw new Error("Arquivo vazio.");
+    if (bytes.byteLength > MAX_BYTES) throw new Error("Arquivo maior que 5 MB.");
+
+    const { data: order, error } = await supabaseAdmin
+      .from("orders")
+      .select("id, total")
+      .eq("id", data.orderId)
+      .maybeSingle();
+    if (error || !order) throw new Error("Pedido não encontrado.");
+
+    const ext =
+      mime === "application/pdf"
+        ? "pdf"
+        : mime === "image/png"
+          ? "png"
+          : mime === "image/webp"
+            ? "webp"
+            : "jpg";
+    const path = `recovery/${order.id}/${newId()}.${ext}`;
+    const { error: upErr } = await supabaseAdmin.storage.from(BUCKET).upload(path, bytes, {
+      contentType: mime,
+      upsert: false,
+      cacheControl: "3600",
+    });
+    if (upErr) throw new Error(upErr.message || "Falha no upload do comprovante.");
+
+    const now = new Date().toISOString();
+    const { data: existing } = await supabaseAdmin
+      .from("support_order_contacts")
+      .select("contacted_at, recovery_receipt_path")
+      .eq("order_id", order.id)
+      .maybeSingle();
+
+    const { error: saveError } = await supabaseAdmin.from("support_order_contacts").upsert({
+      order_id: order.id,
+      user_id: userId,
+      contacted_at: existing?.contacted_at ?? now,
+      outcome: "recovered",
+      outcome_at: now,
+      recovered_total: order.total,
+      recovery_receipt_path: path,
+      recovery_receipt_mime: mime,
+    });
+    if (saveError) {
+      await supabaseAdmin.storage.from(BUCKET).remove([path]);
+      throw new Error(saveError.message);
+    }
+    if (existing?.recovery_receipt_path && existing.recovery_receipt_path !== path) {
+      await supabaseAdmin.storage.from(BUCKET).remove([existing.recovery_receipt_path]);
+    }
+
+    return { ok: true as const, path, mime };
   });
 
 export const confirmPaymentFromReceipt = createServerFn({ method: "POST" })

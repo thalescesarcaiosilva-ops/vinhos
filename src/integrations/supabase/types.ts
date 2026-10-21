@@ -967,16 +967,31 @@ export type Database = {
         Row: {
           contacted_at: string
           order_id: string
+          outcome: string
+          outcome_at: string
+          recovered_total: number | null
+          recovery_receipt_mime: string | null
+          recovery_receipt_path: string | null
           user_id: string
         }
         Insert: {
           contacted_at?: string
           order_id: string
+          outcome?: string
+          outcome_at?: string
+          recovered_total?: number | null
+          recovery_receipt_mime?: string | null
+          recovery_receipt_path?: string | null
           user_id: string
         }
         Update: {
           contacted_at?: string
           order_id?: string
+          outcome?: string
+          outcome_at?: string
+          recovered_total?: number | null
+          recovery_receipt_mime?: string | null
+          recovery_receipt_path?: string | null
           user_id?: string
         }
         Relationships: [
