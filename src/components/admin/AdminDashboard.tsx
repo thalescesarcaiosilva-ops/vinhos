@@ -88,6 +88,12 @@ type OrderItemRow = {
   total: number;
 };
 
+type RecoveryRow = {
+  order_id: string;
+  outcome_at: string;
+  recovered_total: number | null;
+};
+
 type TopProduct = {
   key: string;
   name: string;
@@ -147,7 +153,9 @@ async function fetchAllOrders(fromIso: string | null): Promise<OrderRow[]> {
   while (true) {
     let q = supabase
       .from("orders")
-      .select("id, order_number, customer_name, total, status, payment_method, payment_status, created_at")
+      .select(
+        "id, order_number, customer_name, total, status, payment_method, payment_status, created_at",
+      )
       .order("created_at", { ascending: false })
       .range(from, from + page - 1);
     if (fromIso) q = q.gte("created_at", fromIso);
@@ -155,6 +163,28 @@ async function fetchAllOrders(fromIso: string | null): Promise<OrderRow[]> {
     if (error) throw error;
     if (!data?.length) break;
     all.push(...(data as OrderRow[]));
+    if (data.length < page) break;
+    from += page;
+  }
+  return all;
+}
+
+async function fetchRecovered(fromIso: string | null): Promise<RecoveryRow[]> {
+  const all: RecoveryRow[] = [];
+  const page = 1000;
+  let from = 0;
+  while (true) {
+    let q = supabase
+      .from("support_order_contacts")
+      .select("order_id, outcome_at, recovered_total")
+      .eq("outcome", "recovered")
+      .order("outcome_at", { ascending: false })
+      .range(from, from + page - 1);
+    if (fromIso) q = q.gte("outcome_at", fromIso);
+    const { data, error } = await q;
+    if (error) throw error;
+    if (!data?.length) break;
+    all.push(...(data as RecoveryRow[]));
     if (data.length < page) break;
     from += page;
   }
@@ -181,6 +211,7 @@ export function AdminDashboard() {
   const [period, setPeriod] = useState<PeriodId>("30d");
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState<OrderRow[]>([]);
+  const [recoveries, setRecoveries] = useState<RecoveryRow[]>([]);
   const [items, setItems] = useState<OrderItemRow[]>([]);
   const [customers, setCustomers] = useState(0);
   const [products, setProducts] = useState(0);
@@ -197,8 +228,9 @@ export function AdminDashboard() {
         const start = periodStart(days);
         const fromIso = start?.toISOString() ?? null;
 
-        const [orderRows, cCount, pCount] = await Promise.all([
+        const [orderRows, recoveryRows, cCount, pCount] = await Promise.all([
           fetchAllOrders(fromIso),
+          fetchRecovered(fromIso),
           supabase.from("profiles").select("*", { count: "exact", head: true }),
           supabase.from("products").select("*", { count: "exact", head: true }),
         ]);
@@ -208,6 +240,7 @@ export function AdminDashboard() {
 
         if (cancelled) return;
         setOrders(orderRows);
+        setRecoveries(recoveryRows);
         setItems(itemRows);
         setCustomers(cCount.count ?? 0);
         setProducts(pCount.count ?? 0);
@@ -226,12 +259,35 @@ export function AdminDashboard() {
     const paid = orders.filter(isPaidOrder);
     const pending = orders.filter((o) => o.status === "pending");
     const cancelled = orders.filter((o) => o.status === "cancelled" || o.status === "refunded");
-    const revenue = paid.reduce((s, o) => s + Number(o.total), 0);
-    const aov = paid.length ? revenue / paid.length : 0;
-    const gatewayPercentFee = revenue * GATEWAY_PERCENT;
+    const orderTotal = new Map(orders.map((o) => [o.id, Number(o.total)]));
+    const recoveredIds = new Set(recoveries.map((row) => row.order_id));
+    const soldOrders = paid.filter((o) => !recoveredIds.has(o.id));
+    const paidRevenue = paid.reduce((s, o) => s + Number(o.total), 0);
+    const revenue = soldOrders.reduce((s, o) => s + Number(o.total), 0);
+    const recoveredValue = recoveries.reduce(
+      (s, row) => s + Number(row.recovered_total ?? orderTotal.get(row.order_id) ?? 0),
+      0,
+    );
+    const combinedRevenue = revenue + recoveredValue;
+    const todayKey = dateKeyInSaoPaulo(new Date());
+    const soldToday = soldOrders
+      .filter((o) => dateKeyInSaoPaulo(o.created_at) === todayKey)
+      .reduce((s, o) => s + Number(o.total), 0);
+    const soldTodayCount = soldOrders.filter(
+      (o) => dateKeyInSaoPaulo(o.created_at) === todayKey,
+    ).length;
+    const recoveredTodayRows = recoveries.filter(
+      (row) => dateKeyInSaoPaulo(row.outcome_at) === todayKey,
+    );
+    const recoveredToday = recoveredTodayRows.reduce(
+      (s, row) => s + Number(row.recovered_total ?? orderTotal.get(row.order_id) ?? 0),
+      0,
+    );
+    const aov = soldOrders.length ? revenue / soldOrders.length : 0;
+    const gatewayPercentFee = paidRevenue * GATEWAY_PERCENT;
     const gatewayFixedFee = paid.length * GATEWAY_FIXED_BRL;
     const gatewayFees = gatewayPercentFee + gatewayFixedFee;
-    const netRevenue = revenue - gatewayFees;
+    const netRevenue = paidRevenue - gatewayFees;
 
     const byMethod = {
       pix: { count: 0, revenue: 0, paidCount: 0, paidRevenue: 0 },
@@ -262,17 +318,16 @@ export function AdminDashboard() {
       }))
       .sort((a, b) => b.count - a.count);
 
-    // Daily sales (paid only) — dia civil America/Sao_Paulo (não UTC)
+    // Daily sales (paid, sem recuperados) — dia civil America/Sao_Paulo (não UTC)
     const dayMap = new Map<string, { date: string; revenue: number; orders: number }>();
     const days = PERIODS.find((p) => p.id === period)?.days;
-    const todayKey = dateKeyInSaoPaulo(new Date());
     if (days) {
       for (let i = days - 1; i >= 0; i--) {
         const key = addSaoPauloCalendarDays(todayKey, -i);
         dayMap.set(key, { date: key, revenue: 0, orders: 0 });
       }
     }
-    for (const o of paid) {
+    for (const o of soldOrders) {
       const key = dateKeyInSaoPaulo(o.created_at);
       const row = dayMap.get(key) ?? { date: key, revenue: 0, orders: 0 };
       row.revenue += Number(o.total);
@@ -315,9 +370,27 @@ export function AdminDashboard() {
     const topProducts = [...productMap.values()].sort((a, b) => b.revenue - a.revenue);
 
     const methodPie = [
-      { name: "PIX", key: "pix", value: byMethod.pix.paidCount, revenue: byMethod.pix.paidRevenue, color: "#2f9e4f" },
-      { name: "Cartão", key: "credit_card", value: byMethod.credit_card.paidCount, revenue: byMethod.credit_card.paidRevenue, color: "#5a1a1f" },
-      { name: "Boleto", key: "boleto", value: byMethod.boleto.paidCount, revenue: byMethod.boleto.paidRevenue, color: "#c9a86a" },
+      {
+        name: "PIX",
+        key: "pix",
+        value: byMethod.pix.paidCount,
+        revenue: byMethod.pix.paidRevenue,
+        color: "#2f9e4f",
+      },
+      {
+        name: "Cartão",
+        key: "credit_card",
+        value: byMethod.credit_card.paidCount,
+        revenue: byMethod.credit_card.paidRevenue,
+        color: "#5a1a1f",
+      },
+      {
+        name: "Boleto",
+        key: "boleto",
+        value: byMethod.boleto.paidCount,
+        revenue: byMethod.boleto.paidRevenue,
+        color: "#c9a86a",
+      },
     ].filter((x) => x.value > 0 || x.revenue > 0);
 
     const recent = [...orders].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 8);
@@ -325,9 +398,18 @@ export function AdminDashboard() {
     return {
       totalOrders: orders.length,
       paidCount: paid.length,
+      soldCount: soldOrders.length,
       pendingCount: pending.length,
       cancelledCount: cancelled.length,
       revenue,
+      paidRevenue,
+      recoveredValue,
+      recoveredCount: recoveries.length,
+      combinedRevenue,
+      soldToday,
+      soldTodayCount,
+      recoveredToday,
+      recoveredTodayCount: recoveredTodayRows.length,
       aov,
       gatewayPercentFee,
       gatewayFixedFee,
@@ -340,7 +422,7 @@ export function AdminDashboard() {
       methodPie,
       recent,
     };
-  }, [orders, items, period]);
+  }, [orders, items, recoveries, period]);
 
   const filteredProducts = useMemo(() => {
     const q = productQuery.trim().toLowerCase();
@@ -366,9 +448,36 @@ export function AdminDashboard() {
   }
 
   const kpi = [
-    { label: "Receita confirmada", value: brl(stats.revenue), Icon: DollarSign, hint: `${stats.paidCount} pedidos pagos` },
-    { label: "Pedidos no período", value: stats.totalOrders, Icon: ShoppingCart, hint: `${stats.pendingCount} pendentes` },
-    { label: "Ticket médio", value: brl(stats.aov), Icon: TrendingUp, hint: "Pedidos confirmados" },
+    {
+      label: "Valor vendido",
+      value: brl(stats.revenue),
+      Icon: DollarSign,
+      hint: `${stats.soldCount} pedidos pagos, sem recuperação`,
+    },
+    {
+      label: "Valor recuperado",
+      value: brl(stats.recoveredValue),
+      Icon: Wallet,
+      hint: `${stats.recoveredCount} marcado${stats.recoveredCount === 1 ? "" : "s"} no período`,
+    },
+    {
+      label: "Vendido + recuperado",
+      value: brl(stats.combinedRevenue),
+      Icon: TrendingUp,
+      hint: "Soma dos dois. O vendido não inclui o recuperado",
+    },
+    {
+      label: "Pedidos no período",
+      value: stats.totalOrders,
+      Icon: ShoppingCart,
+      hint: `${stats.pendingCount} pendentes`,
+    },
+    {
+      label: "Ticket médio",
+      value: brl(stats.aov),
+      Icon: TrendingUp,
+      hint: "Pedidos pagos sem recuperação",
+    },
     { label: "Clientes", value: customers, Icon: Users, hint: "Cadastros totais" },
     { label: "Produtos", value: products, Icon: Package, hint: "Catálogo" },
   ];
@@ -378,7 +487,9 @@ export function AdminDashboard() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-serif text-2xl font-bold text-primary">Dashboard</h2>
-          <p className="text-sm text-muted-foreground">Visão geral de pedidos, pagamentos e produtos mais vendidos</p>
+          <p className="text-sm text-muted-foreground">
+            Visão geral de pedidos, pagamentos e produtos mais vendidos
+          </p>
         </div>
         <div className="flex flex-wrap gap-1 rounded-sm border border-border bg-card p-1">
           {PERIODS.map((p) => (
@@ -387,7 +498,9 @@ export function AdminDashboard() {
               type="button"
               onClick={() => setPeriod(p.id)}
               className={`rounded-sm px-3 py-1.5 text-xs font-medium transition ${
-                period === p.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                period === p.id
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
               }`}
             >
               {p.label}
@@ -396,11 +509,49 @@ export function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="rounded-sm border border-border bg-card p-5">
+          <span className="text-xs uppercase tracking-wider text-muted-foreground">
+            Vendido hoje
+          </span>
+          <div className="mt-2 font-serif text-2xl font-bold text-primary">
+            {brl(stats.soldToday)}
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {stats.soldTodayCount} pedido{stats.soldTodayCount === 1 ? "" : "s"} pago
+            {stats.soldTodayCount === 1 ? "" : "s"}, sem o valor recuperado
+          </p>
+        </div>
+        <div className="rounded-sm border border-border bg-card p-5">
+          <span className="text-xs uppercase tracking-wider text-muted-foreground">
+            Recuperado hoje
+          </span>
+          <div className="mt-2 font-serif text-2xl font-bold text-primary">
+            {brl(stats.recoveredToday)}
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {stats.recoveredTodayCount} marcado{stats.recoveredTodayCount === 1 ? "" : "s"} como
+            recuperado hoje
+          </p>
+        </div>
+        <div className="rounded-sm border border-border bg-card p-5">
+          <span className="text-xs uppercase tracking-wider text-muted-foreground">
+            Total do dia
+          </span>
+          <div className="mt-2 font-serif text-2xl font-bold text-primary">
+            {brl(stats.soldToday + stats.recoveredToday)}
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">Vendido hoje + recuperado hoje</p>
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {kpi.map((c) => (
           <div key={c.label} className="rounded-sm border border-border bg-card p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wider text-muted-foreground">{c.label}</span>
+              <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                {c.label}
+              </span>
               <c.Icon className="h-5 w-5 text-primary" />
             </div>
             <div className="mt-2 font-serif text-2xl font-bold text-primary">{c.value}</div>
@@ -414,7 +565,8 @@ export function AdminDashboard() {
           <div>
             <h3 className="font-medium">Receita / gateway</h3>
             <p className="mt-1 text-xs text-muted-foreground">
-              Quanto entra depois da taxa do gateway: 8% do valor + {brl(GATEWAY_FIXED_BRL)} por transação paga.
+              Quanto entra depois da taxa do gateway: 8% do valor + {brl(GATEWAY_FIXED_BRL)} por
+              transação paga.
             </p>
           </div>
           <p className="text-xs text-muted-foreground">{stats.paidCount} transações no período</p>
@@ -422,25 +574,37 @@ export function AdminDashboard() {
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="text-xs uppercase tracking-wider text-muted-foreground">Receita bruta</p>
-            <p className="mt-1 font-serif text-2xl font-bold text-primary">{brl(stats.revenue)}</p>
-            <p className="mt-1 text-xs text-muted-foreground">Antes das taxas</p>
+            <p className="mt-1 font-serif text-2xl font-bold text-primary">
+              {brl(stats.paidRevenue)}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Pagamentos confirmados, antes das taxas
+            </p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-wider text-muted-foreground">Taxa de 8%</p>
-            <p className="mt-1 font-serif text-2xl font-bold text-primary">{brl(stats.gatewayPercentFee)}</p>
+            <p className="mt-1 font-serif text-2xl font-bold text-primary">
+              {brl(stats.gatewayPercentFee)}
+            </p>
             <p className="mt-1 text-xs text-muted-foreground">Sobre a receita bruta</p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-wider text-muted-foreground">Taxa fixa</p>
-            <p className="mt-1 font-serif text-2xl font-bold text-primary">{brl(stats.gatewayFixedFee)}</p>
+            <p className="mt-1 font-serif text-2xl font-bold text-primary">
+              {brl(stats.gatewayFixedFee)}
+            </p>
             <p className="mt-1 text-xs text-muted-foreground">
               {stats.paidCount} × {brl(GATEWAY_FIXED_BRL)}
             </p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-wider text-muted-foreground">Líquido</p>
-            <p className="mt-1 font-serif text-2xl font-bold text-primary">{brl(stats.netRevenue)}</p>
-            <p className="mt-1 text-xs text-muted-foreground">Taxas totais: {brl(stats.gatewayFees)}</p>
+            <p className="mt-1 font-serif text-2xl font-bold text-primary">
+              {brl(stats.netRevenue)}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Taxas totais: {brl(stats.gatewayFees)}
+            </p>
           </div>
         </div>
       </section>
@@ -468,12 +632,21 @@ export function AdminDashboard() {
         <div className="rounded-sm border border-border bg-card p-5">
           <h3 className="mb-3 text-sm font-medium">Pedidos pagos por método</h3>
           {stats.methodPie.length === 0 ? (
-            <p className="py-10 text-center text-sm text-muted-foreground">Sem vendas confirmadas no período</p>
+            <p className="py-10 text-center text-sm text-muted-foreground">
+              Sem vendas confirmadas no período
+            </p>
           ) : (
             <div className="h-52">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={stats.methodPie} dataKey="value" nameKey="name" innerRadius={48} outerRadius={78} paddingAngle={3}>
+                  <Pie
+                    data={stats.methodPie}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={48}
+                    outerRadius={78}
+                    paddingAngle={3}
+                  >
                     {stats.methodPie.map((e) => (
                       <Cell key={e.key} fill={e.color} />
                     ))}
@@ -495,11 +668,15 @@ export function AdminDashboard() {
       {/* Charts */}
       <div className="grid gap-4 lg:grid-cols-5">
         <div className="rounded-sm border border-border bg-card p-5 lg:col-span-3">
-          <h3 className="mb-1 text-sm font-medium">Receita confirmada por dia</h3>
-          <p className="mb-4 text-xs text-muted-foreground">Somente pedidos pagos / confirmados</p>
+          <h3 className="mb-1 text-sm font-medium">Valor vendido por dia</h3>
+          <p className="mb-4 text-xs text-muted-foreground">
+            Pedidos pagos, sem os que foram marcados como recuperados
+          </p>
           <div className="h-64">
             {stats.daily.every((d) => d.revenue === 0) ? (
-              <p className="flex h-full items-center justify-center text-sm text-muted-foreground">Sem dados no período</p>
+              <p className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                Sem dados no período
+              </p>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={stats.daily}>
@@ -512,7 +689,11 @@ export function AdminDashboard() {
                     }}
                     fontSize={11}
                   />
-                  <YAxis tickFormatter={(v) => `R$${Math.round(Number(v) / 100) * 100}`} fontSize={11} width={56} />
+                  <YAxis
+                    tickFormatter={(v) => `R$${Math.round(Number(v) / 100) * 100}`}
+                    fontSize={11}
+                    width={56}
+                  />
                   <Tooltip
                     labelFormatter={(v) =>
                       new Date(String(v) + "T12:00:00-03:00").toLocaleDateString("pt-BR", {
@@ -524,7 +705,13 @@ export function AdminDashboard() {
                       name === "revenue" ? "Receita" : "Pedidos",
                     ]}
                   />
-                  <Line type="monotone" dataKey="revenue" stroke="#5a1a1f" strokeWidth={2} dot={false} />
+                  <Line
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="#5a1a1f"
+                    strokeWidth={2}
+                    dot={false}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             )}
@@ -536,11 +723,17 @@ export function AdminDashboard() {
           <p className="mb-4 text-xs text-muted-foreground">Distribuição no período selecionado</p>
           <div className="h-64">
             {stats.byStatus.length === 0 ? (
-              <p className="flex h-full items-center justify-center text-sm text-muted-foreground">Sem pedidos</p>
+              <p className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                Sem pedidos
+              </p>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.byStatus} layout="vertical" margin={{ left: 8, right: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="hsl(var(--border))"
+                    horizontal={false}
+                  />
                   <XAxis type="number" allowDecimals={false} fontSize={11} />
                   <YAxis type="category" dataKey="label" width={90} fontSize={11} />
                   <Tooltip formatter={(v: number) => [v, "Pedidos"]} />
@@ -562,7 +755,10 @@ export function AdminDashboard() {
             </p>
           </div>
           <div className="w-full sm:max-w-xs">
-            <label className="mb-1 block text-xs text-muted-foreground" htmlFor="product-sales-search">
+            <label
+              className="mb-1 block text-xs text-muted-foreground"
+              htmlFor="product-sales-search"
+            >
               Buscar produto
             </label>
             <input
@@ -606,7 +802,11 @@ export function AdminDashboard() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {p.image ? (
-                        <img src={p.image} alt="" className="h-10 w-10 rounded-sm object-cover border border-border" />
+                        <img
+                          src={p.image}
+                          alt=""
+                          className="h-10 w-10 rounded-sm object-cover border border-border"
+                        />
                       ) : (
                         <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-border bg-muted">
                           <Package className="h-4 w-4 text-muted-foreground" />
@@ -634,7 +834,8 @@ export function AdminDashboard() {
         </div>
         {!productQuery.trim() && stats.topProducts.length > 25 && (
           <p className="border-t border-border px-5 py-2 text-xs text-muted-foreground">
-            Mostrando o top 25 por receita. Use a busca para encontrar qualquer produto vendido no período ({stats.topProducts.length} no total).
+            Mostrando o top 25 por receita. Use a busca para encontrar qualquer produto vendido no
+            período ({stats.topProducts.length} no total).
           </p>
         )}
       </div>
@@ -737,7 +938,9 @@ function MethodCard({
           <p className="text-sm font-medium">{rate}%</p>
         </div>
       </div>
-      <p className="mt-3 text-xs text-muted-foreground">Volume total (inclui pendentes): {brl(totalRevenue)}</p>
+      <p className="mt-3 text-xs text-muted-foreground">
+        Volume total (inclui pendentes): {brl(totalRevenue)}
+      </p>
     </div>
   );
 }
