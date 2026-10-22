@@ -100,8 +100,9 @@ function parseVideo(url: string | null | undefined): VideoInfo | null {
       contentUrl: `https://vimeo.com/${id}`,
     };
   }
-  // Arquivo direto
-  return { kind: "file", embedUrl: u, contentUrl: u };
+  // Arquivo do Storage: caminho do site (/storage/...), nunca o host do Supabase.
+  const siteUrl = toSiteImageUrl(u);
+  return { kind: "file", embedUrl: siteUrl, contentUrl: siteUrl };
 }
 
 async function fetchProductBySlug(slug: string) {
@@ -235,8 +236,8 @@ export const Route = createFileRoute("/produto/$slug")({
           Boolean,
         ),
         uploadDate: (p.created_at ? new Date(p.created_at) : new Date()).toISOString(),
-        contentUrl: v.contentUrl,
-        embedUrl: v.embedUrl,
+        contentUrl: toAbsoluteImageUrl(v.contentUrl) ?? v.contentUrl,
+        embedUrl: toAbsoluteImageUrl(v.embedUrl) ?? v.embedUrl,
       };
     }
     const breadcrumb = {
@@ -634,7 +635,9 @@ function ProductPage() {
           <aside className="min-w-0 space-y-6 xl:sticky xl:top-32">
             <div className="space-y-1">
               {compare > price && (
-                <div className="text-sm text-muted-foreground line-through">de {brl(compare)}</div>
+                <div className="text-sm font-medium text-[color:var(--sale)] line-through">
+                  de {brl(compare)}
+                </div>
               )}
 
               <div className="flex items-baseline gap-2 pt-1">
@@ -917,7 +920,8 @@ function ProductPage() {
       <ProductMobileBuyBar
         image={p.image_url}
         name={p.name}
-        price={headlinePrice}
+        price={price}
+        compareAt={compare}
         quantity={qty}
         disabled={p.stock <= 0}
         onBuy={addToCart}
@@ -985,8 +989,8 @@ function SuggestedProducts({ productId }: { productId: string }) {
                 </p>
                 <div className="mt-1 flex items-baseline gap-2">
                   {spCompare > spPrice && (
-                    <span className="text-xs text-muted-foreground line-through">
-                      {brl(spCompare)}
+                    <span className="text-xs font-medium text-[color:var(--sale)] line-through">
+                      de {brl(spCompare)}
                     </span>
                   )}
                   <span className="text-sm font-bold text-[color:var(--buy)]">{brl(spPrice)}</span>

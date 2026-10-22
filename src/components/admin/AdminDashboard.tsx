@@ -60,6 +60,7 @@ const METHOD_LABEL: Record<string, string> = {
 };
 
 const PERIODS = [
+  { id: "today", label: "Hoje", days: 1 },
   { id: "7d", label: "7 dias", days: 7 },
   { id: "30d", label: "30 dias", days: 30 },
   { id: "90d", label: "90 dias", days: 90 },

@@ -103,7 +103,7 @@ export function ProductCard({ p }: { p: Product }) {
         </div>
         <div className="mt-auto w-full pt-1">
           {p.compare_at_price && Number(p.compare_at_price) > Number(p.price) && (
-            <div className="text-[11px] text-muted-foreground line-through">
+            <div className="text-[11px] font-medium text-[color:var(--sale)] line-through">
               de {brl(p.compare_at_price)}
             </div>
           )}

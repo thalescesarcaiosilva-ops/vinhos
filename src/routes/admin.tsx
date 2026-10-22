@@ -1578,9 +1578,20 @@ const STATUS_LABEL: Record<string, string> = {
 
 const ORDERS_PAGE_SIZE = 20;
 
+function dateKeyInSaoPaulo(input: Date | string): string {
+  const d = typeof input === "string" ? new Date(input) : input;
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+}
+
 function OrdersAdmin() {
   const [items, setItems] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
+  const [dayFilter, setDayFilter] = useState<"all" | "today">("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState<any | null>(null);
@@ -1607,7 +1618,9 @@ function OrdersAdmin() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const todayKey = dateKeyInSaoPaulo(new Date());
     return items.filter((o) => {
+      if (dayFilter === "today" && dateKeyInSaoPaulo(o.created_at) !== todayKey) return false;
       if (filter === "comprovante") {
         if (!o.pix_receipt_path) return false;
       } else if (filter !== "all" && o.status !== filter) {
@@ -1622,12 +1635,12 @@ function OrdersAdmin() {
         seq === q
       );
     });
-  }, [items, filter, query, seqById]);
+  }, [items, filter, dayFilter, query, seqById]);
 
   // Volta para a primeira página quando filtro/busca mudam.
   useEffect(() => {
     setPage(1);
-  }, [filter, query]);
+  }, [filter, dayFilter, query]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ORDERS_PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -1656,6 +1669,14 @@ function OrdersAdmin() {
           placeholder="Buscar por nome ou e-mail do cliente…"
           className="w-full min-w-[220px] flex-1 rounded-sm border border-border bg-background px-3 py-2 text-sm sm:w-72 sm:flex-none"
         />
+        <select
+          value={dayFilter}
+          onChange={(e) => setDayFilter(e.target.value as "all" | "today")}
+          className="rounded-sm border border-border bg-background px-3 py-2 text-sm"
+        >
+          <option value="all">Todos os dias</option>
+          <option value="today">Hoje (desde 00:00)</option>
+        </select>
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}

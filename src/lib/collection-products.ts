@@ -27,7 +27,6 @@ type VFilter = {
 
 export const VIRTUAL_FILTERS: Record<string, VFilter> = {
   todos: { label: "Todos os produtos", apply: (q) => q },
-  outlet: { label: "Outlet — Ofertas", apply: (q) => q.not("compare_at_price", "is", null) },
   sobremesa: {
     label: "Vinhos de Sobremesa",
     apply: (q) =>
