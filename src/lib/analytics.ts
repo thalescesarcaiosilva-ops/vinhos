@@ -4,6 +4,7 @@ export type TrackingIdsInput = {
   googleAnalyticsId?: string | null;
   googleAdsId?: string | null;
   googleAdsConversionSendTo?: string | null;
+  googleAdsPaidConversionSendTo?: string | null;
   googleTagManagerId?: string | null;
   microsoftClarityId?: string | null;
   headScripts?: string | null;
@@ -68,6 +69,7 @@ export function normalizeTrackingSettings(raw: TrackingIdsInput): {
   googleAnalyticsId: string;
   googleAdsId: string;
   googleAdsConversionSendTo: string;
+  googleAdsPaidConversionSendTo: string;
   googleTagManagerId: string;
   microsoftClarityId: string;
   headScripts: string;
@@ -77,6 +79,7 @@ export function normalizeTrackingSettings(raw: TrackingIdsInput): {
     googleAnalyticsId: normalizeGoogleId(raw.googleAnalyticsId, ["G"]),
     googleAdsId: normalizeGoogleId(raw.googleAdsId, ["AW"]),
     googleAdsConversionSendTo: normalizeAdsSendTo(raw.googleAdsConversionSendTo),
+    googleAdsPaidConversionSendTo: normalizeAdsSendTo(raw.googleAdsPaidConversionSendTo),
     googleTagManagerId: normalizeGoogleId(raw.googleTagManagerId, ["GTM"]),
     microsoftClarityId: normalizeClarityId(raw.microsoftClarityId),
     headScripts: typeof raw.headScripts === "string" ? raw.headScripts : "",
@@ -111,9 +114,15 @@ export function trackingActiveItems(t: TrackingIdsInput): TrackingActiveItem[] {
     { key: "ads", label: "Google Ads", active: Boolean(n.googleAdsId), value: n.googleAdsId || undefined },
     {
       key: "conv",
-      label: "Conversão Google Ads",
+      label: "Conversão Google Ads — pedido gerado",
       active: Boolean(n.googleAdsConversionSendTo),
       value: n.googleAdsConversionSendTo || undefined,
+    },
+    {
+      key: "conv-paid",
+      label: "Conversão Google Ads — pedido pago",
+      active: Boolean(n.googleAdsPaidConversionSendTo),
+      value: n.googleAdsPaidConversionSendTo || undefined,
     },
     { key: "clarity", label: "Microsoft Clarity", active: Boolean(n.microsoftClarityId), value: n.microsoftClarityId || undefined },
   ];
@@ -122,26 +131,32 @@ export function trackingActiveItems(t: TrackingIdsInput): TrackingActiveItem[] {
 const firedConversionIds = new Set<string>();
 
 /**
- * Dispara conversão do Google Ads na página de obrigado.
- * Evita duplicata via sessionStorage + Set em memória; retenta gtag até ~10s.
+ * Dispara conversão do Google Ads.
+ * scope "order" na tela do Pix; scope "paid" só com pagamento confirmado.
+ * Dedupe separado por escopo, para as duas tags contarem o mesmo pedido.
  */
 export function fireGoogleAdsConversion(opts: {
   sendTo: string;
   value: number;
   transactionId: string;
   currency?: string;
+  /** "order" = Pix gerado. "paid" = pagamento confirmado. Chaves separadas. */
+  scope?: "order" | "paid";
 }): void {
   const sendTo = normalizeAdsSendTo(opts.sendTo);
   const transactionId = String(opts.transactionId ?? "").trim();
   if (!sendTo || !transactionId) return;
 
-  const storageKey = `galvao_gads_conv_${transactionId}`;
+  const scope = opts.scope ?? "order";
+  const dedupeId = `${scope}:${transactionId}`;
+  const storageKey =
+    scope === "paid" ? `galvao_gads_paid_${transactionId}` : `galvao_gads_conv_${transactionId}`;
   try {
     if (typeof sessionStorage !== "undefined" && sessionStorage.getItem(storageKey)) return;
   } catch {
     /* private mode */
   }
-  if (firedConversionIds.has(transactionId)) return;
+  if (firedConversionIds.has(dedupeId)) return;
 
   const value = Number.isFinite(opts.value) ? opts.value : 0;
   const currency = opts.currency || "BRL";
@@ -157,7 +172,7 @@ export function fireGoogleAdsConversion(opts: {
         currency,
         transaction_id: transactionId,
       });
-      firedConversionIds.add(transactionId);
+      firedConversionIds.add(dedupeId);
       try {
         sessionStorage.setItem(storageKey, "1");
       } catch {

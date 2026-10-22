@@ -3376,7 +3376,7 @@ function SettingsAdmin() {
           </label>
           <label>
             <span className="text-xs uppercase text-muted-foreground">
-              Conversão Google Ads (send_to)
+              Conversão Google Ads — pedido gerado (send_to)
             </span>
             <input
               className={`${inp} mt-1 font-mono`}
@@ -3390,7 +3390,26 @@ function SettingsAdmin() {
               }
             />
             <span className="mt-1 block text-[11px] text-muted-foreground">
-              Disparado só na página de obrigado, quando o pagamento estiver confirmado.
+              Disparado quando o Pix é gerado e o pedido ainda está pendente.
+            </span>
+          </label>
+          <label>
+            <span className="text-xs uppercase text-muted-foreground">
+              Conversão Google Ads — pedido pago (send_to)
+            </span>
+            <input
+              className={`${inp} mt-1 font-mono`}
+              placeholder="AW-XXXXXXXX/label"
+              value={s.tracking.googleAdsPaidConversionSendTo ?? ""}
+              onChange={(e) =>
+                setS({
+                  ...s,
+                  tracking: { ...s.tracking, googleAdsPaidConversionSendTo: e.target.value },
+                })
+              }
+            />
+            <span className="mt-1 block text-[11px] text-muted-foreground">
+              Outra tag, só quando o pagamento é confirmado. A de pedido gerado continua separada.
             </span>
           </label>
           <label className="md:col-span-2">

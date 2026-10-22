@@ -432,6 +432,7 @@ function Checkout() {
   if (paid) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
+        <GoogleAdsConversion orderId={paid.orderId} value={paid.total} paid />
         <CheckCircle2 className="mx-auto h-20 w-20 text-[oklch(0.6_0.18_150)]" strokeWidth={1.5} />
         <h1 className="mt-6 font-serif text-3xl font-bold text-primary">Pagamento confirmado!</h1>
         <p className="mt-2 text-sm text-muted-foreground">Número do pedido</p>

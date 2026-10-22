@@ -3,24 +3,29 @@ import { useStoreSettings } from "@/lib/store-settings";
 import { fireGoogleAdsConversion, normalizeAdsSendTo } from "@/lib/analytics";
 
 /**
- * Dispara a conversão do Google Ads ao gerar o Pix (pedido criado).
- * Não dispara na página de obrigado — a conversão conta no momento da intenção
- * de compra (Pix gerado), não no pagamento confirmado.
- * O dedupe por pedido (sessionStorage + memória) garante um único disparo por orderId,
- * mesmo que a tela do Pix seja revisitada/restaurada após reload.
- * Pageviews continuam automáticos via gtag — este é o único evento customizado.
+ * Tag de conversão do Google Ads.
+ * Sem `paid`: dispara na tela do Pix, quando o pedido é gerado.
+ * Com `paid`: dispara só na tela de pagamento confirmado, com a outra tag.
+ * O dedupe é separado, então as duas podem contar o mesmo pedido.
  */
 export function GoogleAdsConversion({
   orderId,
   value,
   currency = "BRL",
+  paid = false,
 }: {
   orderId: string;
   value: number;
   currency?: string;
+  /** true = só a tag de pedido pago. false = tag de pedido gerado (Pix). */
+  paid?: boolean;
 }) {
   const { data: settings } = useStoreSettings();
-  const sendTo = normalizeAdsSendTo(settings?.tracking?.googleAdsConversionSendTo);
+  const sendTo = normalizeAdsSendTo(
+    paid
+      ? settings?.tracking?.googleAdsPaidConversionSendTo
+      : settings?.tracking?.googleAdsConversionSendTo,
+  );
 
   useEffect(() => {
     if (!sendTo || !orderId) return;
@@ -29,8 +34,9 @@ export function GoogleAdsConversion({
       value,
       transactionId: orderId,
       currency,
+      scope: paid ? "paid" : "order",
     });
-  }, [sendTo, orderId, value, currency]);
+  }, [sendTo, orderId, value, currency, paid]);
 
   return null;
 }
