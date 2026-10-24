@@ -1,16 +1,20 @@
-import { PackageCheck, ShieldCheck, CreditCard, MessageCircle } from "lucide-react";
+import { PackageCheck, RotateCcw, CreditCard, MessageCircle } from "lucide-react";
 import { useStoreSettings } from "@/lib/store-settings";
 import { StoreContainer } from "@/components/store/StoreContainer";
+import { brl } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 /**
  * Barra de benefícios com altura estável.
  * CSS scroll em vez de Embla — evita forced reflow de medição do carrossel.
  * Textos finais vêm do SSR (store_settings no root loader) para o bot ver o HTML completo.
+ * Cada frase precisa estar coberta pelas políticas publicadas (Merchant Center).
  */
-export function BenefitsBar() {
+export function BenefitsBar({ className }: { className?: string }) {
   const { data: settings } = useStoreSettings();
   const maxInstallments = settings?.payments?.maxInstallments;
   const interestFree = settings?.payments?.interestFreeUpTo;
+  const freeFrom = settings?.shipping?.freeShippingFrom;
 
   const payTitle =
     maxInstallments != null && maxInstallments > 0
@@ -30,25 +34,25 @@ export function BenefitsBar() {
       id: "freight",
       icon: PackageCheck,
       title: "Frete para todo Brasil",
-      text: "Embalagem segura e térmica",
+      text: freeFrom != null && freeFrom > 0 ? `Grátis acima de ${brl(freeFrom)}` : "Valor calculado pelo CEP",
     },
     { id: "card", icon: CreditCard, title: payTitle, text: payText },
     {
-      id: "secure",
-      icon: ShieldCheck,
-      title: "Compra 100% segura",
-      text: "Garantia de procedência",
+      id: "returns",
+      icon: RotateCcw,
+      title: "7 dias para desistir",
+      text: "Contados do recebimento",
     },
     {
       id: "support",
       icon: MessageCircle,
-      title: "Atendimento especializado",
-      text: "Sommelier à disposição",
+      title: "Atendimento",
+      text: "Segunda a sexta, 8h às 18h",
     },
   ] as const;
 
   return (
-    <section className="border-b border-border/70 bg-background">
+    <section className={cn("border-b border-border/70 bg-background", className)}>
       <StoreContainer className="py-4">
         <ul
           className="flex gap-0 overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden xl:grid xl:grid-cols-4 xl:overflow-visible"

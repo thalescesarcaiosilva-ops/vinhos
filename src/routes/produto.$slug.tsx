@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 import { brl } from "@/lib/format";
 import { useCart } from "@/lib/cart";
 import { toMerchantImageUrl, toSiteImageUrl } from "@/lib/image-url";
@@ -18,13 +18,22 @@ import {
   ChevronLeft,
   ChevronRight,
   Heart,
-  Truck,
   Star,
   MapPin,
   CreditCard,
+  Globe,
+  Factory,
+  Wine,
+  GlassWater,
+  Grape,
+  Percent,
+  Thermometer,
+  Eye,
+  Wind,
+  Soup,
+  Utensils,
 } from "lucide-react";
 import { toast } from "sonner";
-import { POLICY_SLUGS } from "@/lib/policy-links";
 import {
   Accordion,
   AccordionItem,
@@ -50,8 +59,6 @@ import {
   resolveProductBrandName,
 } from "@/lib/product-seo";
 import { buildSellerOrganization } from "@/lib/seo";
-import { calcShipping, type ShippingQuote } from "@/lib/shipping";
-import { maskCEP, fetchAddressByCEP } from "@/lib/validation";
 import {
   useStoreSettings,
   installmentPlan,
@@ -65,6 +72,8 @@ import { StoreContainer } from "@/components/store/StoreContainer";
 import { ProductHtmlContent } from "@/components/store/ProductHtmlContent";
 import { PixDiscountBanner } from "@/components/store/PixDiscountBanner";
 import { BenefitsBar } from "@/components/store/BenefitsBar";
+import { ProductShippingCalculator } from "@/components/store/ProductShippingCalculator";
+import { ProductTrustCards } from "@/components/store/ProductTrustCards";
 import { withRetry } from "@/lib/with-retry";
 
 type VideoInfo = {
@@ -296,10 +305,6 @@ function ProductPage() {
   const { data: favs } = useFavorites();
   const toggleFav = useToggleFavorite();
   const [qty, setQty] = useState(1);
-  const [cep, setCep] = useState("");
-  const [quotes, setQuotes] = useState<ShippingQuote[] | null>(null);
-  const [shipAddr, setShipAddr] = useState<{ city: string; state: string } | null>(null);
-  const [cepLoading, setCepLoading] = useState(false);
   const [active, setActive] = useState(0);
   const [thumbStart, setThumbStart] = useState(0);
   const [payOpen, setPayOpen] = useState(false);
@@ -378,10 +383,6 @@ function ProductPage() {
       : []),
   ];
   const visibleThumbs = media.slice(thumbStart, thumbStart + 5);
-  const harmonization =
-    (p.harmonizacao && p.harmonizacao.length > 0 ? p.harmonizacao.join(", ") : null) ??
-    p.harmonization ??
-    null;
   const origin = [p.country, p.region].filter(Boolean).join(" · ");
   const primaryDetailsSource: Array<[string, string | null | undefined]> = [
     ["Produtor", p.brand],
@@ -393,21 +394,11 @@ function ProductPage() {
   const primaryDetails = primaryDetailsSource.filter(
     ([, value]) => value && String(value).trim().length > 0,
   );
-  const tastingNotesSource: Array<[string, string | null | undefined]> = [
-    ["Visual", p.visual_notes],
-    ["Aroma", p.nose_notes],
-    ["Paladar", p.palate_notes],
-    ["Harmonização", harmonization],
-  ];
-  const tastingNotes = tastingNotesSource.filter(
-    ([, value]) => value && String(value).trim().length > 0,
-  );
   const techRows: Array<[string, string | null | undefined]> = [
     ["Safra", p.vintage],
     ["Estilo", p.wine_style],
     ["Envelhecimento", p.aging],
     ["Teor alcoólico", p.alcohol_content],
-    ["Temperatura de serviço", p.serving_temp],
     ["Taça recomendada", p.glass_type],
     ["Decantação", p.decanting],
   ];
@@ -415,29 +406,7 @@ function ProductPage() {
   const approvedReviewCount = reviewsCountQ.data ?? 0;
   const productRating = Number(p.rating ?? 0);
   const hasProductRating = productRating > 0;
-
-  async function calcFreight() {
-    const clean = cep.replace(/\D/g, "");
-    if (clean.length !== 8) {
-      toast.error("CEP inválido");
-      return;
-    }
-    setCepLoading(true);
-    try {
-      const addr = await fetchAddressByCEP(cep);
-      if (addr) setShipAddr({ city: addr.city, state: addr.state });
-      else setShipAddr(null);
-      const result = calcShipping(price * qty, cep, settings?.shipping, addr?.state);
-      if (result.length === 0) {
-        toast.error("Não há métodos de frete disponíveis para este CEP");
-        return;
-      }
-      setQuotes(result);
-    } finally {
-      setCepLoading(false);
-    }
-  }
-
+  const isFav = favs?.has(p.id) ?? false;
   function addToCart() {
     add({ id: p.id, name: p.name, slug: p.slug, price, image: p.image_url }, qty);
     toast.success("Adicionado ao carrinho");
@@ -445,9 +414,9 @@ function ProductPage() {
 
   return (
     <div className="bg-background pb-[calc(6rem+env(safe-area-inset-bottom))] xl:pb-0">
-      <BenefitsBar />
-      <StoreContainer className="py-6">
-        <nav className="mb-5 text-xs text-muted-foreground">
+      <BenefitsBar className="hidden xl:block" />
+      <StoreContainer className="py-4 xl:py-6">
+        <nav className="mb-3 truncate text-xs text-muted-foreground xl:mb-5">
           <Link to="/" className="hover:text-primary">
             Home
           </Link>
@@ -458,11 +427,13 @@ function ProductPage() {
               <span className="hover:text-primary">{p.wine_type}s</span>
             </>
           )}
-          <span className="mx-2">›</span>
-          <span className="text-foreground">{p.name}</span>
+          <span className="hidden sm:inline">
+            <span className="mx-2">›</span>
+            <span className="text-foreground">{p.name}</span>
+          </span>
         </nav>
 
-        <div className="grid gap-8 xl:grid-cols-[40fr_32fr_28fr] xl:items-start xl:gap-10">
+        <div className="grid gap-5 xl:grid-cols-[40fr_32fr_28fr] xl:items-start xl:gap-10">
           {/* Galeria */}
           <div className="min-w-0">
             <ProductMediaMobileCarousel
@@ -470,8 +441,6 @@ function ProductPage() {
               productName={p.name}
               discount={discount}
               bestSeller={!!p.best_seller}
-              country={p.country}
-              flagUrl={flagUrlFor(p.country)}
             />
             <ProductMediaDesktopMain
               item={media[active]}
@@ -552,17 +521,35 @@ function ProductPage() {
           </div>
 
           {/* Informações */}
-          <section className="min-w-0 space-y-4">
+          <section className="min-w-0 space-y-3 xl:space-y-4">
             <div>
-              <h1 className="font-serif text-2xl font-bold leading-tight text-foreground md:text-3xl">
+              <h1 className="font-serif text-[1.375rem] font-bold leading-snug text-foreground md:text-3xl md:leading-tight">
                 {p.name}
               </h1>
-              <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
-                ref: {p.id.slice(0, 8).toUpperCase()}
-              </p>
+              <button
+                type="button"
+                onClick={() =>
+                  toggleFav.mutate({
+                    product: {
+                      id: p.id,
+                      name: p.name,
+                      slug: p.slug,
+                      price: Number(p.price),
+                      image: p.image_url,
+                      country: p.country,
+                    },
+                    isFav,
+                  })
+                }
+                aria-pressed={isFav}
+                className="mt-3 flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+              >
+                <Heart className={`h-4 w-4 ${isFav ? "fill-primary text-primary" : ""}`} />
+                {isFav ? "Remover dos favoritos" : "Favoritar"}
+              </button>
             </div>
 
-            {hasProductRating && (
+            {hasProductRating && approvedReviewCount > 0 && (
               <a
                 href="#avaliacoes"
                 className="flex w-fit items-center gap-2 text-sm transition-opacity hover:opacity-70"
@@ -589,7 +576,7 @@ function ProductPage() {
             )}
 
             {primaryDetails.length > 0 && (
-              <dl className="divide-y divide-border/50 border-y border-border/60">
+              <dl className="hidden divide-y divide-border/50 border-y border-border/60 xl:block">
                 {primaryDetails.map(([label, value]) => (
                   <div key={label} className="grid grid-cols-[7.5rem_1fr] gap-3 py-2.5 text-sm">
                     <dt className="font-medium text-muted-foreground">{label}</dt>
@@ -601,38 +588,13 @@ function ProductPage() {
               </dl>
             )}
 
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              {(() => {
-                const isFav = favs?.has(p.id) ?? false;
-                return (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      toggleFav.mutate({
-                        product: {
-                          id: p.id,
-                          name: p.name,
-                          slug: p.slug,
-                          price: Number(p.price),
-                          image: p.image_url,
-                          country: p.country,
-                        },
-                        isFav,
-                      })
-                    }
-                    className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-                  >
-                    <Heart className={`h-4 w-4 ${isFav ? "fill-primary text-primary" : ""}`} />
-                    {isFav ? "Remover dos favoritos" : "Favoritar"}
-                  </button>
-                );
-              })()}
-
-            </div>
+            <p className="hidden text-xs uppercase tracking-widest text-muted-foreground xl:block">
+              ref: {p.id.slice(0, 8).toUpperCase()}
+            </p>
           </section>
 
           {/* Compra e frete */}
-          <aside className="min-w-0 space-y-6 xl:sticky xl:top-32">
+          <aside className="min-w-0 space-y-4 xl:sticky xl:top-32 xl:space-y-5">
             <div className="space-y-1">
               {compare > price && (
                 <div className="text-sm font-medium text-[color:var(--sale)] line-through">
@@ -707,132 +669,83 @@ function ProductPage() {
               pay={pay}
             />
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-foreground">Quantidade</span>
-                <div className="inline-flex h-10 items-center rounded-sm bg-muted/60">
-                  <button
-                    type="button"
-                    onClick={() => setQty((v) => Math.max(1, v - 1))}
-                    className="flex h-10 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-primary"
-                    aria-label="Diminuir quantidade"
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
-                  <span className="w-9 text-center text-sm font-semibold" aria-live="polite">
-                    {qty}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setQty((v) => v + 1)}
-                    className="flex h-10 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-primary"
-                    aria-label="Aumentar quantidade"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
+            <div id="product-buy" className="flex items-stretch gap-2">
+              <div className="inline-flex h-12 shrink-0 items-center rounded-md border border-border bg-background">
+                <button
+                  type="button"
+                  onClick={() => setQty((v) => Math.max(1, v - 1))}
+                  className="flex h-12 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-primary disabled:opacity-40"
+                  aria-label="Diminuir quantidade"
+                  disabled={qty <= 1}
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <span className="w-7 text-center text-sm font-semibold" aria-live="polite">
+                  {qty}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setQty((v) => v + 1)}
+                  className="flex h-12 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-primary"
+                  aria-label="Aumentar quantidade"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
               </div>
               <button
                 type="button"
                 disabled={p.stock <= 0}
                 onClick={addToCart}
-                className="min-h-12 w-full rounded-sm bg-[color:var(--buy)] px-6 py-3 text-sm font-bold uppercase tracking-wider text-[color:var(--buy-foreground)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
+                className="min-h-12 flex-1 rounded-md bg-[color:var(--buy)] px-4 text-sm font-bold uppercase tracking-wider text-[color:var(--buy-foreground)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {p.stock > 0 ? "Comprar agora" : "Produto indisponível"}
               </button>
             </div>
+            {qty > 1 && p.stock > 0 && (
+              <p className="-mt-2 text-xs text-muted-foreground">
+                {qty} unidades · total {brl(price * qty)}
+              </p>
+            )}
+
+            <ProductShippingCalculator subtotal={price * qty} shipping={settings?.shipping} />
+
+            <ProductTrustCards />
 
             <SuggestedProducts productId={p.id} />
-
-            <section className="border-t border-border/70 pt-5" aria-labelledby="shipping-title">
-              <div className="flex items-center gap-2">
-                <Truck className="h-5 w-5 shrink-0 text-primary" />
-                <div>
-                  <h2 id="shipping-title" className="text-sm font-bold">
-                    Calcule o frete
-                  </h2>
-                  <p className="text-xs text-muted-foreground">
-                    Consulte prazo e valor para seu CEP ·{" "}
-                    <Link
-                      to="/politicas/$slug"
-                      params={{ slug: POLICY_SLUGS.shipping }}
-                      className="font-medium text-primary hover:underline"
-                    >
-                      Política de frete
-                    </Link>
-                    {" · "}
-                    <Link
-                      to="/politicas/$slug"
-                      params={{ slug: POLICY_SLUGS.returns }}
-                      className="font-medium text-primary hover:underline"
-                    >
-                      Trocas e devoluções
-                    </Link>
-                  </p>
-                </div>
-              </div>
-              <div className="mt-3 flex items-end gap-3">
-                <label className="min-w-0 flex-1">
-                  <span className="sr-only">CEP</span>
-                  <input
-                    inputMode="numeric"
-                    autoComplete="postal-code"
-                    value={cep}
-                    onChange={(e) => setCep(maskCEP(e.target.value))}
-                    placeholder="00000-000"
-                    className="w-full border-0 border-b border-border bg-transparent px-0 py-2 text-sm outline-none transition-colors focus:border-primary"
-                  />
-                </label>
-                <button
-                  type="button"
-                  onClick={calcFreight}
-                  disabled={cepLoading}
-                  className="min-h-10 px-1 text-sm font-bold uppercase tracking-wide text-primary transition-opacity hover:opacity-70 disabled:opacity-50"
-                >
-                  {cepLoading ? "Calculando…" : "Calcular"}
-                </button>
-              </div>
-              {shipAddr && (
-                <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-                  <MapPin className="h-3.5 w-3.5 text-primary" />
-                  Entrega para{" "}
-                  <strong className="text-foreground">
-                    {shipAddr.city} / {shipAddr.state}
-                  </strong>
-                </div>
-              )}
-              {quotes && (
-                <ul className="mt-3 divide-y divide-border/60 border-t border-border/60 text-sm">
-                  {quotes.map((q) => (
-                    <li key={q.label} className="flex items-center justify-between gap-3 py-2.5">
-                      <span>
-                        <strong>{q.label}</strong> · {q.eta}
-                      </span>
-                      <span className="font-bold text-primary">
-                        {q.price === 0 ? "Grátis" : brl(q.price)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
           </aside>
         </div>
 
-        <section
-          id="descricao"
-          className="mt-10 scroll-mt-32 border-t border-border/60 pt-8 lg:mt-12 lg:pt-10"
-        >
-          <div className="w-full text-left [&_*]:!text-left">
+        <section id="descricao" className="mt-16 scroll-mt-32">
+          <div className="mx-auto max-w-4xl text-center">
+            <h2 className="font-serif text-3xl font-bold text-primary">Descrição</h2>
+            <div className="mx-auto mt-2 h-1 w-16 rounded bg-[color:var(--sale)]" />
             {p.description || p.short_description ? (
               <ProductHtmlContent
                 html={p.description ?? p.short_description}
-                className="text-left [&_*]:!text-left"
+                className="mt-6 text-center [&_p]:text-center"
               />
             ) : (
-              <p className="text-sm text-muted-foreground">Sem descrição disponível.</p>
+              <p className="mt-6 text-sm text-muted-foreground">Sem descrição disponível.</p>
             )}
           </div>
+        </section>
+
+        <section className="mt-16">
+          <div className="mx-auto mb-8 max-w-4xl text-center">
+            <h2 className="font-serif text-3xl font-bold text-primary">
+              <span className="mr-2 text-base font-normal text-muted-foreground">Saiba mais</span>
+              <br />
+              Características
+            </h2>
+            <div className="mx-auto mt-2 h-1 w-16 rounded bg-[color:var(--sale)]" />
+          </div>
+          <CharacteristicsGrid p={p} />
+        </section>
+
+        <section className="mt-16 text-center">
+          <h2 className="font-serif text-2xl font-bold text-primary">O que vem no pacote?</h2>
+          <div className="mx-auto mt-2 h-1 w-16 rounded bg-[color:var(--sale)]" />
+          <p className="mt-4 text-sm text-foreground/80">{p.name}</p>
         </section>
 
         {/* Conteúdo consultivo sob demanda, sem alongar a leitura principal. */}
@@ -857,26 +770,6 @@ function ProductPage() {
                       />
                     )}
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {tastingNotes.length > 0 && (
-              <AccordionItem value="degustacao" className="border-border">
-                <AccordionTrigger className="text-sm font-semibold uppercase tracking-wider text-foreground hover:no-underline">
-                  Notas de degustação
-                </AccordionTrigger>
-                <AccordionContent>
-                  <dl className="grid gap-x-10 md:grid-cols-2">
-                    {tastingNotes.map(([label, value]) => (
-                      <div key={label} className="border-b border-border/60 py-3">
-                        <dt className="text-xs font-semibold uppercase tracking-wider text-primary">
-                          {label}
-                        </dt>
-                        <dd className="mt-1 text-sm leading-relaxed text-foreground/75">{value}</dd>
-                      </div>
-                    ))}
-                  </dl>
                 </AccordionContent>
               </AccordionItem>
             )}
@@ -906,13 +799,15 @@ function ProductPage() {
           </Accordion>
         </div>
 
-        <section id="avaliacoes" className="mt-10 scroll-mt-32 lg:mt-12">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Experiência de outros clientes
-          </p>
-          <h2 className="mt-1 font-serif text-2xl font-bold text-primary">Avaliações</h2>
-          <Reviews productId={p.id} compact />
-        </section>
+        {approvedReviewCount > 0 && (
+          <section id="avaliacoes" className="mt-10 scroll-mt-32 lg:mt-12">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              Experiência de outros clientes
+            </p>
+            <h2 className="mt-1 font-serif text-2xl font-bold text-primary">Avaliações</h2>
+            <Reviews productId={p.id} compact />
+          </section>
+        )}
 
         {/* Produtos relacionados */}
         <RelatedProducts productId={p.id} country={p.country} wineType={p.wine_type} />
@@ -925,7 +820,84 @@ function ProductPage() {
         quantity={qty}
         disabled={p.stock <= 0}
         onBuy={addToCart}
+        watchId="product-buy"
       />
+    </div>
+  );
+}
+
+type CharProduct = {
+  country?: string | null;
+  region?: string | null;
+  brand?: string | null;
+  wine_type?: string | null;
+  classification?: string | null;
+  wine_style?: string | null;
+  grape?: string | null;
+  serving_temp?: string | null;
+  visual_notes?: string | null;
+  nose_notes?: string | null;
+  palate_notes?: string | null;
+  harmonization?: string | null;
+  harmonizacao?: string[] | null;
+};
+
+function CharacteristicsGrid({ p }: { p: CharProduct }) {
+  const harmonizacaoText =
+    (p.harmonizacao && p.harmonizacao.length > 0 ? p.harmonizacao.join(", ") : null) ??
+    p.harmonization ??
+    null;
+
+  const items: Array<{
+    icon: ComponentType<{ className?: string }>;
+    label: string;
+    value: string | null | undefined;
+  }> = [
+    { icon: Globe, label: "País", value: p.country },
+    { icon: MapPin, label: "Região", value: p.region },
+    { icon: Factory, label: "Produtor", value: p.brand },
+    { icon: Wine, label: "Tipo", value: p.wine_type },
+    { icon: GlassWater, label: "Classificação", value: p.classification },
+    { icon: Soup, label: "Envelhecimento", value: p.wine_style },
+    { icon: Grape, label: "Uva", value: p.grape },
+    { icon: Thermometer, label: "Temperatura de Serviço", value: p.serving_temp },
+    { icon: Eye, label: "Visual", value: p.visual_notes },
+    { icon: Wind, label: "Aroma", value: p.nose_notes },
+    { icon: Percent, label: "Paladar", value: p.palate_notes },
+    { icon: Utensils, label: "Harmonização", value: harmonizacaoText },
+  ].filter((it) => it.value && String(it.value).trim().length > 0);
+
+  if (items.length === 0) {
+    return (
+      <p className="mx-auto max-w-4xl text-center text-sm text-muted-foreground">
+        Características indisponíveis para este produto.
+      </p>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {items.map(({ icon: Icon, label, value }) => {
+        const flag = label === "País" ? flagUrlFor(value as string) : null;
+        return (
+          <div
+            key={label}
+            className="flex items-start gap-3 rounded-full border border-border/70 bg-card px-4 py-3 shadow-sm"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-primary">
+              {flag ? (
+                <img src={flag} alt="" className="h-9 w-9 rounded-full object-cover" />
+              ) : (
+                <Icon className="h-5 w-5" />
+              )}
+            </span>
+            <div className="min-w-0">
+              <div className="text-sm font-bold text-primary">{label}</div>
+              <div className="break-words text-sm leading-snug text-foreground/80">{value}</div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

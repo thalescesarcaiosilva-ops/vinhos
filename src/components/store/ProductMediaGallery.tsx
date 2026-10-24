@@ -101,6 +101,9 @@ function CountryFlag({ flagUrl, country }: { flagUrl?: string | null; country?: 
       alt={country ?? ""}
       title={country ?? ""}
       className="absolute bottom-4 left-4 z-10 h-12 w-12 rounded-full border border-background object-cover"
+      onError={(e) => {
+        e.currentTarget.style.display = "none";
+      }}
     />
   );
 }
@@ -140,7 +143,7 @@ export function ProductMediaMobileCarousel({
           <CarouselContent className="-ml-0">
             {media.map((item, i) => (
               <CarouselItem key={i} className="pl-0">
-                <div className="relative aspect-square w-full max-w-full overflow-hidden bg-card">
+                <div className="relative aspect-square max-h-[52vh] w-full max-w-full overflow-hidden bg-card">
                   <GalleryBadges discount={discount} bestSeller={bestSeller} />
                   <MediaSlide item={item} productName={productName} priority={i === 0} />
                   <CountryFlag flagUrl={flagUrl} country={country} />

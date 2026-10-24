@@ -11,6 +11,8 @@ type ProductMobileBuyBarProps = {
   quantity: number;
   disabled?: boolean;
   onBuy: () => void;
+  /** Id do botão principal; a barra aparece depois que ele sai da tela. */
+  watchId?: string;
 };
 
 export function ProductMobileBuyBar({
@@ -21,8 +23,10 @@ export function ProductMobileBuyBar({
   quantity,
   disabled = false,
   onBuy,
+  watchId,
 }: ProductMobileBuyBarProps) {
   const [footerVisible, setFooterVisible] = useState(false);
+  const [mainBuyVisible, setMainBuyVisible] = useState(true);
 
   useEffect(() => {
     const footer = document.querySelector("footer[data-site-footer]");
@@ -36,13 +40,32 @@ export function ProductMobileBuyBar({
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!watchId || typeof IntersectionObserver === "undefined") {
+      setMainBuyVisible(false);
+      return;
+    }
+    const target = document.getElementById(watchId);
+    if (!target) {
+      setMainBuyVisible(false);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => setMainBuyVisible(entry.isIntersecting),
+      { threshold: 0 },
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [watchId]);
+
+  const hidden = footerVisible || mainBuyVisible;
+
   return (
     <div
       className={`fixed inset-x-0 bottom-0 z-30 border-t border-border/50 bg-background px-4 pt-3 shadow-[0_-6px_20px_rgba(0,0,0,0.07)] transition duration-200 xl:hidden ${
-        footerVisible
-          ? "pointer-events-none translate-y-full opacity-0"
-          : "translate-y-0 opacity-100"
+        hidden ? "pointer-events-none translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
+      aria-hidden={hidden}
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
       role="region"
       aria-label="Compra rápida"

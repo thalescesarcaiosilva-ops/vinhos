@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { recordFunnelStep } from "@/lib/funnel";
 
 export type CartItem = {
   id: string;
@@ -45,6 +46,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CartContextValue>(() => ({
     items,
     add: (item, qty = 1) => {
+      recordFunnelStep("cart");
       setItems(prev => {
         const idx = prev.findIndex(p => p.id === item.id);
         if (idx >= 0) {

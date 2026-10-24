@@ -29,6 +29,7 @@ import QRCode from "qrcode";
 import { toSiteImageUrl } from "@/lib/image-url";
 import { STORE } from "@/lib/settings";
 import { pageMeta } from "@/lib/seo";
+import { recordFunnelStep } from "@/lib/funnel";
 
 export const Route = createFileRoute("/checkout")({
   head: () =>
@@ -428,6 +429,29 @@ function Checkout() {
     const t = window.setTimeout(jump, 50);
     return () => window.clearTimeout(t);
   }, [pix?.orderId, paid?.orderId, pendingResume?.orderId]);
+
+  const pixOrderId = pix?.orderId ?? null;
+  const paidOrderId = paid?.orderId ?? null;
+
+  useEffect(() => {
+    if (restoring) return;
+    const reachedCheckout = count > 0 || !!pixOrderId || !!paidOrderId;
+    if (!reachedCheckout) return;
+    if (count > 0) recordFunnelStep("cart");
+    recordFunnelStep("checkout");
+    if (step >= 2 || pixOrderId || paidOrderId) recordFunnelStep("personal");
+    if (step >= 3 || pixOrderId || paidOrderId) {
+      recordFunnelStep("shipping");
+      recordFunnelStep("payment");
+    }
+  }, [restoring, count, step, pixOrderId, paidOrderId]);
+
+  useEffect(() => {
+    const orderId = paid?.orderId ?? pix?.orderId;
+    if (!orderId) return;
+    recordFunnelStep("order", orderId);
+    if (paid?.orderId) recordFunnelStep("paid", paid.orderId);
+  }, [pix?.orderId, paid?.orderId]);
 
   if (paid) {
     return (

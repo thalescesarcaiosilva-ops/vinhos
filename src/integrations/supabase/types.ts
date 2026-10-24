@@ -1004,6 +1004,38 @@ export type Database = {
           },
         ]
       }
+      store_funnel_events: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string | null
+          session_id: string
+          step: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          session_id: string
+          step: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          session_id?: string
+          step?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_funnel_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       store_settings: {
         Row: {
           data: Json

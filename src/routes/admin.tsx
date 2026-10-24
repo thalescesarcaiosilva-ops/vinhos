@@ -14,6 +14,7 @@ import {
   Users,
   Tag,
   Settings,
+  Filter,
   FolderTree,
   FolderOpen,
   FileText,
@@ -37,6 +38,7 @@ import { syncTrack7OrderFn } from "@/lib/track7-sync";
 import { useServerFn } from "@tanstack/react-start";
 import { MediaLibrary, MediaPickerDialog } from "@/components/admin/MediaLibrary";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
+import { AdminFunnel } from "@/components/admin/AdminFunnel";
 import { toSiteImageUrl } from "@/lib/image-url";
 import { getProductFeedAbsoluteUrl } from "@/lib/product-feed-xml";
 import { countries } from "@/lib/countries";
@@ -58,6 +60,7 @@ export const Route = createFileRoute("/admin")({
 
 type TabId =
   | "dashboard"
+  | "funnel"
   | "products"
   | "banners"
   | "orders"
@@ -309,6 +312,7 @@ function Admin() {
 
   const tabs: { id: TabId; label: string; Icon: typeof Package }[] = [
     { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
+    { id: "funnel", label: "Funil", Icon: Filter },
     { id: "products", label: "Produtos", Icon: Package },
     { id: "categories", label: "Categorias", Icon: FolderTree },
     { id: "orders", label: "Pedidos", Icon: ShoppingCart },
@@ -346,6 +350,7 @@ function Admin() {
       </div>
 
       {tab === "dashboard" && <AdminDashboard />}
+      {tab === "funnel" && <AdminFunnel />}
       {tab === "products" && <ProductsAdmin />}
       {tab === "categories" && <CategoriesAdmin />}
       {tab === "banners" && <BannersAdmin />}
