@@ -24,7 +24,6 @@ import { createCheckoutPix, getPayoutStatus, abandonPendingOrder } from "@/lib/p
 import { PayoutCardForm } from "@/components/store/PayoutCardForm";
 import { GoogleAdsConversion } from "@/components/store/GoogleAdsConversion";
 import { PixReceiptUpload } from "@/components/store/PixReceiptUpload";
-import { CheckoutPolicyLinks } from "@/components/store/CheckoutLegalConsent";
 import QRCode from "qrcode";
 import { toSiteImageUrl } from "@/lib/image-url";
 import { STORE } from "@/lib/settings";
@@ -726,7 +725,6 @@ function Checkout() {
           if (s === 2 && step1Valid) setStep(2);
           if (s === 3 && step2Valid) setStep(3);
         }} step1Valid={step1Valid} step2Valid={step2Valid} />
-        <CheckoutPolicyLinks />
         <form onSubmit={submit} className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
           <div className="min-w-0 space-y-5">
             {/* STEP 1 — Identificação */}
@@ -1025,7 +1023,7 @@ function Checkout() {
           </div>
 
           {/* Resumo */}
-          <aside className="h-fit lg:sticky lg:top-6">
+          <aside className="order-first h-fit lg:order-last lg:sticky lg:top-6">
             <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
               <div className="border-b border-border bg-muted/40 px-5 py-3.5">
                 <h3 className="font-serif text-base font-bold uppercase tracking-wider text-foreground">Resumo do pedido</h3>
