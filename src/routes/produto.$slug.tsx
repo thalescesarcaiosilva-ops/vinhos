@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, type ComponentType } from "react";
 import { brl } from "@/lib/format";
+import { productKeyFacts } from "@/lib/product-facts";
 import { useCart } from "@/lib/cart";
 import { toMerchantImageUrl, toSiteImageUrl } from "@/lib/image-url";
 import { ProductImage } from "@/components/store/ProductImage";
@@ -394,11 +395,10 @@ function ProductPage() {
   const primaryDetails = primaryDetailsSource.filter(
     ([, value]) => value && String(value).trim().length > 0,
   );
+  const keyFacts = productKeyFacts(p);
   const techRows: Array<[string, string | null | undefined]> = [
-    ["Safra", p.vintage],
     ["Estilo", p.wine_style],
     ["Envelhecimento", p.aging],
-    ["Teor alcoólico", p.alcohol_content],
     ["Taça recomendada", p.glass_type],
     ["Decantação", p.decanting],
   ];
@@ -526,6 +526,35 @@ function ProductPage() {
               <h1 className="font-serif text-[1.375rem] font-bold leading-snug text-foreground md:text-3xl md:leading-tight">
                 {p.name}
               </h1>
+              {keyFacts.length > 0 && (
+                <dl className="mt-3 grid grid-cols-2 gap-2">
+                  {keyFacts.map((fact) => (
+                    <div
+                      key={fact.label}
+                      className="min-w-0 rounded-md border border-border/70 bg-muted/30 px-3 py-2"
+                    >
+                      <dt className="text-[0.6875rem] font-medium uppercase tracking-wider text-muted-foreground">
+                        {fact.label}
+                      </dt>
+                      <dd className="mt-0.5 text-sm font-semibold leading-snug text-foreground">
+                        {fact.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {primaryDetails.length > 0 && (
+                <dl className="mt-2 divide-y divide-border/50 border-y border-border/60">
+                  {primaryDetails.map(([label, value]) => (
+                    <div key={label} className="grid grid-cols-[6.5rem_1fr] gap-3 py-2 text-sm">
+                      <dt className="font-medium text-muted-foreground">{label}</dt>
+                      <dd className="min-w-0 whitespace-pre-line break-words text-foreground">
+                        {value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
               <button
                 type="button"
                 onClick={() =>
@@ -573,19 +602,6 @@ function ProductPage() {
                   )}
                 </span>
               </a>
-            )}
-
-            {primaryDetails.length > 0 && (
-              <dl className="hidden divide-y divide-border/50 border-y border-border/60 xl:block">
-                {primaryDetails.map(([label, value]) => (
-                  <div key={label} className="grid grid-cols-[7.5rem_1fr] gap-3 py-2.5 text-sm">
-                    <dt className="font-medium text-muted-foreground">{label}</dt>
-                    <dd className="min-w-0 whitespace-pre-line break-words text-foreground">
-                      {value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
             )}
 
             <p className="hidden text-xs uppercase tracking-widest text-muted-foreground xl:block">

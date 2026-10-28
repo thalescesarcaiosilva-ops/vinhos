@@ -729,6 +729,8 @@ function ProductForm({
     classification: "",
     brand: "",
     vintage: "",
+    volume_ml: "",
+    shelf_life: "",
     alcohol_content: "",
     aging: "",
     wine_style: "",
@@ -849,6 +851,8 @@ function ProductForm({
       compare_at_price: num(f.compare_at_price),
       rating: num(f.rating),
       vivino_rating: num(f.vivino_rating),
+      volume_ml: f.volume_ml === "" || f.volume_ml == null ? null : Math.round(Number(f.volume_ml)) || null,
+      shelf_life: String(f.shelf_life ?? "").trim() || null,
       gtin: (f.gtin || "").replace(/\D/g, "") || null,
       harmonizacao: Array.isArray(f.harmonizacao) ? f.harmonizacao : [],
       selo: Array.isArray(f.selo) ? f.selo : [],
@@ -1125,7 +1129,33 @@ function ProductForm({
           </label>
           <label>
             <span className={lbl}>Safra</span>
-            <input className={inp} value={f.vintage ?? ""} onChange={upd("vintage")} />
+            <input
+              className={inp}
+              value={f.vintage ?? ""}
+              onChange={upd("vintage")}
+              placeholder="2022 (deixe vazio se a safra varia por lote)"
+            />
+          </label>
+          <label>
+            <span className={lbl}>Volume (ml)</span>
+            <input
+              type="number"
+              min={0}
+              step={1}
+              className={inp}
+              value={f.volume_ml ?? ""}
+              onChange={upd("volume_ml")}
+              placeholder="750"
+            />
+          </label>
+          <label>
+            <span className={lbl}>Potencial de guarda</span>
+            <input
+              className={inp}
+              value={f.shelf_life ?? ""}
+              onChange={upd("shelf_life")}
+              placeholder="5 a 10 anos (não é data de validade)"
+            />
           </label>
           <label>
             <span className={lbl}>Teor alcoólico</span>

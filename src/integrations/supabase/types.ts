@@ -721,6 +721,8 @@ export type Database = {
           updated_at: string
           video_url: string | null
           vintage: string | null
+          volume_ml: number | null
+          shelf_life: string | null
           visual_notes: string | null
           vivino_rating: number | null
           wine_style: string | null
@@ -769,6 +771,8 @@ export type Database = {
           updated_at?: string
           video_url?: string | null
           vintage?: string | null
+          volume_ml?: number | null
+          shelf_life?: string | null
           visual_notes?: string | null
           vivino_rating?: number | null
           wine_style?: string | null
@@ -817,6 +821,8 @@ export type Database = {
           updated_at?: string
           video_url?: string | null
           vintage?: string | null
+          volume_ml?: number | null
+          shelf_life?: string | null
           visual_notes?: string | null
           vivino_rating?: number | null
           wine_style?: string | null
