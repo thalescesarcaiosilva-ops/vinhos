@@ -109,6 +109,8 @@ function volumeLabel(product: ProductFactSource): string | null {
 }
 
 function vintageLabel(product: ProductFactSource): string | null {
+  // Espumante sem safra no rótulo é mistura de anos. Não exibimos safra nesse tipo.
+  if (isSparkling(product)) return null;
   const stored = product.vintage?.trim() ?? "";
   if (stored && !/consult|varia|não inform|nao inform|safra a confirmar|sob consulta/i.test(stored)) {
     return stored;
