@@ -15,6 +15,23 @@ type ProductMobileBuyBarProps = {
   watchId?: string;
 };
 
+function buyBlockOnScreen(id: string | undefined) {
+  if (!id) return false;
+  const target = document.getElementById(id);
+  if (!target) return false;
+  const rect = target.getBoundingClientRect();
+  const height = window.visualViewport?.height ?? window.innerHeight;
+  return rect.top < height * 0.7 && rect.bottom > height * 0.2;
+}
+
+function footerCoversBar() {
+  const footer = document.querySelector("footer[data-site-footer]");
+  if (!footer) return false;
+  const rect = footer.getBoundingClientRect();
+  const height = window.visualViewport?.height ?? window.innerHeight;
+  return rect.top < height - 8;
+}
+
 export function ProductMobileBuyBar({
   image,
   name,
@@ -25,48 +42,53 @@ export function ProductMobileBuyBar({
   onBuy,
   watchId,
 }: ProductMobileBuyBarProps) {
-  const [footerVisible, setFooterVisible] = useState(false);
-  const [mainBuyVisible, setMainBuyVisible] = useState(true);
+  const [hidden, setHidden] = useState(true);
+  const [bottomOffset, setBottomOffset] = useState(0);
 
   useEffect(() => {
-    const footer = document.querySelector("footer[data-site-footer]");
-    if (!footer || typeof IntersectionObserver === "undefined") return;
+    let frame = 0;
 
-    const observer = new IntersectionObserver(([entry]) => setFooterVisible(entry.isIntersecting), {
-      threshold: 0,
-    });
+    const measure = () => {
+      frame = 0;
+      setHidden(buyBlockOnScreen(watchId) || footerCoversBar());
+      const viewport = window.visualViewport;
+      if (!viewport) {
+        setBottomOffset(0);
+        return;
+      }
+      const covered = window.innerHeight - viewport.height - viewport.offsetTop;
+      setBottomOffset(Math.max(0, covered));
+    };
 
-    observer.observe(footer);
-    return () => observer.disconnect();
-  }, []);
+    const schedule = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(measure);
+    };
 
-  useEffect(() => {
-    if (!watchId || typeof IntersectionObserver === "undefined") {
-      setMainBuyVisible(false);
-      return;
-    }
-    const target = document.getElementById(watchId);
-    if (!target) {
-      setMainBuyVisible(false);
-      return;
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => setMainBuyVisible(entry.isIntersecting),
-      { threshold: 0 },
-    );
-    observer.observe(target);
-    return () => observer.disconnect();
+    measure();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    window.visualViewport?.addEventListener("resize", schedule);
+    window.visualViewport?.addEventListener("scroll", schedule);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      window.visualViewport?.removeEventListener("resize", schedule);
+      window.visualViewport?.removeEventListener("scroll", schedule);
+    };
   }, [watchId]);
-
-  const hidden = footerVisible || mainBuyVisible;
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-30 border-t border-border/50 bg-background px-4 pt-3 shadow-[0_-6px_20px_rgba(0,0,0,0.07)] transition duration-200 xl:hidden ${
-        hidden ? "pointer-events-none translate-y-full opacity-0" : "translate-y-0 opacity-100"
+      className={`fixed inset-x-0 z-30 border-t border-border/50 bg-background px-4 pt-3 shadow-[0_-6px_20px_rgba(0,0,0,0.07)] transition-opacity duration-200 xl:hidden ${
+        hidden ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
       aria-hidden={hidden}
-      style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+      style={{
+        bottom: bottomOffset,
+        paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+      }}
       role="region"
       aria-label="Compra rápida"
     >
@@ -88,13 +110,13 @@ export function ProductMobileBuyBar({
               de {brl(compareAt)}
             </p>
           )}
-          <p className="font-semibold text-[color:var(--buy)]">{brl(price)}</p>
+          <p className="font-semibold text-primary">{brl(price)}</p>
         </div>
         <button
           type="button"
           onClick={onBuy}
           disabled={disabled}
-          className="min-h-11 shrink-0 rounded-sm bg-[color:var(--buy)] px-5 text-sm font-bold uppercase tracking-wide text-[color:var(--buy-foreground)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-11 shrink-0 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Comprar{quantity > 1 ? ` (${quantity})` : ""}
         </button>

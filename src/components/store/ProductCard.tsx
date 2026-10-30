@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { ShoppingBag, Heart } from "lucide-react";
 import { brl } from "@/lib/format";
 import { useCart } from "@/lib/cart";
-import { toast } from "sonner";
 import { useFavorites, useToggleFavorite } from "@/lib/favorites";
 import { ProductImage } from "@/components/store/ProductImage";
 import { useStoreSettings, installmentPlan } from "@/lib/store-settings";
@@ -135,7 +134,6 @@ export function ProductCard({ p }: { p: Product }) {
               price: Number(p.price),
               image: p.image_url,
             });
-            toast.success("Adicionado ao carrinho");
           }}
           className="mt-1 inline-flex min-h-10 w-full items-center justify-center gap-2 border border-primary bg-transparent px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
         >

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Loader2, MapPin, Truck } from "lucide-react";
+import { ArrowRight, Loader2, MapPin, Truck } from "lucide-react";
 import { brl } from "@/lib/format";
 import { calcShipping, type ShippingQuote } from "@/lib/shipping";
 import { fetchAddressByCEP, maskCEP } from "@/lib/validation";
@@ -85,21 +85,27 @@ export function ProductShippingCalculator({ subtotal, shipping }: Props) {
   }
 
   return (
-    <section className="rounded-md border border-border bg-card p-4" aria-labelledby="shipping-title">
-      <div className="flex items-center gap-2">
-        <Truck className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.7} aria-hidden />
-        <h2 id="shipping-title" className="text-sm font-bold text-foreground">
-          Frete e prazo de entrega
-        </h2>
+    <section className="rounded-[1.25rem] border border-border bg-card p-4" aria-labelledby="shipping-title">
+      <div className="flex items-start gap-3">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+          <Truck className="h-5 w-5" strokeWidth={1.7} aria-hidden />
+        </span>
+        <div className="min-w-0">
+          <h2 id="shipping-title" className="text-sm font-bold text-foreground">
+            Calcule o frete e o prazo
+          </h2>
+          <p className="text-xs text-muted-foreground">Informe seu CEP para ver as opções</p>
+        </div>
       </div>
 
       <form
-        className="mt-3 flex h-11 overflow-hidden rounded-md border border-input bg-background focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
+        className="mt-4 flex h-12 items-center gap-2 rounded-full border border-input bg-background px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
         onSubmit={(e) => {
           e.preventDefault();
           void calculate(cep);
         }}
       >
+        <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
         <label className="min-w-0 flex-1">
           <span className="sr-only">CEP</span>
           <input
@@ -108,17 +114,21 @@ export function ProductShippingCalculator({ subtotal, shipping }: Props) {
             enterKeyHint="go"
             value={cep}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="Digite seu CEP"
-            className="h-full w-full bg-transparent px-3 text-base outline-none placeholder:text-muted-foreground/70 sm:text-sm"
+            placeholder="00000-000"
+            className="h-full w-full bg-transparent text-base outline-none placeholder:text-muted-foreground/70 sm:text-sm"
           />
         </label>
         <button
           type="submit"
           disabled={loading}
-          className="flex min-w-24 items-center justify-center gap-1.5 bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+          aria-label="Calcular frete"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
         >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
-          {loading ? "" : "Calcular"}
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+          ) : (
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          )}
         </button>
       </form>
 
@@ -126,8 +136,7 @@ export function ProductShippingCalculator({ subtotal, shipping }: Props) {
         {error ? (
           <span className="text-destructive">{error}</span>
         ) : place ? (
-          <span className="flex items-center gap-1 text-muted-foreground">
-            <MapPin className="h-3.5 w-3.5 text-primary" aria-hidden />
+          <span className="text-muted-foreground">
             {place.city} / {place.state}
           </span>
         ) : (
@@ -137,7 +146,7 @@ export function ProductShippingCalculator({ subtotal, shipping }: Props) {
           href="https://buscacepinter.correios.com.br/app/endereco/index.php"
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 text-muted-foreground underline underline-offset-2 hover:text-primary"
+          className="shrink-0 font-medium text-primary underline underline-offset-2"
         >
           Não sei meu CEP
         </a>

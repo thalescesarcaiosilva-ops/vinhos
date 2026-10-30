@@ -31,6 +31,7 @@ import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthConfirmRouteImport } from './routes/auth.confirm'
 import { Route as ColecaoSlugRouteImport } from './routes/colecao.$slug'
+import { Route as FlagsSplatRouteImport } from './routes/flags.$'
 import { Route as PaginaSlugRouteImport } from './routes/pagina.$slug'
 import { Route as PoliticasSlugRouteImport } from './routes/politicas.$slug'
 import { Route as ProdutoSlugRouteImport } from './routes/produto.$slug'
@@ -152,6 +153,11 @@ const ColecaoSlugRoute = ColecaoSlugRouteImport.update({
   path: '/colecao/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FlagsSplatRoute = FlagsSplatRouteImport.update({
+  id: '/flags/$',
+  path: '/flags/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaginaSlugRoute = PaginaSlugRouteImport.update({
   id: '/pagina/$slug',
   path: '/pagina/$slug',
@@ -230,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/colecao/$slug': typeof ColecaoSlugRoute
+  '/flags/$': typeof FlagsSplatRoute
   '/pagina/$slug': typeof PaginaSlugRoute
   '/politicas/$slug': typeof PoliticasSlugRoute
   '/produto/$slug': typeof ProdutoSlugRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/colecao/$slug': typeof ColecaoSlugRoute
+  '/flags/$': typeof FlagsSplatRoute
   '/pagina/$slug': typeof PaginaSlugRoute
   '/politicas/$slug': typeof PoliticasSlugRoute
   '/produto/$slug': typeof ProdutoSlugRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/colecao/$slug': typeof ColecaoSlugRoute
+  '/flags/$': typeof FlagsSplatRoute
   '/pagina/$slug': typeof PaginaSlugRoute
   '/politicas/$slug': typeof PoliticasSlugRoute
   '/produto/$slug': typeof ProdutoSlugRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/auth/confirm'
     | '/colecao/$slug'
+    | '/flags/$'
     | '/pagina/$slug'
     | '/politicas/$slug'
     | '/produto/$slug'
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/auth/confirm'
     | '/colecao/$slug'
+    | '/flags/$'
     | '/pagina/$slug'
     | '/politicas/$slug'
     | '/produto/$slug'
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/auth/confirm'
     | '/colecao/$slug'
+    | '/flags/$'
     | '/pagina/$slug'
     | '/politicas/$slug'
     | '/produto/$slug'
@@ -438,6 +450,7 @@ export interface RootRouteChildren {
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthConfirmRoute: typeof AuthConfirmRoute
   ColecaoSlugRoute: typeof ColecaoSlugRoute
+  FlagsSplatRoute: typeof FlagsSplatRoute
   PaginaSlugRoute: typeof PaginaSlugRoute
   PoliticasSlugRoute: typeof PoliticasSlugRoute
   ProdutoSlugRoute: typeof ProdutoSlugRoute
@@ -606,6 +619,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColecaoSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/flags/$': {
+      id: '/flags/$'
+      path: '/flags/$'
+      fullPath: '/flags/$'
+      preLoaderRoute: typeof FlagsSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pagina/$slug': {
       id: '/pagina/$slug'
       path: '/pagina/$slug'
@@ -702,6 +722,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthCallbackRoute: AuthCallbackRoute,
   AuthConfirmRoute: AuthConfirmRoute,
   ColecaoSlugRoute: ColecaoSlugRoute,
+  FlagsSplatRoute: FlagsSplatRoute,
   PaginaSlugRoute: PaginaSlugRoute,
   PoliticasSlugRoute: PoliticasSlugRoute,
   ProdutoSlugRoute: ProdutoSlugRoute,

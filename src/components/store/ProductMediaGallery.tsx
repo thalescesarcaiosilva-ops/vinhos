@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import { ProductImage } from "@/components/store/ProductImage";
 import {
   Carousel,
@@ -18,13 +18,17 @@ type VideoInfo = {
 export type ProductMediaItem =
   { type: "image"; src: string } | { type: "video"; src: string; info: VideoInfo };
 
+type FavoriteControl = {
+  active: boolean;
+  onToggle: () => void;
+};
+
 type Props = {
   media: ProductMediaItem[];
   productName: string;
   discount?: number;
   bestSeller?: boolean;
-  country?: string | null;
-  flagUrl?: string | null;
+  favorite?: FavoriteControl;
 };
 
 function MediaSlide({
@@ -77,34 +81,39 @@ function MediaSlide({
 }
 
 function GalleryBadges({ discount, bestSeller }: { discount?: number; bestSeller?: boolean }) {
+  const hasDiscount = discount != null && discount > 0;
   return (
     <>
-      {discount != null && discount > 0 && (
-        <span className="absolute left-4 top-4 z-10 rounded-sm bg-[color:var(--sale)] px-3 py-1 text-xs font-bold text-[color:var(--sale-foreground)]">
-          -{discount}%
+      {hasDiscount && (
+        <span className="absolute left-4 top-4 z-10 flex h-16 w-16 flex-col items-center justify-center rounded-full bg-[#c6a35a] text-center leading-none text-[#3a2418] shadow-sm">
+          <span className="text-sm font-bold">-{discount}%</span>
+          <span className="mt-1 text-[10px] font-semibold tracking-[0.08em]">OFF</span>
         </span>
       )}
       {bestSeller && (
-        <span className="absolute right-4 top-4 z-10 rounded-sm bg-[color:var(--sale)] px-3 py-1 text-xs font-bold uppercase tracking-wider text-[color:var(--sale-foreground)]">
-          Mais Vendido
+        <span
+          className={`absolute left-4 z-10 rounded-full bg-[color:var(--sale)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[color:var(--sale-foreground)] ${
+            hasDiscount ? "top-24" : "top-4"
+          }`}
+        >
+          Mais vendido
         </span>
       )}
     </>
   );
 }
 
-function CountryFlag({ flagUrl, country }: { flagUrl?: string | null; country?: string | null }) {
-  if (!flagUrl) return null;
+function FavoriteButton({ favorite }: { favorite: FavoriteControl }) {
   return (
-    <img
-      src={flagUrl}
-      alt={country ?? ""}
-      title={country ?? ""}
-      className="absolute bottom-4 left-4 z-10 h-12 w-12 rounded-full border border-background object-cover"
-      onError={(e) => {
-        e.currentTarget.style.display = "none";
-      }}
-    />
+    <button
+      type="button"
+      onClick={favorite.onToggle}
+      aria-pressed={favorite.active}
+      aria-label={favorite.active ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+      className="absolute right-3 top-3 z-20 grid h-10 w-10 place-items-center rounded-full bg-background/95 text-foreground shadow-sm ring-1 ring-border/50 transition-colors hover:text-primary"
+    >
+      <Heart className={`h-5 w-5 ${favorite.active ? "fill-primary text-primary" : ""}`} />
+    </button>
   );
 }
 
@@ -114,8 +123,7 @@ export function ProductMediaMobileCarousel({
   productName,
   discount,
   bestSeller,
-  country,
-  flagUrl,
+  favorite,
 }: Props) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -143,10 +151,9 @@ export function ProductMediaMobileCarousel({
           <CarouselContent className="-ml-0">
             {media.map((item, i) => (
               <CarouselItem key={i} className="pl-0">
-                <div className="relative aspect-square max-h-[52vh] w-full max-w-full overflow-hidden bg-card">
+                <div className="relative aspect-square max-h-[52vh] w-full max-w-full overflow-hidden rounded-[1.25rem] bg-white">
                   <GalleryBadges discount={discount} bestSeller={bestSeller} />
                   <MediaSlide item={item} productName={productName} priority={i === 0} />
-                  <CountryFlag flagUrl={flagUrl} country={country} />
                 </div>
               </CarouselItem>
             ))}
@@ -171,6 +178,7 @@ export function ProductMediaMobileCarousel({
               </button>
             </>
           )}
+          {favorite && <FavoriteButton favorite={favorite} />}
         </div>
       </Carousel>
       {media.length > 1 && (
@@ -198,22 +206,20 @@ export function ProductMediaDesktopMain({
   productName,
   discount,
   bestSeller,
-  flagUrl,
-  country,
+  favorite,
 }: {
   item: ProductMediaItem | undefined;
   productName: string;
   discount?: number;
   bestSeller?: boolean;
-  flagUrl?: string | null;
-  country?: string | null;
+  favorite?: FavoriteControl;
 }) {
   return (
     <div className="hidden xl:block">
-      <div className="relative aspect-square w-full max-w-full overflow-hidden bg-card">
+      <div className="relative aspect-square w-full max-w-full overflow-hidden rounded-[1.25rem] bg-white">
         <GalleryBadges discount={discount} bestSeller={bestSeller} />
         {item ? <MediaSlide item={item} productName={productName} priority /> : null}
-        <CountryFlag flagUrl={flagUrl} country={country} />
+        {favorite && <FavoriteButton favorite={favorite} />}
       </div>
     </div>
   );

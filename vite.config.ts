@@ -6,6 +6,15 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { nitro } from "nitro/vite";
 
 export default defineConfig({
+  server: {
+    proxy: {
+      "/flags": {
+        target: "https://flagcdn.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/flags/, ""),
+      },
+    },
+  },
   plugins: [
     tsconfigPaths(),
     tailwindcss(),

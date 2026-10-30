@@ -4,7 +4,6 @@ import { useFavoritesList, removeFavorite } from "@/lib/favorites";
 import { useCart } from "@/lib/cart";
 import { brl } from "@/lib/format";
 import { toSiteImageUrl } from "@/lib/image-url";
-import { toast } from "sonner";
 import { pageMeta } from "@/lib/seo";
 import { STORE } from "@/lib/settings";
 
@@ -65,7 +64,6 @@ function FavoritesPage() {
                     <button
                       onClick={() => {
                         add({ id: p.id, name: p.name, slug: p.slug, price: p.price, image: p.image });
-                        toast.success("Adicionado ao carrinho");
                       }}
                       className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-sm bg-[color:var(--buy)] px-3 py-1.5 text-xs font-medium text-[color:var(--buy-foreground)] shadow-sm transition hover:brightness-110"
                     >

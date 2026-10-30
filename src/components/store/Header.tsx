@@ -5,18 +5,23 @@ import {
   User,
   Menu,
   X,
-  Package,
   ChevronDown,
+  ChevronRight,
   Mail,
   Heart,
   PackageSearch,
-  ArrowRight,
+  Wine,
+  Gift,
+  Globe,
+  Tags,
+  Headphones,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
 import { useStoreSettings } from "@/lib/store-settings";
 import { STORE } from "@/lib/settings";
+import { POLICY_SLUGS } from "@/lib/policy-links";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
 import { flagImgUrl } from "@/lib/country-flags";
 import { useFavoritesList } from "@/lib/favorites";
@@ -50,7 +55,7 @@ function Flag({ cc, alt, className = "" }: { cc: string; alt: string; className?
 }
 
 export function Header() {
-  const { count } = useCart();
+  const { count, openDrawer } = useCart();
   const { user } = useAuth();
   const favorites = useFavoritesList();
   const { data: settings } = useStoreSettings();
@@ -65,7 +70,6 @@ export function Header() {
       }) || toSiteImageUrl(settings.brand.logoUrl)
     : "/assets/favicon.png";
   const accountHref = user ? "/minha-conta" : "/login";
-  const accountLabel = user ? "Minha conta" : "Entre ou Cadastre-se";
   const [open, setOpen] = useState(false);
   const [desktopMenu, setDesktopMenu] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -301,12 +305,17 @@ export function Header() {
               icon={<Mail />}
               className="hidden 2xl:flex"
             />
-            <HeaderAction
-              to="/carrinho"
+            <HeaderIconButton
               label="Carrinho"
               icon={<ShoppingBag />}
               className="flex"
               count={count}
+              onClick={() => {
+                setOpen(false);
+                setSearchOpen(false);
+                setDesktopMenu(null);
+                openDrawer();
+              }}
             />
           </nav>
         </StoreContainer>
@@ -324,41 +333,66 @@ export function Header() {
       {open && (
         <div className="fixed inset-0 z-50 bg-black/45 xl:hidden" onClick={() => setOpen(false)}>
           <aside
-            className="absolute left-0 top-0 h-full w-[min(88vw,360px)] overflow-y-auto bg-background shadow-2xl"
+            className="absolute left-0 top-0 flex h-full w-[min(88vw,380px)] flex-col bg-background shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-border/60 px-5 py-4">
+            <div className="flex items-center justify-between bg-primary px-4 py-3 text-primary-foreground">
               <img
                 src={logoSrc}
                 alt={STORE.name}
-                width={100}
-                height={50}
-                style={{ maxHeight: Math.min(logoMaxHeight, 48) }}
-                className="h-10 w-auto object-contain"
+                width={120}
+                height={48}
+                style={{ maxHeight: Math.min(logoMaxHeight, 40) }}
+                className="h-9 w-auto rounded-md bg-background object-contain px-2 py-1"
               />
               <button
+                type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Fechar menu"
-                className="grid h-10 w-10 place-items-center text-foreground transition-colors hover:text-primary"
+                className="grid h-10 w-10 place-items-center text-primary-foreground"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="p-5">
+            <Link
+              to={accountHref}
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 border-b border-border px-4 py-4"
+            >
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                <User className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block text-sm font-semibold text-primary">
+                  {user ? "Olá! Acesse sua conta" : "Olá! Entre ou cadastre-se"}
+                </span>
+                <span className="block text-xs text-muted-foreground">
+                  Acompanhe seus pedidos num lugar só
+                </span>
+              </span>
+            </Link>
+
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <p className="px-4 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                Departamentos
+              </p>
+
               <Link
                 to="/colecao/$slug"
                 params={{ slug: "todos" }}
                 onClick={() => setOpen(false)}
-                className="mb-3 flex items-center justify-between border-b border-border/60 px-1 py-3 text-sm font-semibold text-primary"
+                className="flex items-center gap-3 border-b border-border/70 px-4 py-3.5 text-sm font-medium text-foreground"
               >
-                Todos os produtos
-                <ArrowRight className="h-4 w-4" />
+                <Wine className="h-5 w-5 text-primary" aria-hidden />
+                <span className="flex-1">Todos os produtos</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
               </Link>
 
               <MobileSection
-                label="Comprar por preço"
+                label="Preços"
                 id="precos"
+                icon={<Tags className="h-5 w-5" />}
                 open={mobileTab === "precos"}
                 onToggle={() => setMobileTab(mobileTab === "precos" ? null : "precos")}
               >
@@ -372,6 +406,7 @@ export function Header() {
               <MobileSection
                 label="Tipos de bebida"
                 id="tipos"
+                icon={<Wine className="h-5 w-5" />}
                 open={mobileTab === "tipos"}
                 onToggle={() => setMobileTab(mobileTab === "tipos" ? null : "tipos")}
               >
@@ -392,6 +427,7 @@ export function Header() {
               <MobileSection
                 label="Combos"
                 id="combos"
+                icon={<Gift className="h-5 w-5" />}
                 open={mobileTab === "combos"}
                 onToggle={() => setMobileTab(mobileTab === "combos" ? null : "combos")}
               >
@@ -407,6 +443,7 @@ export function Header() {
               <MobileSection
                 label="Países"
                 id="paises"
+                icon={<Globe className="h-5 w-5" />}
                 open={mobileTab === "paises"}
                 onToggle={() => setMobileTab(mobileTab === "paises" ? null : "paises")}
               >
@@ -424,27 +461,31 @@ export function Header() {
                   ))}
                 </div>
               </MobileSection>
+            </div>
 
-              <div className="mt-5 grid gap-2 border-t border-border pt-5">
-                <DrawerAction
-                  to="/rastreio"
-                  icon={<PackageSearch />}
-                  onClick={() => setOpen(false)}
-                >
-                  Rastrear pedido
-                </DrawerAction>
-                <DrawerAction to="/fale-conosco" icon={<Mail />} onClick={() => setOpen(false)}>
+            <div className="border-t border-border bg-muted/40 px-5 py-4">
+              <p className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
+                <Headphones className="h-4 w-4" aria-hidden />
+                Atendimento
+              </p>
+              <div className="grid gap-2 text-sm">
+                <Link to="/fale-conosco" onClick={() => setOpen(false)} className="hover:text-primary">
                   Fale conosco
-                </DrawerAction>
-                <DrawerAction to="/favoritos" icon={<Heart />} onClick={() => setOpen(false)}>
-                  Meus favoritos
-                </DrawerAction>
-                <DrawerAction to={accountHref} icon={<User />} onClick={() => setOpen(false)}>
-                  {accountLabel}
-                </DrawerAction>
-                <DrawerAction to="/minha-conta" icon={<Package />} onClick={() => setOpen(false)}>
-                  Meus pedidos
-                </DrawerAction>
+                </Link>
+                <Link
+                  to="/politicas/$slug"
+                  params={{ slug: POLICY_SLUGS.returns }}
+                  onClick={() => setOpen(false)}
+                  className="hover:text-primary"
+                >
+                  Trocas e devoluções
+                </Link>
+                <Link to="/quem-somos" onClick={() => setOpen(false)} className="hover:text-primary">
+                  Sobre a {STORE.name}
+                </Link>
+                <Link to="/rastreio" onClick={() => setOpen(false)} className="hover:text-primary">
+                  Rastrear pedido
+                </Link>
               </div>
             </div>
           </aside>
@@ -659,28 +700,34 @@ function HeaderAction({
   );
 }
 
-function DrawerAction({
-  to,
+function HeaderIconButton({
+  label,
   icon,
+  className = "",
+  count,
   onClick,
-  children,
 }: {
-  to: HeaderStaticRoute;
+  label: string;
   icon: React.ReactNode;
+  className?: string;
+  count?: number;
   onClick: () => void;
-  children: React.ReactNode;
 }) {
   return (
-    <Link
-      to={to}
+    <button
+      type="button"
       onClick={onClick}
-      className="flex items-center gap-3 px-1 py-2.5 text-sm text-foreground transition-colors hover:text-primary"
+      className={`relative grid h-9 w-9 place-items-center text-foreground transition-colors hover:text-primary sm:h-10 sm:w-10 ${className}`}
+      aria-label={label}
+      title={label}
     >
-      <span className="grid h-8 w-8 place-items-center text-primary [&>svg]:h-4 [&>svg]:w-4">
-        {icon}
-      </span>
-      {children}
-    </Link>
+      <span className="[&>svg]:h-[21px] [&>svg]:w-[21px] [&>svg]:stroke-[1.7]">{icon}</span>
+      {typeof count === "number" && count > 0 && (
+        <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">
+          {count}
+        </span>
+      )}
+    </button>
   );
 }
 
@@ -689,30 +736,34 @@ function MobileSection({
   id,
   open,
   onToggle,
+  icon,
   children,
 }: {
   label: string;
   id: string;
   open: boolean;
   onToggle: () => void;
+  icon: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
-    <div className="border-b border-border/80">
+    <div className="border-b border-border/70">
       <button
         type="button"
         onClick={onToggle}
         aria-controls={id}
         aria-expanded={open}
-        className="flex w-full items-center justify-between px-1 py-3.5 text-xs font-semibold uppercase tracking-[0.14em] text-foreground transition hover:text-primary"
+        className="flex w-full items-center gap-3 px-4 py-3.5 text-sm font-medium text-foreground"
       >
-        {label}
-        <ChevronDown
-          className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180 text-primary" : ""}`}
+        <span className="text-primary">{icon}</span>
+        <span className="flex-1 text-left">{label}</span>
+        <ChevronRight
+          className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-90 text-primary" : ""}`}
+          aria-hidden
         />
       </button>
       {open && (
-        <div id={id} className="animate-in pb-3 fade-in slide-in-from-top-1 duration-150">
+        <div id={id} className="px-4 pb-3">
           {children}
         </div>
       )}

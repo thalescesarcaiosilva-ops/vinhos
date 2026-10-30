@@ -21,20 +21,20 @@ const CARDS = [
 
 export function ProductTrustCards() {
   return (
-    <ul className="divide-y divide-border overflow-hidden rounded-md border border-border bg-card" aria-label="Devolução">
+    <ul className="space-y-3" aria-label="Devolução">
       {CARDS.map(({ icon: Icon, title, text }) => (
         <li key={title}>
           <Link
             to="/politicas/$slug"
             params={{ slug: POLICY_SLUGS.returns }}
-            className="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/50"
+            className="flex items-center gap-3 rounded-[1.25rem] border border-border bg-card px-4 py-3 transition-colors hover:bg-muted/40"
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Icon className="h-4 w-4" strokeWidth={1.8} aria-hidden />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-semibold text-foreground">{title}</span>
-              <span className="block truncate text-xs text-muted-foreground">{text}</span>
+              <span className="block text-sm font-semibold text-foreground">{title}</span>
+              <span className="block text-xs text-muted-foreground">{text}</span>
             </span>
             <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
           </Link>
