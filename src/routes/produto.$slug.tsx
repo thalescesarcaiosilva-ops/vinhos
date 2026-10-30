@@ -36,6 +36,7 @@ import {
   Percent,
   Thermometer,
   Eye,
+  Play,
   Wind,
   Soup,
   Utensils,
@@ -315,6 +316,7 @@ function ProductPage() {
   const [active, setActive] = useState(0);
   const [thumbStart, setThumbStart] = useState(0);
   const [payOpen, setPayOpen] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
   const { data: settings, isPending: settingsPending } = useStoreSettings();
 
   const q = useQuery({
@@ -467,6 +469,21 @@ function ProductPage() {
               bestSeller={!!p.best_seller}
               favorite={{ active: isFav, onToggle: toggleFavorite }}
             />
+            {videoInfo && (
+              <button
+                type="button"
+                onClick={() => setVideoOpen(true)}
+                className="mt-3 flex w-full items-center gap-3 rounded-2xl border border-primary/25 bg-primary/5 px-3 py-2.5 text-left transition hover:bg-primary/10"
+              >
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground">
+                  <Play className="ml-0.5 h-5 w-5 fill-current" aria-hidden />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-foreground">Assistir vídeo deste vinho</span>
+                  <span className="block text-xs text-muted-foreground">Toque para ver antes de comprar</span>
+                </span>
+              </button>
+            )}
             {media.length > 1 && (
               <div
                 className="mt-4 hidden items-center gap-2 xl:flex"
@@ -512,8 +529,9 @@ function ProductPage() {
                           className="h-full w-full object-contain"
                         />
                         {item.type === "video" && (
-                          <span className="absolute inset-0 flex items-center justify-center bg-black/25 text-lg text-white">
-                            ▶
+                          <span className="absolute inset-0 flex flex-col items-center justify-center gap-0.5 bg-primary/80 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
+                            <Play className="h-4 w-4 fill-current" aria-hidden />
+                            Vídeo
                           </span>
                         )}
                       </button>
@@ -651,6 +669,35 @@ function ProductPage() {
               pay={pay}
             />
 
+            {videoInfo && (
+              <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
+                <DialogContent className="max-w-3xl gap-3 p-3 sm:p-4">
+                  <DialogHeader>
+                    <DialogTitle>Vídeo do produto</DialogTitle>
+                    <DialogDescription>{p.name}</DialogDescription>
+                  </DialogHeader>
+                  <div className="aspect-video overflow-hidden rounded-xl bg-black">
+                    {videoOpen &&
+                      (videoInfo.kind === "file" ? (
+                        <video src={videoInfo.contentUrl} controls autoPlay className="h-full w-full" />
+                      ) : (
+                        <iframe
+                          src={
+                            videoInfo.embedUrl.includes("?")
+                              ? `${videoInfo.embedUrl}&autoplay=1`
+                              : `${videoInfo.embedUrl}?autoplay=1`
+                          }
+                          title={`Vídeo de ${p.name}`}
+                          allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="h-full w-full"
+                        />
+                      ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )}
+
             <div id="product-buy" className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-sm text-muted-foreground">Quantidade</span>
@@ -739,29 +786,6 @@ function ProductPage() {
         {/* Conteúdo consultivo sob demanda, sem alongar a leitura principal. */}
         <div className="mt-8 lg:mt-10">
           <Accordion type="multiple" className="w-full">
-            {videoInfo && (
-              <AccordionItem value="video" className="border-border">
-                <AccordionTrigger className="text-sm font-semibold uppercase tracking-wider text-foreground hover:no-underline">
-                  Vídeos do produto
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="mx-auto aspect-video w-full max-w-3xl overflow-hidden rounded-sm bg-black">
-                    {videoInfo.kind === "file" ? (
-                      <video src={videoInfo.embedUrl} controls className="h-full w-full" />
-                    ) : (
-                      <iframe
-                        src={videoInfo.embedUrl}
-                        title={p.name}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="h-full w-full"
-                      />
-                    )}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
             {techRows.some(([, v]) => v) && (
               <AccordionItem value="detalhes" className="border-border">
                 <AccordionTrigger className="text-sm font-semibold uppercase tracking-wider text-foreground hover:no-underline">

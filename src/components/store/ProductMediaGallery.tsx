@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, Play } from "lucide-react";
 import { ProductImage } from "@/components/store/ProductImage";
 import {
   Carousel,
@@ -182,18 +182,26 @@ export function ProductMediaMobileCarousel({
         </div>
       </Carousel>
       {media.length > 1 && (
-        <div className="mt-3 flex justify-center gap-2">
-          {media.map((_, i) => (
+        <div className="mt-3 flex items-center justify-center gap-2">
+          {media.map((item, i) => (
             <button
               key={i}
               type="button"
-              aria-label={`Ir para imagem ${i + 1}`}
+              aria-label={item.type === "video" ? "Ver vídeo do produto" : `Ir para imagem ${i + 1}`}
               onClick={() => api?.scrollTo(i)}
               className={cn(
-                "h-2 rounded-full transition-all",
-                i === current ? "w-6 bg-primary" : "w-2 bg-border",
+                "grid place-items-center rounded-full transition-all",
+                item.type === "video"
+                  ? i === current
+                    ? "h-7 w-7 bg-primary text-primary-foreground"
+                    : "h-7 w-7 bg-primary text-primary-foreground ring-2 ring-primary/30 ring-offset-2"
+                  : i === current
+                    ? "h-2 w-6 bg-primary"
+                    : "h-2 w-2 bg-border",
               )}
-            />
+            >
+              {item.type === "video" && <Play className="h-3.5 w-3.5 fill-current" aria-hidden />}
+            </button>
           ))}
         </div>
       )}
