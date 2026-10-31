@@ -277,3 +277,132 @@ export async function sendOrderPaidEmail(orderId: string): Promise<{ sent: boole
     return { sent: false, reason: "exception" };
   }
 }
+
+/** E-mail do Pix reemitido pelo suporte, para o mesmo endereço do comprovante de compra. */
+export async function sendReplacementPixEmail(
+  orderId: string,
+  pixCode: string,
+  expiresAt: string | null,
+): Promise<{ sent: boolean; reason?: string }> {
+  const resend = resendClient();
+  if (!resend) return { sent: false, reason: "missing_api_key" };
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const eventKey = `order-pix-email-${orderId}`;
+
+  const { data: existing } = await supabaseAdmin
+    .from("webhook_events")
+    .select("id")
+    .eq("pagou_event_id", eventKey)
+    .maybeSingle();
+  if (existing) return { sent: false, reason: "already_sent" };
+
+  const { data: order, error } = await supabaseAdmin
+    .from("orders")
+    .select(
+      "id, order_number, customer_name, customer_email, total, subtotal, shipping, discount, payment_method, shipping_address, order_items(product_name, quantity, unit_price, total)",
+    )
+    .eq("id", orderId)
+    .maybeSingle();
+
+  if (error || !order?.customer_email) {
+    return { sent: false, reason: "order_not_found" };
+  }
+
+  const payload = order as unknown as OrderEmailPayload;
+  const { data: inserted, error: insertError } = await supabaseAdmin
+    .from("webhook_events")
+    .insert({
+      pagou_event_id: eventKey,
+      event_type: "order.pix_email",
+      payload: { orderId, email: payload.customer_email },
+      processed: false,
+    })
+    .select("id")
+    .maybeSingle();
+
+  if (insertError || !inserted) return { sent: false, reason: "already_sent" };
+
+  const expiresLabel = expiresAt
+    ? new Date(expiresAt).toLocaleString("pt-BR")
+    : "em até 24 horas";
+
+  try {
+    const { error: sendError } = await resend.emails.send({
+      from: fromAddress(),
+      to: [payload.customer_email],
+      subject: `Novo Pix do pedido #${payload.order_number} - ${STORE.name}`,
+      html: buildReplacementPixEmailHtml(payload, pixCode, expiresLabel),
+    });
+
+    if (sendError) {
+      await supabaseAdmin
+        .from("webhook_events")
+        .update({ processed: false, error: String(sendError.message ?? sendError) })
+        .eq("id", inserted.id);
+      return { sent: false, reason: "resend_error" };
+    }
+
+    await supabaseAdmin.from("webhook_events").update({ processed: true }).eq("id", inserted.id);
+    return { sent: true };
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "send_failed";
+    await supabaseAdmin.from("webhook_events").update({ processed: false, error: message }).eq("id", inserted.id);
+    return { sent: false, reason: "exception" };
+  }
+}
+
+function buildReplacementPixEmailHtml(
+  order: OrderEmailPayload,
+  pixCode: string,
+  expiresLabel: string,
+): string {
+  const items = order.order_items ?? [];
+  const rows = items
+    .map(
+      (item) => `
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid #eee;font-size:14px;color:#1a1a1a;">
+          ${escapeHtml(item.product_name)}
+          <div style="color:#777;font-size:12px;">Qtd: ${item.quantity}</div>
+        </td>
+        <td style="padding:10px 0;border-bottom:1px solid #eee;font-size:14px;text-align:right;white-space:nowrap;">
+          ${escapeHtml(brl(Number(item.total)))}
+        </td>
+      </tr>`,
+    )
+    .join("");
+  const firstName = escapeHtml(order.customer_name.split(" ")[0] || order.customer_name);
+
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8" /></head>
+<body style="margin:0;padding:0;background:#f7f4f0;font-family:Georgia,'Times New Roman',serif;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f7f4f0;padding:32px 12px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e8e0d8;">
+        <tr>
+          <td style="background:#5a1a1f;padding:28px 32px;text-align:center;">
+            <div style="font-size:22px;font-weight:700;color:#fff;letter-spacing:0.04em;">${escapeHtml(STORE.name.toUpperCase())}</div>
+            <div style="margin-top:6px;font-size:13px;color:#e8c9a0;">Novo Pix do seu pedido</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:28px 32px;">
+            <p style="margin:0 0 12px;font-size:16px;color:#1a1a1a;">Olá, <strong>${firstName}</strong>!</p>
+            <p style="margin:0 0 20px;font-size:14px;line-height:1.5;color:#444;">
+              Geramos um novo Pix do pedido <strong>#${escapeHtml(order.order_number)}</strong>,
+              com os mesmos produtos. Ele vale até ${escapeHtml(expiresLabel)}.
+            </p>
+            <table role="presentation" width="100%" style="margin:0 0 20px;">${rows}</table>
+            <p style="margin:0 0 8px;font-size:14px;color:#444;">Total: <strong>${escapeHtml(brl(Number(order.total)))}</strong></p>
+            <p style="margin:16px 0 8px;font-size:12px;color:#777;">Pix copia e cola</p>
+            <p style="margin:0;padding:12px;background:#f7f4f0;border-radius:6px;font-family:monospace;font-size:12px;line-height:1.4;word-break:break-all;color:#1a1a1a;">${escapeHtml(pixCode)}</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}

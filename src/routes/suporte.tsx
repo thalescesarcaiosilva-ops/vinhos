@@ -18,7 +18,7 @@ import type { Json } from "@/integrations/supabase/types";
 import { brl } from "@/lib/format";
 import { buildPixQrDataUrl, isPixEmvPayload } from "@/lib/pix-qrcode";
 import { getPixReceiptSignedUrl, uploadRecoveryReceipt } from "@/lib/pix-receipt.functions";
-import { getPayoutStatus } from "@/lib/payoutbr.functions";
+import { getPayoutStatus, regenerateExpiredOrderPix } from "@/lib/payoutbr.functions";
 import { pageMeta } from "@/lib/seo";
 import { STORE } from "@/lib/settings";
 
@@ -724,6 +724,7 @@ function Queue({ email, userId }: { email?: string; userId: string }) {
           onReceipt={() => void viewReceipt(details.id)}
           onAskReceipt={() => setReceiptFor(details)}
           checking={checkingId === details.id}
+          onCreated={() => void load()}
         />
       )}
       {receiptFor && (
@@ -891,6 +892,15 @@ function OrderRow({
               <Phone className="h-3 w-3" />
             </a>
           )}
+          {pix.kind === "expired" && (
+            <button
+              type="button"
+              onClick={onOpen}
+              className="inline-flex items-center gap-1 rounded-sm bg-primary px-2 py-1 text-[11px] font-semibold text-primary-foreground"
+            >
+              <RefreshCw className="h-3 w-3" /> Novo Pix
+            </button>
+          )}
           <button
             type="button"
             onClick={onOpen}
@@ -1028,6 +1038,7 @@ function OrderDetails({
   onReceipt,
   onAskReceipt,
   checking,
+  onCreated,
 }: {
   order: AbandonedOrder;
   mark: ContactMark | null;
@@ -1039,12 +1050,20 @@ function OrderDetails({
   onReceipt: () => void;
   onAskReceipt: () => void;
   checking: boolean;
+  onCreated: () => void;
 }) {
+  const regeneratePix = useServerFn(regenerateExpiredOrderPix);
   const [pixCode, setPixCode] = useState<string | null>(null);
   const [pixExpires, setPixExpires] = useState<string | null>(order.pix_expiration);
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [reissue, setReissue] = useState<{
+    orderNumber: string;
+    email: string;
+    emailSent: boolean;
+  } | null>(null);
   const address = formatAddress(order.shipping_address);
   const pix = pixState({ ...order, pix_expiration: pixExpires }, now);
 
@@ -1095,6 +1114,32 @@ function OrderDetails({
     }
   }
 
+  async function generateNewPix() {
+    setGenerating(true);
+    try {
+      const result = await regeneratePix({ data: { orderId: order.id } });
+      setPixCode(result.qrCode);
+      setPixExpires(result.expiresAt);
+      setQrUrl(result.qrImage);
+      setReissue({
+        orderNumber: result.orderNumber,
+        email: result.email,
+        emailSent: result.emailSent,
+      });
+      if (result.emailSent) {
+        toast.success(`Pedido #${result.orderNumber} criado. E-mail enviado para ${result.email}.`);
+      } else {
+        toast.success(`Pedido #${result.orderNumber} criado.`);
+        toast.error(`O Pix foi gerado, mas o e-mail não saiu para ${result.email}. Copie o código.`);
+      }
+      onCreated();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível gerar o Pix.");
+    } finally {
+      setGenerating(false);
+    }
+  }
+
   const expired = pix.kind !== "valid";
 
   return (
@@ -1116,7 +1161,7 @@ function OrderDetails({
               id="support-order-details-title"
               className="font-serif text-2xl font-bold text-primary"
             >
-              Pedido #{order.order_number}
+              Pedido #{reissue?.orderNumber ?? order.order_number}
             </h2>
             <p className="text-sm text-muted-foreground">
               {order.customer_name} · {brl(order.total)}
@@ -1137,17 +1182,31 @@ function OrderDetails({
 
         {loading && <p className="text-sm text-muted-foreground">Carregando Pix…</p>}
         {loadError && <p className="text-sm text-destructive">{loadError}</p>}
-        {!loading && !pixCode && (
-          <p className="rounded-sm border border-border bg-cream px-3 py-3 text-sm text-muted-foreground">
-            Este pedido não tem Pix copia e cola. A cobrança pode ter falhado antes de chegar na
-            Veno.
+        {reissue && (
+          <p className="mb-3 rounded-sm border border-border bg-cream px-3 py-3 text-sm">
+            Novo pedido #{reissue.orderNumber}, com os mesmos produtos e o mesmo cliente.
+            {reissue.emailSent
+              ? ` O Pix foi enviado para ${reissue.email}.`
+              : ` O e-mail não foi enviado para ${reissue.email}. Copie o código abaixo.`}
           </p>
         )}
-        {!loading && pixCode && expired && (
-          <p className="rounded-sm border border-border bg-cream px-3 py-3 text-sm text-muted-foreground">
-            O Pix venceu{pixExpires ? ` em ${new Date(pixExpires).toLocaleString("pt-BR")}` : ""}. O
-            cliente precisa gerar um novo pagamento no site.
-          </p>
+        {!loading && !reissue && (pix.kind === "expired" || pix.kind === "none") && (
+          <div className="rounded-sm border border-border bg-cream px-3 py-3 text-sm text-muted-foreground">
+            <p>
+              {pixCode
+                ? `O Pix venceu${pixExpires ? ` em ${new Date(pixExpires).toLocaleString("pt-BR")}` : ""}.`
+                : "Este pedido não tem Pix copia e cola. A cobrança pode ter falhado antes de chegar na Veno."}
+            </p>
+            <button
+              type="button"
+              onClick={() => void generateNewPix()}
+              disabled={generating}
+              className="mt-3 inline-flex items-center gap-2 rounded-sm bg-primary px-3 py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground disabled:opacity-60"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${generating ? "animate-spin" : ""}`} />
+              {generating ? "Gerando Pix…" : "Gerar novo Pix"}
+            </button>
+          </div>
         )}
         {!loading && pixCode && !expired && (
           <div className="space-y-4">

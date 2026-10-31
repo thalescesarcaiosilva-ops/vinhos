@@ -500,3 +500,205 @@ export const abandonPendingOrder = createServerFn({ method: "POST" })
 
     return { ok: true };
   });
+
+const PAID_PAYMENT = new Set(["confirmed", "paid", "approved"]);
+const CLOSED_ORDER = new Set([
+  "confirmed",
+  "shipped",
+  "delivered",
+  "separating",
+  "invoiced",
+  "out_for_delivery",
+  "refunded",
+]);
+
+/**
+ * Suporte reemite um Pix vencido: novo pedido com o mesmo cliente, produtos,
+ * endereço e totais, e e-mail do Pix para o mesmo endereço do comprovante.
+ * O pedido antigo não é cancelado — se aquele Pix ainda for pago, o webhook confirma.
+ */
+export const regenerateExpiredOrderPix = createServerFn({ method: "POST" })
+  .inputValidator((d) => z.object({ orderId: z.string().uuid() }).parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const staffId = await getCheckoutSessionUserId(supabaseAdmin);
+    if (!staffId) throw new Error("Faça login para gerar um novo Pix.");
+
+    const [{ data: isAdmin }, { data: isSupport }] = await Promise.all([
+      supabaseAdmin.rpc("has_role", { _user_id: staffId, _role: "admin" }),
+      supabaseAdmin.rpc("has_role", { _user_id: staffId, _role: "support" }),
+    ]);
+    if (!isAdmin && !isSupport) throw new Error("Somente o suporte pode gerar um novo Pix.");
+
+    const { data: source, error } = await supabaseAdmin
+      .from("orders")
+      .select(
+        "id, order_number, customer_name, customer_email, customer_phone, customer_doc, shipping_address, subtotal, shipping, discount, coupon_code, total, notes, payment_status, status, pix_expiration, user_id",
+      )
+      .eq("id", data.orderId)
+      .maybeSingle();
+    if (error || !source) throw new Error("Pedido não encontrado.");
+
+    const pay = (source.payment_status ?? "").toLowerCase();
+    if (PAID_PAYMENT.has(pay) || CLOSED_ORDER.has(source.status)) {
+      throw new Error("Este pedido já foi pago. Não dá para gerar outro Pix.");
+    }
+
+    const already = source.notes?.match(/pix_reemitido:#(\S+)/);
+    if (already) {
+      throw new Error(`Este pedido já foi reemitido como #${already[1].replace(/\|$/, "")}.`);
+    }
+
+    if (source.pix_expiration && new Date(source.pix_expiration).getTime() > Date.now()) {
+      throw new Error("O Pix deste pedido ainda está válido.");
+    }
+
+    const taxId = (source.customer_doc ?? "").replace(/\D/g, "");
+    const phone = (source.customer_phone ?? "").replace(/\D/g, "");
+    if (!isValidCpfOrCnpj(taxId)) {
+      throw new Error("O pedido não tem CPF ou CNPJ válido para gerar o Pix.");
+    }
+    if (phone.length < 10) {
+      throw new Error("O pedido não tem celular com DDD para gerar o Pix.");
+    }
+    if (!source.customer_email?.includes("@")) {
+      throw new Error("O pedido não tem e-mail do cliente.");
+    }
+    if (Number(source.total) <= 0) throw new Error("O valor do pedido é inválido.");
+
+    const { data: itemRows, error: itemsError } = await supabaseAdmin
+      .from("order_items")
+      .select("product_id, product_name, product_image, unit_price, quantity, total")
+      .eq("order_id", source.id);
+    if (itemsError) throw new Error(itemsError.message);
+    if (!itemRows?.length) throw new Error("O pedido não tem produtos.");
+
+    const productIds = itemRows
+      .map((item) => item.product_id)
+      .filter((id): id is string => !!id);
+    let liveProducts = new Set<string>();
+    if (productIds.length) {
+      const { data: products } = await supabaseAdmin.from("products").select("id").in("id", productIds);
+      liveProducts = new Set((products ?? []).map((product) => product.id));
+    }
+
+    const address =
+      source.shipping_address &&
+      typeof source.shipping_address === "object" &&
+      !Array.isArray(source.shipping_address)
+        ? (source.shipping_address as Record<string, unknown>)
+        : {};
+    const reissueNote = encodeVenoProviderNote(`reemissao do pedido #${source.order_number}`);
+
+    const { data: order, error: insertError } = await supabaseAdmin
+      .from("orders")
+      .insert({
+        customer_name: source.customer_name,
+        customer_email: source.customer_email.trim().toLowerCase(),
+        customer_phone: source.customer_phone,
+        customer_doc: taxId,
+        shipping_address: source.shipping_address ?? {},
+        subtotal: source.subtotal,
+        shipping: source.shipping,
+        discount: source.discount,
+        coupon_code: source.coupon_code,
+        total: source.total,
+        notes: reissueNote,
+        payment_method: "pix",
+        payment_status: "pending",
+        user_id: source.user_id,
+      })
+      .select("id, order_number")
+      .single();
+    if (insertError || !order) throw new Error(insertError?.message ?? "Não foi possível criar o pedido.");
+
+    const { error: linesError } = await supabaseAdmin.from("order_items").insert(
+      itemRows.map((item) => ({
+        order_id: order.id,
+        product_id: item.product_id && liveProducts.has(item.product_id) ? item.product_id : null,
+        product_name: item.product_name,
+        product_image: item.product_image,
+        unit_price: item.unit_price,
+        quantity: item.quantity,
+        total: item.total,
+      })),
+    );
+    if (linesError) {
+      await supabaseAdmin
+        .from("orders")
+        .update({
+          payment_status: "cancelled",
+          status: "cancelled",
+          notes: `${reissueNote} | Falha ao copiar os produtos`,
+        })
+        .eq("id", order.id);
+      throw new Error(linesError.message);
+    }
+
+    let pix: Awaited<ReturnType<typeof venoCreatePix>>;
+    try {
+      pix = await venoCreatePix({
+        amountCents: Math.round(Number(source.total) * 100),
+        description: paymentDescription(order.id, Number(source.total)),
+        externalId: order.id,
+        callbackUrl: `${siteOrigin()}/api/public/veno-webhook`,
+        payer: {
+          name: source.customer_name,
+          email: source.customer_email,
+          document: taxId,
+          phone,
+          address: [address.street, address.number].filter(Boolean).join(", ") || undefined,
+          city: typeof address.city === "string" ? address.city : undefined,
+          state: typeof address.state === "string" ? address.state : undefined,
+          zipCode: String(address.zip ?? address.zipCode ?? "").replace(/\D/g, "") || undefined,
+        },
+      });
+    } catch (e) {
+      await supabaseAdmin
+        .from("orders")
+        .update({
+          payment_status: "cancelled",
+          status: "cancelled",
+          notes: `${reissueNote} | Falha ao gerar Pix na Veno`,
+        })
+        .eq("id", order.id);
+      throw e;
+    }
+
+    const qrCode = pix.pixCopyPaste;
+    const qrImage = await buildPixQrDataUrl(qrCode, pix.qrImage);
+    const expiration = pix.expiresAt ?? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    const { newPixReceiptToken } = await import("@/lib/pix-receipt.functions");
+
+    await supabaseAdmin
+      .from("orders")
+      .update({
+        pagou_transaction_id: pix.id,
+        payment_status: "pending",
+        pix_qr_code: qrCode,
+        pix_expiration: expiration,
+        pix_receipt_token: newPixReceiptToken(),
+        notes: reissueNote,
+      })
+      .eq("id", order.id);
+
+    await supabaseAdmin
+      .from("orders")
+      .update({
+        notes: [source.notes, `pix_reemitido:#${order.order_number}`].filter(Boolean).join(" | "),
+      })
+      .eq("id", source.id);
+
+    const { sendReplacementPixEmail } = await import("@/lib/order-email");
+    const email = await sendReplacementPixEmail(order.id, qrCode, expiration);
+
+    return {
+      orderId: order.id,
+      orderNumber: order.order_number,
+      qrCode,
+      qrImage,
+      expiresAt: expiration,
+      email: source.customer_email.trim().toLowerCase(),
+      emailSent: email.sent,
+    };
+  });
