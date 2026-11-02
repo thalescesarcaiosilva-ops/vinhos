@@ -38,8 +38,8 @@ const RANGES = [
 ] as const;
 
 type RangeId = (typeof RANGES)[number]["id"] | "day";
-type Outcome = "waiting" | "recovered" | "lost";
-type TabId = "new" | "waiting" | "recovered" | "lost" | "receipt";
+type Outcome = "waiting" | "responded" | "recovered" | "lost";
+type TabId = "new" | "responded" | "waiting" | "recovered" | "lost" | "receipt";
 
 type OrderItem = {
   order_id: string;
@@ -384,6 +384,7 @@ function Queue({ email, userId }: { email?: string; userId: string }) {
     return orders.filter((order) => {
       const mark = marks[order.id];
       if (tab === "new" && mark) return false;
+      if (tab === "responded" && mark?.outcome !== "responded") return false;
       if (tab === "waiting" && mark?.outcome !== "waiting") return false;
       if (tab === "recovered" && mark?.outcome !== "recovered") return false;
       if (tab === "lost" && mark?.outcome !== "lost") return false;
@@ -521,6 +522,7 @@ function Queue({ email, userId }: { email?: string; userId: string }) {
 
   const tabs: { id: TabId; label: string; count: number }[] = [
     { id: "new", label: "Novos", count: stats.newCount },
+    { id: "responded", label: "Respondidos", count: stats.respondedCount },
     { id: "waiting", label: "Aguardando", count: stats.waitingCount },
     { id: "recovered", label: "Recuperados", count: stats.recoveredCount },
     { id: "lost", label: "Perdidos", count: stats.lostCount },
@@ -708,7 +710,8 @@ function Queue({ email, userId }: { email?: string; userId: string }) {
         <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
           Pedidos com menos de 15 minutos ficam de fora, para o cliente ainda conseguir pagar
           sozinho. “Pix válido” usa o vencimento gravado pela Veno. “Checar Veno” consulta o status
-          ao vivo. O card Recuperado soma só o que foi marcado como recuperado neste período.
+          ao vivo. Respondido tira o pedido da fila de novos para a equipe não atender de novo. O
+          card Recuperado soma só o que foi marcado como recuperado neste período.
         </p>
       </div>
 
@@ -821,7 +824,7 @@ function OrderRow({
 
   return (
     <tr
-      className={`border-t border-border align-top ${mark?.outcome === "recovered" ? "bg-sky-50/70" : mark?.outcome === "lost" ? "bg-rose-50/50" : ""}`}
+      className={`border-t border-border align-top ${mark?.outcome === "recovered" ? "bg-sky-50/70" : mark?.outcome === "lost" ? "bg-rose-50/50" : mark?.outcome === "responded" ? "bg-emerald-50/80" : ""}`}
     >
       <td className="px-3 py-3">
         <div className="font-medium">{order.customer_name}</div>
@@ -919,6 +922,13 @@ function OrderRow({
             </button>
           )}
           <OutcomeButton
+            active={mark?.outcome === "responded"}
+            onClick={() => onOutcome(mark?.outcome === "responded" ? null : "responded")}
+            className="border-emerald-700 text-emerald-900 data-[on=true]:bg-emerald-600 data-[on=true]:text-white"
+          >
+            Respondido
+          </OutcomeButton>
+          <OutcomeButton
             active={mark?.outcome === "waiting"}
             onClick={() => onOutcome(mark?.outcome === "waiting" ? null : "waiting")}
             className="border-amber-700 text-amber-900 data-[on=true]:bg-amber-500 data-[on=true]:text-white"
@@ -1003,6 +1013,22 @@ function SituationBadge({ order, mark }: { order: AbandonedOrder; mark: ContactM
     return (
       <span className="inline-block rounded bg-rose-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
         Perdido
+      </span>
+    );
+  }
+  if (mark?.outcome === "responded") {
+    const when = new Date(mark.outcome_at).toLocaleString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return (
+      <span className="inline-flex flex-col items-start gap-0.5">
+        <span className="inline-block rounded bg-emerald-600 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+          Respondido
+        </span>
+        <span className="text-[10px] text-muted-foreground">{when}</span>
       </span>
     );
   }
@@ -1255,6 +1281,13 @@ function OrderDetails({
           )}
           <button
             type="button"
+            onClick={() => onOutcome(mark?.outcome === "responded" ? null : "responded")}
+            className={`rounded-sm px-3 py-2 text-xs font-semibold ${mark?.outcome === "responded" ? "bg-emerald-600 text-white" : "border border-emerald-700 text-emerald-900"}`}
+          >
+            {mark?.outcome === "responded" ? "Desmarcar respondido" : "Respondido"}
+          </button>
+          <button
+            type="button"
             onClick={() => (mark?.outcome === "recovered" ? onOutcome(null) : onAskReceipt())}
             className="rounded-sm bg-sky-700 px-3 py-2 text-xs font-semibold text-white"
           >
@@ -1336,6 +1369,7 @@ function summarize(orders: AbandonedOrder[], marks: Record<string, ContactMark>,
   let recoveredValue = 0;
   let lostCount = 0;
   let newCount = 0;
+  let respondedCount = 0;
   let waitingCount = 0;
   let receiptCount = 0;
   for (const order of orders) {
@@ -1351,7 +1385,8 @@ function summarize(orders: AbandonedOrder[], marks: Record<string, ContactMark>,
       lostCount += 1;
       continue;
     }
-    if (mark?.outcome === "waiting") waitingCount += 1;
+    if (mark?.outcome === "responded") respondedCount += 1;
+    else if (mark?.outcome === "waiting") waitingCount += 1;
     else newCount += 1;
     openCount += 1;
     openValue += total;
@@ -1375,13 +1410,16 @@ function summarize(orders: AbandonedOrder[], marks: Record<string, ContactMark>,
     recoveredValue,
     lostCount,
     newCount,
+    respondedCount,
     waitingCount,
     receiptCount,
   };
 }
 
 function normalizeOutcome(value: string | null | undefined): Outcome {
-  if (value === "recovered" || value === "lost" || value === "waiting") return value;
+  if (value === "recovered" || value === "lost" || value === "waiting" || value === "responded") {
+    return value;
+  }
   return "waiting";
 }
 
