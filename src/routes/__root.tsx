@@ -70,7 +70,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "google-site-verification", content: "gR2W2gQ9M4DKb3uwUjXh_m8FQiWxntgNo05ZxQU5_2U" },
+      { name: "google-site-verification", content: "HUGsprA-PP-AG3XHBy6LPZ5w4HUopmP3DmikO4ccRcs" },
       { title: SEO.homeTitle },
       { name: "description", content: SEO.homeDescription },
       { property: "og:title", content: SEO.homeTitle },
