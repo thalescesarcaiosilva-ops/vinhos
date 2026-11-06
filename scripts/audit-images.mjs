@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const BUCKET = "product-images";
-const SITE = "https://www.galvaovinhos.com.br";
+const SITE = "https://www.galvaovinhos.com";
 const SUPABASE_HOST = "https://aufvvgytbrstsrfomngm.supabase.co";
 
 function loadEnv() {

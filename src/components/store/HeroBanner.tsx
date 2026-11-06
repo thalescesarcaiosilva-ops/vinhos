@@ -147,12 +147,23 @@ export function HomeHeroBanner(props: HomeHeroProps) {
 
   const href = (mobileLinkUrl ?? desktopLinkUrl)?.trim();
 
+  // Sem srcset o <source> é ignorado e o <img> (arte mobile) aparece no desktop.
+  const desktopSource =
+    desktopSrcSet ||
+    (desktop ? `${bannerSrc(desktop, 1600, desktopDims.width)} 1600w` : "");
+  const mobileFallbackSrcSet =
+    mobileSrcSet ||
+    desktopSrcSet ||
+    (mobile || desktop
+      ? `${bannerSrc(mobile || desktop!, 960, mobileDims.width)} 960w`
+      : "");
+
   const picture = (
     <picture>
       {desktop && (
         <source
           media={DESKTOP_MEDIA}
-          srcSet={desktopSrcSet || undefined}
+          srcSet={desktopSource}
           sizes="100vw"
           width={desktopDims.width ?? undefined}
           height={desktopDims.height ?? undefined}
@@ -160,7 +171,7 @@ export function HomeHeroBanner(props: HomeHeroProps) {
       )}
       <img
         src={bannerSrc(mobile || desktop!, 960, mobileDims.width)}
-        srcSet={mobileSrcSet || desktopSrcSet || undefined}
+        srcSet={mobileFallbackSrcSet || undefined}
         sizes="100vw"
         alt={alt}
         width={mobileDims.width ?? undefined}

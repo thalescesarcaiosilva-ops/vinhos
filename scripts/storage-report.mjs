@@ -10,7 +10,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const BUCKET = "product-images";
-const SITE = "https://www.galvaovinhos.com.br";
+const SITE = "https://www.galvaovinhos.com";
 
 function loadEnv() {
   const envPath = path.join(ROOT, ".env");

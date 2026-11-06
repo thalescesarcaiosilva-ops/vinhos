@@ -3,7 +3,7 @@ export function getSiteUrl(): string {
   const raw =
     (typeof import.meta !== "undefined" && import.meta.env?.VITE_PUBLIC_SITE_URL) ||
     (typeof process !== "undefined" && process.env.PUBLIC_SITE_URL) ||
-    "https://www.galvaovinhos.com.br";
+    "https://www.galvaovinhos.com";
   return raw.replace(/\/+$/, "") + "/";
 }
 

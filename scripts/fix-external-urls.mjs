@@ -1,6 +1,6 @@
 /**
  * Corrige URLs externas restantes (auditoria item 2).
- * - banners com host supabase.co → galvaovinhos.com.br
+ * - banners com host supabase.co → galvaovinhos.com
  * - banner Chile em postimg.cc → Storage Galvao
  *
  * node scripts/fix-external-urls.mjs
@@ -8,7 +8,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { getSupabaseConfig } from "./lib/env.mjs";
 
-const SITE = "https://www.galvaovinhos.com.br";
+const SITE = "https://www.galvaovinhos.com";
 const CHILE_OLD = "https://i.postimg.cc/dtXY3bRy/chile-(1).webp";
 const CHILE_PATH = "chile-migrated.webp";
 

@@ -197,7 +197,7 @@ function mapStatus(s?: string): "pending" | "confirmed" | "cancelled" | "refunde
 }
 
 function siteOrigin(): string {
-  return (serverEnv("PUBLIC_SITE_URL") || serverEnv("VITE_PUBLIC_SITE_URL") || "https://www.galvaovinhos.com.br").replace(
+  return (serverEnv("PUBLIC_SITE_URL") || serverEnv("VITE_PUBLIC_SITE_URL") || "https://www.galvaovinhos.com").replace(
     /\/+$/,
     "",
   );

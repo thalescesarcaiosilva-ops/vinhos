@@ -55,7 +55,7 @@ await req("/transactions", {
     paymentMethod: "pix",
     customer: {
       name: "Teste Galvao",
-      email: "teste@galvaovinhos.com.br",
+      email: "teste@galvaovinhos.com",
       phone: "62999999999",
       document: { type: "cpf", number: "12345678909" },
       address: {
@@ -81,7 +81,7 @@ await req("/transactions", {
       },
     },
     items: [{ title: "Vinho Teste", unitPrice: 1000, quantity: 1, tangible: true }],
-    postbackUrl: "https://www.galvaovinhos.com.br/api/public/payoutbr-webhook",
+    postbackUrl: "https://www.galvaovinhos.com/api/public/payoutbr-webhook",
     metadata: "test-order",
     externalRef: "test-order",
     traceable: true,

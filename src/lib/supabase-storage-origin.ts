@@ -8,6 +8,11 @@ export function getSupabaseStorageOrigin(): string {
 /** Known Storage URL prefixes to normalize to site-relative /storage/... paths. */
 export function getStorageHostPrefixes(): string[] {
   const hosts = new Set<string>([
+    "https://galvaovinhos.com",
+    "http://galvaovinhos.com",
+    "https://www.galvaovinhos.com",
+    "http://www.galvaovinhos.com",
+    // Domínio antigo — ainda reescreve URLs absolutas legadas no banco
     "https://galvaovinhos.com.br",
     "http://galvaovinhos.com.br",
     "https://www.galvaovinhos.com.br",

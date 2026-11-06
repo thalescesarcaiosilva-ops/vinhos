@@ -17,7 +17,7 @@ const JWT = JSON.parse(
 const files = ["VIN001_1.jpg", "VIN009_3.jpg", "VIN1165_1.png", "VIN1305_1.jpg", "VIN950_1.png"];
 const hosts = [
   "https://aufvvgytbrstsrfomngm.supabase.co",
-  "https://www.galvaovinhos.com.br",
+  "https://www.galvaovinhos.com",
 ];
 
 for (const host of hosts) {

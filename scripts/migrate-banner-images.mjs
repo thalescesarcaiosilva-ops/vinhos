@@ -10,7 +10,7 @@ import path from "node:path";
 import { createClient } from "@supabase/supabase-js";
 import { ROOT, getSupabaseConfig } from "./lib/env.mjs";
 
-const SITE = "https://www.galvaovinhos.com.br";
+const SITE = "https://www.galvaovinhos.com";
 const BUCKET = "banner-images";
 const LEGACY_HOST = "https://zsfhnjrotkbzyikkxmnm.supabase.co";
 const TMP = path.join(ROOT, ".tmp", "banner-migrate");

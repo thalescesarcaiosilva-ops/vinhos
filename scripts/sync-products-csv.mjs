@@ -18,8 +18,15 @@ const CSV_PATH = process.argv[2] || "D:\\products-export-2026-06-23_13-52-21.csv
 const BUCKET = "product-images";
 
 const LEGACY_HOSTS = [
+  "https://www.galvaovinhos.com",
+  "http://www.galvaovinhos.com",
+  "https://galvaovinhos.com",
+  "http://galvaovinhos.com",
+  // Domínio antigo
   "https://www.galvaovinhos.com.br",
   "http://www.galvaovinhos.com.br",
+  "https://galvaovinhos.com.br",
+  "http://galvaovinhos.com.br",
   "https://dymhoqxfamosdujzorrl.supabase.co",
   "https://aufvvgytbrstsrfomngm.supabase.co",
   "/__l5e/",

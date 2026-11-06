@@ -1,5 +1,5 @@
 /**
- * Lista URLs absolutas fora de galvaovinhos.com.br no banco (auditoria GMC).
+ * Lista URLs absolutas fora de galvaovinhos.com no banco (auditoria GMC).
  * node scripts/audit-external-urls.mjs
  */
 import { createClient } from "@supabase/supabase-js";

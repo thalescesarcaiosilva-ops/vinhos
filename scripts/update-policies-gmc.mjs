@@ -8,7 +8,7 @@ import { getSupabaseConfig } from "./lib/env.mjs";
 const RETURNS_INSERT = `1.1 Cenários comuns
 
 Pedido que não chegou ou foi extraviado
-Se o prazo estimado de entrega tiver sido ultrapassado sem movimentação no rastreio, ou se a transportadora confirmar extravio, contacte atendimento@galvaovinhos.com.br com o número do pedido. Analisaremos reenvio ou reembolso integral, conforme a situação e a Política de frete.
+Se o prazo estimado de entrega tiver sido ultrapassado sem movimentação no rastreio, ou se a transportadora confirmar extravio, contacte atendimento@galvaovinhos.com com o número do pedido. Analisaremos reenvio ou reembolso integral, conforme a situação e a Política de frete.
 
 Produto errado
 Se você receber item diferente do pedido (marca, rótulo, safra ou quantidade distintos do comprado), avise-nos em até 7 dias corridos do recebimento com fotos do produto e da embalagem. Confirmado erro nosso, providenciaremos troca, reenvio ou reembolso sem custo de retorno para você.
@@ -23,7 +23,7 @@ Em arrependimento (Art. 49 do CDC), o frete de devolução é de responsabilidad
 
 const PRIVACY_LGPD_BLOCK = `Encarregado pelo tratamento de dados (LGPD)
 Para assuntos relacionados à Lei Geral de Proteção de Dados (Lei nº 13.709/2018), incluindo exercício de direitos do titular, utilize:
-E-mail: atendimento@galvaovinhos.com.br
+E-mail: atendimento@galvaovinhos.com
 Telefone: (31) 97554-9668
 
 `;
@@ -44,8 +44,8 @@ async function main() {
     if (page.slug === "politica-de-devolucao-e-reembolso") {
       if (!page.content.includes("1.1 Cenários comuns")) {
         page.content = page.content.replace(
-          "O pedido de devolução deve ser enviado dentro desse prazo para atendimento@galvaovinhos.com.br.\n\n2. Condições",
-          `O pedido de devolução deve ser enviado dentro desse prazo para atendimento@galvaovinhos.com.br.\n\n${RETURNS_INSERT}2. Condições`,
+          "O pedido de devolução deve ser enviado dentro desse prazo para atendimento@galvaovinhos.com.\n\n2. Condições",
+          `O pedido de devolução deve ser enviado dentro desse prazo para atendimento@galvaovinhos.com.\n\n${RETURNS_INSERT}2. Condições`,
         );
         changed++;
         console.log("Devolução: cenários comuns adicionados");

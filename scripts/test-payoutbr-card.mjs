@@ -47,7 +47,7 @@ async function tokenize(card) {
 
 const customer = {
   name: "Teste Galvao",
-  email: "teste@galvaovinhos.com.br",
+  email: "teste@galvaovinhos.com",
   phone: "62999999999",
   document: { type: "cpf", number: "11144477735" },
   address: {
@@ -73,7 +73,7 @@ async function createTransaction(token) {
       customer,
       shipping: { fee: 0, address: customer.address },
       items: [{ title: "Vinho Teste", unitPrice: 1000, quantity: 1, tangible: true }],
-      postbackUrl: "https://www.galvaovinhos.com.br/api/public/payoutbr-webhook",
+      postbackUrl: "https://www.galvaovinhos.com/api/public/payoutbr-webhook",
       metadata: "test-card-order",
       externalRef: "test-card-order",
       traceable: true,

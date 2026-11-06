@@ -5,7 +5,7 @@ import { execSync } from "node:child_process";
 import { createClient } from "@supabase/supabase-js";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const SITE = "https://www.galvaovinhos.com.br";
+const SITE = "https://www.galvaovinhos.com";
 
 function loadEnv() {
   for (const line of readFileSync(path.join(ROOT, ".env"), "utf8").split(/\r?\n/)) {

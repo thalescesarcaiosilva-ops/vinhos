@@ -1,6 +1,6 @@
 /**
  * Baixa imagens vinotecavinhoprosa.cdn das descriptions, sobe no Storage Galvao
- * e troca as URLs para https://www.galvaovinhos.com.br/storage/...
+ * e troca as URLs para https://www.galvaovinhos.com/storage/...
  *
  * node scripts/migrate-desc-cdn-images.mjs
  */
@@ -10,7 +10,7 @@ import path from "node:path";
 import { createClient } from "@supabase/supabase-js";
 import { ROOT, getSupabaseConfig } from "./lib/env.mjs";
 
-const SITE = "https://www.galvaovinhos.com.br";
+const SITE = "https://www.galvaovinhos.com";
 const BUCKET = "product-images";
 const PREFIX = "desc-cdn";
 const TMP = path.join(ROOT, ".tmp", "desc-cdn");

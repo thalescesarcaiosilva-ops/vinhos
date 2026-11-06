@@ -10,7 +10,7 @@ import path from "node:path";
 import { getSupabaseConfig, ROOT } from "./lib/env.mjs";
 
 const OUT = path.join(ROOT, "exports", "woocommerce-produtos-com-vendas.csv");
-const SITE = "https://www.galvaovinhos.com.br";
+const SITE = "https://www.galvaovinhos.com";
 
 const { url, jwt } = getSupabaseConfig();
 const supabase = createClient(url, jwt, {

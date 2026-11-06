@@ -35,7 +35,10 @@ function storageUrlPrefix(): string {
 
 function toStoragePath(url: string): string | null {
   const stripped = stripHost(url);
-  return stripped.startsWith("/storage/v1/") ? stripped : null;
+  if (stripped.startsWith("/storage/v1/")) return stripped;
+  // Aceita URL absoluta de qualquer host (ex.: domínio antigo após migração).
+  const absolute = url.match(/^https?:\/\/[^/]+(\/storage\/v1\/.+)$/i);
+  return absolute?.[1] ?? null;
 }
 
 export function isStorageObjectUrl(url: string | null | undefined): boolean {

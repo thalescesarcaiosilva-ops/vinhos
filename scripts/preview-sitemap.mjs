@@ -3,7 +3,7 @@ import { loadEnvFile } from "./lib/env.mjs";
 import { collectSitemapUrls } from "../src/lib/seo-sitemap.ts";
 
 loadEnvFile();
-process.env.PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL || "https://www.galvaovinhos.com.br";
+process.env.PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL || "https://www.galvaovinhos.com";
 
 const urls = await collectSitemapUrls();
 const colecao = urls.filter((u) => u.loc.includes("/colecao/"));
