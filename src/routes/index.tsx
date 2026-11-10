@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { BenefitsBar } from "@/components/store/BenefitsBar";
+import { HomeAboutSection } from "@/components/store/HomeAboutSection";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
 import { HeroBanner, HomeHeroBanner, homeHeroPreloadLinks } from "@/components/store/HeroBanner";
 
@@ -583,6 +584,8 @@ function Home() {
       ) : kitsQ.isLoading ? (
         <ShowcaseSkeleton title="Kits & Combos" subtitle="Presentes especiais selecionados" />
       ) : null}
+
+      <HomeAboutSection />
 
       {/* Google Merchant / SEO structured data (produtos do loader/SSR) */}
       <script
