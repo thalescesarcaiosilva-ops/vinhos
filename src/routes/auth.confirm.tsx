@@ -10,7 +10,10 @@ function resolveNextPath(next: string) {
   if (next.startsWith("/")) return next;
   try {
     const url = new URL(next);
-    if (url.hostname.includes("galvaovinhos.com")) {
+    if (
+      url.hostname.includes("lojagalvaovinhos.com.br") ||
+      url.hostname.includes("galvaovinhos.com")
+    ) {
       return `${url.pathname}${url.search}` || "/minha-conta";
     }
   } catch {

@@ -1,4 +1,4 @@
-const SITE_HOST_RE = /galvaovinhos\.com|vercel\.app/i;
+const SITE_HOST_RE = /lojagalvaovinhos\.com\.br|galvaovinhos\.com|vercel\.app/i;
 
 function readSupabaseUrlFromEnv(): string | undefined {
   const fromVite =

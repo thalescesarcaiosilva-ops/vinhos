@@ -7,7 +7,6 @@ type ProductMobileBuyBarProps = {
   image: string | null | undefined;
   name: string;
   price: number;
-  compareAt?: number | null;
   quantity: number;
   disabled?: boolean;
   onBuy: () => void;
@@ -36,7 +35,6 @@ export function ProductMobileBuyBar({
   image,
   name,
   price,
-  compareAt,
   quantity,
   disabled = false,
   onBuy,
@@ -105,11 +103,6 @@ export function ProductMobileBuyBar({
         </div>
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-medium text-foreground">{name}</p>
-          {compareAt != null && compareAt > price && (
-            <p className="text-[11px] font-medium leading-none text-[color:var(--sale)] line-through">
-              de {brl(compareAt)}
-            </p>
-          )}
           <p className="font-semibold text-primary">{brl(price)}</p>
         </div>
         <button

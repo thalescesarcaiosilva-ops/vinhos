@@ -354,8 +354,6 @@ function ProductPage() {
 
   const p = q.data;
   const price = Number(p.price);
-  const compare = p.compare_at_price ? Number(p.compare_at_price) : 0;
-  const discount = compare > price ? Math.round(((compare - price) / compare) * 100) : 0;
   const pay = settings?.payments ?? DEFAULT_SETTINGS.payments;
   const showPix = pay.pixEnabled;
   const pixDiscountPct = pay.pixDiscount || 0;
@@ -407,7 +405,6 @@ function ProductPage() {
   const hasProductRating = productRating > 0;
   const isFav = favs?.has(p.id) ?? false;
   const shownPrice = hasPixDiscount ? pixPrice : price;
-  const savings = compare > shownPrice ? compare - shownPrice : 0;
   const cartItem = { id: p.id, name: p.name, slug: p.slug, price, image: p.image_url };
   function toggleFavorite() {
     toggleFav.mutate({
@@ -458,14 +455,12 @@ function ProductPage() {
             <ProductMediaMobileCarousel
               media={media}
               productName={p.name}
-              discount={discount}
               bestSeller={!!p.best_seller}
               favorite={{ active: isFav, onToggle: toggleFavorite }}
             />
             <ProductMediaDesktopMain
               item={media[active]}
               productName={p.name}
-              discount={discount}
               bestSeller={!!p.best_seller}
               favorite={{ active: isFav, onToggle: toggleFavorite }}
             />
@@ -601,21 +596,6 @@ function ProductPage() {
             </div>
 
             <div className="space-y-3 rounded-[1.25rem] border border-border bg-card p-4">
-              {(compare > shownPrice || savings > 0) && (
-                <div className="flex flex-wrap items-center gap-2">
-                  {compare > shownPrice && (
-                    <span className="text-sm text-muted-foreground line-through">
-                      de {brl(compare)}
-                    </span>
-                  )}
-                  {savings > 0 && (
-                    <span className="rounded-full bg-buy/10 px-2.5 py-1 text-xs font-semibold text-buy">
-                      Economize {brl(savings)}
-                    </span>
-                  )}
-                </div>
-              )}
-
               <div className="flex items-baseline gap-2">
                 <span className="text-4xl font-bold tracking-tight text-primary">
                   {brl(shownPrice)}
@@ -828,7 +808,6 @@ function ProductPage() {
         image={p.image_url}
         name={p.name}
         price={price}
-        compareAt={compare}
         quantity={qty}
         disabled={p.stock <= 0}
         onBuy={buyNow}
@@ -1077,7 +1056,6 @@ function SuggestedProducts({ productId }: { productId: string }) {
       <div className="space-y-3">
         {data.map((sp) => {
           const spPrice = Number(sp.price);
-          const spCompare = sp.compare_at_price ? Number(sp.compare_at_price) : 0;
           return (
             <Link
               key={sp.id}
@@ -1099,12 +1077,7 @@ function SuggestedProducts({ productId }: { productId: string }) {
                 <p className="line-clamp-2 text-sm font-medium leading-snug text-foreground">
                   {sp.name}
                 </p>
-                <div className="mt-1 flex items-baseline gap-2">
-                  {spCompare > spPrice && (
-                    <span className="text-xs font-medium text-[color:var(--sale)] line-through">
-                      de {brl(spCompare)}
-                    </span>
-                  )}
+                <div className="mt-1">
                   <span className="text-sm font-bold text-[color:var(--buy)]">{brl(spPrice)}</span>
                 </div>
               </div>

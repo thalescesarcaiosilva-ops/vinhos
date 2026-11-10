@@ -25,12 +25,11 @@ function maskExpiry(value: string) {
 
 /**
  * Formulário de cartão + parcelas (UI).
- * Cobrança por cartão está desligada — use Pix no checkout.
+ * Os dados podem ser preenchidos; a cobrança no gateway permanece desligada.
  */
 export function PayoutCardForm({
   onReadyChange,
   onValidChange,
-  onError,
   registerHandle,
   installments,
   setInstallments,
@@ -75,13 +74,10 @@ export function PayoutCardForm({
     registerHandle({
       ready: true,
       valid,
-      submit: async () => {
-        const msg = "Pagamento por cartão indisponível no momento. Use Pix.";
-        onError?.(msg);
-        throw new Error(msg);
-      },
+      // Cobrança no gateway desligada — submit não processa pagamento.
+      submit: async () => undefined,
     });
-  }, [valid, registerHandle, onError]);
+  }, [valid, registerHandle]);
 
   const inp =
     "w-full rounded-sm border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";

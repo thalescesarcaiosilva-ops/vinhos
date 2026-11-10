@@ -50,6 +50,9 @@ export const Route = createFileRoute("/politicas/$slug")({
   component: PolicyPage,
 });
 
+/** Data de vigência publicada no topo das políticas (fixa — não recalcular automaticamente). */
+const POLICY_EFFECTIVE_LABEL = "10 de novembro de 2026";
+
 function PolicyPage() {
   const { page, phone } = Route.useLoaderData();
   const html = sanitizeProductHtml(linkifyContactHtml(page.content));
@@ -57,6 +60,16 @@ function PolicyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
       <h1 className="font-serif text-3xl font-bold text-primary">{page.label}</h1>
+
+      <aside className="mt-6 rounded-sm border border-border bg-muted/40 px-4 py-3 text-sm leading-relaxed text-foreground">
+        <p className="font-semibold text-primary">Política vigente</p>
+        <p className="mt-1 text-muted-foreground">
+          Este documento está em vigor e é válido a partir de{" "}
+          <span className="font-medium text-foreground">{POLICY_EFFECTIVE_LABEL}</span>. Em caso
+          de dúvida, fale com o atendimento antes de concluir a compra.
+        </p>
+      </aside>
+
       <div
         className="prose prose-sm mt-6 max-w-none whitespace-pre-wrap text-foreground [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:opacity-80 [&_a[href*='wa.me']]:font-semibold"
         dangerouslySetInnerHTML={{ __html: html }}

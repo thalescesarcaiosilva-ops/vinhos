@@ -5,7 +5,7 @@ export const STORE = {
   name: "Galvao Vinhos",
   legalName: "66.645.637 Ana Clara Sena Galvao",
   cnpj: "66.645.637/0001-43",
-  email: "atendimento@galvaovinhos.com",
+  email: "atendimento@lojagalvaovinhos.com.br",
   phone: "(31) 97554-9668",
   phoneDigits: "31975549668",
   address: "Avenida Dom João VI, 342 - Brotas, Salvador - BA, CEP: 40285-001",

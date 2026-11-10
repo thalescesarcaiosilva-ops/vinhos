@@ -12,11 +12,6 @@ export function CartDrawer() {
   const pixPercent = settings?.payments?.pixEnabled ? (settings.payments.pixDiscount ?? 0) : 0;
   const pixOff = pixPercent > 0 ? Math.round(subtotal * (pixPercent / 100) * 100) / 100 : 0;
   const pixTotal = Math.max(0, subtotal - pixOff);
-  const freeFrom = settings?.shipping?.freeShippingFrom ?? 0;
-  const hasFreeRule = freeFrom > 0;
-  const freeShipping = hasFreeRule && subtotal >= freeFrom;
-  const progress = !hasFreeRule ? 100 : Math.min(100, (subtotal / freeFrom) * 100);
-  const missing = Math.max(0, freeFrom - subtotal);
 
   return (
     <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
@@ -134,27 +129,12 @@ export function CartDrawer() {
             </div>
 
             <div className="border-t border-border bg-background px-4 pb-4 pt-3">
-              {hasFreeRule && (
-                <div className="mb-3">
-                  <p className={`mb-1.5 text-center text-sm font-semibold ${freeShipping ? "text-buy" : "text-foreground"}`}>
-                    {freeShipping
-                      ? "Você ganhou frete grátis!"
-                      : `Faltam ${brl(missing)} para frete grátis`}
-                  </p>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full rounded-full bg-buy" style={{ width: `${progress}%` }} />
-                  </div>
-                </div>
-              )}
-
               <div className="mb-3 flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2 text-foreground">
                   <Truck className="h-4 w-4 text-primary" aria-hidden />
                   Entrega
                 </span>
-                <span className={freeShipping ? "font-semibold text-buy" : "text-muted-foreground"}>
-                  {freeShipping ? "Grátis" : "Calculada no checkout"}
-                </span>
+                <span className="text-muted-foreground">Calculada no checkout</span>
               </div>
 
               <dl className="space-y-1.5 text-sm">

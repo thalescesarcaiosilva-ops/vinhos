@@ -662,26 +662,24 @@ function Checkout() {
       notes: form.notes || null,
     };
 
+    // Cartão: formulário preenchível na UI; cobrança no gateway desligada.
+    if (method !== "pix") return;
+
     setLoading(true);
     try {
-      if (method === "pix") {
-        const pixRes = await createPix({ data: baseData });
-        const nextPix: StoredPix = {
-          orderId: pixRes.orderId,
-          orderNumber: pixRes.orderNumber,
-          qrCode: pixRes.qrCode,
-          qrImage: pixRes.qrImage,
-          expiresAt: pixRes.expiresAt,
-          receiptToken: pixRes.receiptToken ?? null,
-          total: baseData.total,
-          cartSignature: cartSignatureOf(items),
-        };
-        setPix(nextPix);
-        writeStoredPix(nextPix);
-      } else {
-        toast.error("Pagamento por cartão indisponível no momento. Use Pix.");
-        setMethod("pix");
-      }
+      const pixRes = await createPix({ data: baseData });
+      const nextPix: StoredPix = {
+        orderId: pixRes.orderId,
+        orderNumber: pixRes.orderNumber,
+        qrCode: pixRes.qrCode,
+        qrImage: pixRes.qrImage,
+        expiresAt: pixRes.expiresAt,
+        receiptToken: pixRes.receiptToken ?? null,
+        total: baseData.total,
+        cartSignature: cartSignatureOf(items),
+      };
+      setPix(nextPix);
+      writeStoredPix(nextPix);
     } catch (err: any) {
       console.error(err);
       toast.error(err?.message || "Erro ao gerar pagamento. Tente novamente.");
@@ -933,27 +931,6 @@ function Checkout() {
                             plan={plan}
                             registerHandle={() => {}}
                           />
-                          <div
-                            role="alert"
-                            className="rounded-md border border-amber-500/40 bg-amber-50 px-4 py-3 text-sm text-amber-950"
-                          >
-                            <p className="font-semibold">Pagamento por cartão indisponível no momento</p>
-                            <p className="mt-1 text-amber-900/90">
-                              Finalize seu pedido com <strong>Pix</strong> — aprovação imediata
-                              {(payments?.pixDiscount ?? 0) > 0
-                                ? ` e ${payments?.pixDiscount}% de desconto`
-                                : ""}
-                              .
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            disabled={!pixEnabled}
-                            onClick={() => setMethod("pix")}
-                            className={btnPrimary}
-                          >
-                            {pixEnabled ? "Pagar com Pix" : "Pix indisponível"}
-                          </button>
                         </div>
                       )}
                     </>

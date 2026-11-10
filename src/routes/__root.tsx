@@ -19,6 +19,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeStyle } from "@/components/store/ThemeStyle";
 import { CartDrawer } from "@/components/store/CartDrawer";
 import { HeadTrackingScripts } from "@/components/store/HeadTrackingScripts";
+import { CookieConsentBanner } from "@/components/store/CookieConsentBanner";
 import { fetchStoreSettings, STORE_SETTINGS_QUERY_KEY } from "@/lib/store-settings";
 import { STORE } from "@/lib/settings";
 import { DEFAULT_OG_IMAGE, SEO, buildStoreSchema } from "@/lib/seo";
@@ -28,10 +29,15 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="font-serif text-7xl font-bold text-primary">404</h1>
-        <h2 className="mt-4 font-serif text-xl font-semibold text-foreground">Página não encontrada</h2>
+        <h2 className="mt-4 font-serif text-xl font-semibold text-foreground">
+          Página não encontrada
+        </h2>
         <p className="mt-2 text-sm text-muted-foreground">A página que você procura não existe.</p>
         <div className="mt-6">
-          <Link to="/" className="inline-flex items-center justify-center rounded-sm bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          <Link
+            to="/"
+            className="inline-flex items-center justify-center rounded-sm bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
             Voltar à loja
           </Link>
         </div>
@@ -42,15 +48,30 @@ function NotFoundComponent() {
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
-  useEffect(() => { console.error(error); }, [error]);
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="font-serif text-xl font-semibold text-foreground">Algo deu errado</h1>
         <p className="mt-2 text-sm text-muted-foreground">Tente novamente ou volte para a loja.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button onClick={() => { router.invalidate(); reset(); }} className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">Tentar novamente</button>
-          <a href="/" className="rounded-sm border border-input bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground">Ir para o início</a>
+          <button
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
+            className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            Tentar novamente
+          </button>
+          <a
+            href="/"
+            className="rounded-sm border border-input bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
+          >
+            Ir para o início
+          </a>
         </div>
       </div>
     </div>
@@ -117,7 +138,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
-      <head><HeadContent /></head>
+      <head>
+        <HeadContent />
+      </head>
       <body>
         {children}
         <Scripts />
@@ -139,10 +162,13 @@ function RootComponent() {
           <ThemeStyle />
           <div className="flex min-h-screen flex-col">
             {!isCheckout && !isSupport && <Header />}
-            <main className="flex-1"><Outlet /></main>
+            <main className="flex-1">
+              <Outlet />
+            </main>
             {!isSupport && <Footer />}
           </div>
           <CartDrawer />
+          <CookieConsentBanner />
           <Toaster position="top-right" />
         </CartProvider>
       </AuthProvider>
