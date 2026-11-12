@@ -1,19 +1,49 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Phone, MapPin, Instagram, Facebook } from "lucide-react";
+import { Mail, Phone, MapPin, Instagram, Facebook, Clock, ArrowRight } from "lucide-react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { useStoreSettings } from "@/lib/store-settings";
 import { STORE } from "@/lib/settings";
-import { mailtoHref } from "@/lib/contact-links";
-import { WhatsAppIcon } from "@/components/store/WhatsAppIcon";
+import { mailtoHref, telHref } from "@/lib/contact-links";
 import { toSiteImageUrl, toTransformedImageUrl } from "@/lib/image-url";
 import { NewsletterForm } from "@/components/store/NewsletterForm";
 import { StoreContainer } from "@/components/store/StoreContainer";
+import { cn } from "@/lib/utils";
+
+function FooterHeading({ children }: { children: ReactNode }) {
+  return (
+    <div className="mb-5">
+      <h4 className="font-serif text-[13px] font-bold uppercase tracking-[0.14em] text-primary">
+        {children}
+      </h4>
+      <span className="mt-2 block h-px w-10 bg-[#d6b36a]" aria-hidden />
+    </div>
+  );
+}
+
+function FooterNavLink({
+  children,
+  className,
+  ...props
+}: ComponentProps<"a"> & { children: ReactNode }) {
+  return (
+    <a
+      {...props}
+      className={cn(
+        "block border-b border-neutral-100 py-2.5 text-sm text-neutral-600 transition last:border-b-0 hover:border-primary/30 hover:text-primary",
+        className,
+      )}
+    >
+      {children}
+    </a>
+  );
+}
 
 export function Footer() {
   const { data: settings } = useStoreSettings();
   const f = settings?.footer;
   if (!f) {
-    return <footer data-site-footer className="mt-16 min-h-[32rem] bg-[#090909]" aria-hidden />;
+    return <footer data-site-footer className="mt-16 min-h-[32rem] bg-white" aria-hidden />;
   }
   const year = new Date().getFullYear();
   const copyright = f.copyrightText.replace("{year}", String(year));
@@ -26,49 +56,62 @@ export function Footer() {
     f.aboutText?.trim() ||
     "A Galvao Vinhos é uma loja especializada em vinhos e espumantes selecionados, com curadoria cuidadosa, compra segura e atendimento próximo.";
 
+  const logoMaxHeight = settings?.brand?.logoMaxHeight || f.logoMaxHeight || 56;
+  const logoSrc = settings?.brand?.logoUrl
+    ? toTransformedImageUrl(toSiteImageUrl(settings.brand.logoUrl), {
+        width: 280,
+        quality: 80,
+        format: "webp",
+        resize: "contain",
+      }) || toSiteImageUrl(settings.brand.logoUrl)
+    : "/assets/favicon.png";
+
+  const phone = f.phone || STORE.phone;
+  const columnClass =
+    "border-t border-neutral-200 pt-8 lg:border-t-0 lg:border-l lg:border-neutral-200 lg:pt-0 lg:pl-8";
+
   return (
-    <footer data-site-footer className="mt-16 bg-[#090909] text-white">
-      <StoreContainer>
+    <footer data-site-footer className="mt-16 bg-white text-foreground">
+      <StoreContainer className="pt-10 lg:pt-12">
         <NewsletterForm title={f.newsletterTitle} />
 
         <div
-          className={`grid gap-x-8 gap-y-12 border-t border-white/15 py-12 sm:grid-cols-2 lg:py-16 ${
-            hasCategories ? "lg:grid-cols-5" : "lg:grid-cols-4"
-          }`}
+          className={cn(
+            "mt-10 grid gap-y-10 border-y border-neutral-200 py-12 sm:grid-cols-2 lg:mt-12 lg:gap-x-0 lg:py-14",
+            hasCategories ? "lg:grid-cols-5" : "lg:grid-cols-4",
+          )}
         >
-          <div>
-            <div className="flex h-14 items-center" style={{ height: f.logoMaxHeight || 56 }}>
+          <div className="lg:pr-8">
+            <div className="flex items-center" style={{ height: logoMaxHeight }}>
               <img
-                src={
-                  f.logoUrl
-                    ? toTransformedImageUrl(toSiteImageUrl(f.logoUrl), {
-                        width: 280,
-                        quality: 70,
-                        format: "webp",
-                        resize: "contain",
-                      }) || toSiteImageUrl(f.logoUrl)
-                    : "/assets/favicon.png"
-                }
+                src={logoSrc}
                 alt={STORE.name}
                 width={112}
-                height={56}
+                height={logoMaxHeight}
                 loading="lazy"
                 decoding="async"
                 className="h-full w-auto max-h-full object-contain"
               />
             </div>
-            <p className="mt-5 text-sm leading-6 text-white/70">{aboutText}</p>
+            <p className="mt-5 text-sm leading-6 text-neutral-600">{aboutText}</p>
+            <Link
+              to="/quem-somos"
+              className="mt-5 inline-flex items-center gap-2 border border-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary transition hover:bg-primary hover:text-primary-foreground"
+            >
+              Quem somos
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+            </Link>
             {(hasInstagram || hasFacebook) && (
-              <div className="mt-6 flex items-center gap-3">
+              <div className="mt-6 flex items-center gap-4">
                 {hasInstagram && (
                   <a
                     href={f.instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="grid h-10 w-10 place-items-center rounded-full border border-white/20 text-white/80 hover:border-white/50 hover:text-white"
+                    className="text-neutral-500 transition hover:text-primary"
                     aria-label="Instagram"
                   >
-                    <Instagram className="h-[18px] w-[18px]" />
+                    <Instagram className="h-5 w-5" />
                   </a>
                 )}
                 {hasFacebook && (
@@ -76,10 +119,10 @@ export function Footer() {
                     href={f.facebookUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="grid h-10 w-10 place-items-center rounded-full border border-white/20 text-white/80 hover:border-white/50 hover:text-white"
+                    className="text-neutral-500 transition hover:text-primary"
                     aria-label="Facebook"
                   >
-                    <Facebook className="h-[18px] w-[18px]" />
+                    <Facebook className="h-5 w-5" />
                   </a>
                 )}
               </div>
@@ -87,119 +130,113 @@ export function Footer() {
           </div>
 
           {hasCategories && (
-            <div>
-              <h4 className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-white">
-                {f.categoriesTitle}
-              </h4>
-              <ul className="space-y-3 text-sm text-white/70">
-                {f.categories.map((c, i) => (
-                  <li key={i}>
-                    {isExternal(c.href) ? (
-                      <a href={c.href} className="hover:text-white">
-                        {c.label}
-                      </a>
-                    ) : (
-                      <Link to={c.href} className="hover:text-white">
-                        {c.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
+            <div className={columnClass}>
+              <FooterHeading>{f.categoriesTitle}</FooterHeading>
+              <nav aria-label={f.categoriesTitle}>
+                {f.categories.map((c, i) =>
+                  isExternal(c.href) ? (
+                    <FooterNavLink key={i} href={c.href}>
+                      {c.label}
+                    </FooterNavLink>
+                  ) : (
+                    <Link
+                      key={i}
+                      to={c.href}
+                      className="block border-b border-neutral-100 py-2.5 text-sm text-neutral-600 transition last:border-b-0 hover:border-primary/30 hover:text-primary"
+                    >
+                      {c.label}
+                    </Link>
+                  ),
+                )}
+              </nav>
             </div>
           )}
 
-          <div>
-            <h4 className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-white">
-              {f.institutionalTitle}
-            </h4>
-            <ul className="space-y-3 text-sm text-white/70">
+          <div className={columnClass}>
+            <FooterHeading>{f.institutionalTitle}</FooterHeading>
+            <nav aria-label={f.institutionalTitle}>
               {f.institutional
                 .filter((p) => p.slug !== "quem-somos")
                 .map((p) => (
-                  <li key={p.id}>
-                    <Link to="/politicas/$slug" params={{ slug: p.slug }} className="hover:text-white">
-                      {p.label}
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-white">
-              Área do Cliente
-            </h4>
-            <ul className="space-y-3 text-sm text-white/70">
-              <li>
-                <Link to="/fale-conosco" className="hover:text-white">
-                  Fale conosco
-                </Link>
-              </li>
-              <li>
-                <Link to="/rastreio" className="hover:text-white">
-                  Rastrear Pedido
-                </Link>
-              </li>
-              <li>
-                <Link to="/quem-somos" className="hover:text-white">
-                  Quem somos
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="min-w-0">
-            <h4 className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-white">
-              Contato
-            </h4>
-            <ul className="space-y-4 text-sm leading-6 text-white/70">
-              {f.address && (
-                <li className="flex items-start gap-3">
-                  <MapPin className="mt-1 h-4 w-4 shrink-0 text-[#d6b36a]" />
-                  <span className="min-w-0 text-pretty">{f.address}</span>
-                </li>
-              )}
-              <li className="flex items-start gap-3">
-                <WhatsAppIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#25D366]" />
-                <a
-                  href={`https://wa.me/${STORE.whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-semibold text-white hover:text-white/80"
-                >
-                  WhatsApp: {STORE.whatsappDisplay}
-                </a>
-              </li>
-              {(f.phone || STORE.phone) && (
-                <li className="flex items-center gap-3 text-sm text-white/55">
-                  <Phone className="h-4 w-4 shrink-0 text-white/40" />
-                  <span className="whitespace-nowrap">Telefone: {f.phone || STORE.phone}</span>
-                </li>
-              )}
-              {f.email && (
-                <li className="flex items-start gap-3">
-                  <Mail className="mt-1 h-4 w-4 shrink-0 text-[#d6b36a]" />
-                  <a
-                    href={mailtoHref(f.email) ?? `mailto:${f.email}`}
-                    className="min-w-0 break-words [overflow-wrap:anywhere] hover:text-white"
+                  <Link
+                    key={p.id}
+                    to="/politicas/$slug"
+                    params={{ slug: p.slug }}
+                    className="block border-b border-neutral-100 py-2.5 text-sm text-neutral-600 transition last:border-b-0 hover:border-primary/30 hover:text-primary"
                   >
-                    {f.email}
+                    {p.label}
+                  </Link>
+                ))}
+            </nav>
+          </div>
+
+          <div className={columnClass}>
+            <FooterHeading>Área do Cliente</FooterHeading>
+            <nav aria-label="Área do Cliente">
+              <Link
+                to="/fale-conosco"
+                className="block border-b border-neutral-100 py-2.5 text-sm text-neutral-600 transition hover:border-primary/30 hover:text-primary"
+              >
+                Fale conosco
+              </Link>
+              <Link
+                to="/rastreio"
+                className="block border-b border-neutral-100 py-2.5 text-sm text-neutral-600 transition last:border-b-0 hover:border-primary/30 hover:text-primary"
+              >
+                Rastrear Pedido
+              </Link>
+            </nav>
+          </div>
+
+          <div className={cn(columnClass, "min-w-0")}>
+            <FooterHeading>Contato</FooterHeading>
+            <ul className="space-y-5 text-sm text-neutral-600">
+              {f.address && (
+                <li className="flex gap-3">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
+                  <span className="min-w-0 leading-6 text-pretty">{f.address}</span>
+                </li>
+              )}
+              {phone && (
+                <li>
+                  <a
+                    href={telHref(phone) ?? `tel:+55${STORE.phoneDigits}`}
+                    className="flex items-center gap-3 transition hover:text-primary"
+                  >
+                    <Phone className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+                    <span>{phone}</span>
                   </a>
                 </li>
               )}
-              <li className="text-sm text-pretty">
-                <b className="font-semibold text-white/90">Horário de atendimento:</b> Segunda a
-                Sexta-feira das 08:00hrs às 18:00hrs
+              {f.email && (
+                <li>
+                  <a
+                    href={mailtoHref(f.email) ?? `mailto:${f.email}`}
+                    className="flex items-start gap-3 transition hover:text-primary"
+                  >
+                    <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
+                    <span className="min-w-0 break-all">{f.email}</span>
+                  </a>
+                </li>
+              )}
+              <li className="flex gap-3 border-t border-neutral-100 pt-5">
+                <Clock className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
+                <span className="leading-6">
+                  Segunda a Sexta-feira
+                  <br />
+                  08:00 às 18:00
+                </span>
               </li>
             </ul>
           </div>
         </div>
+      </StoreContainer>
 
-        {f.securityBadges && f.securityBadges.length > 0 && (
-          <div className="border-t border-white/15 py-7">
+      {f.securityBadges && f.securityBadges.length > 0 && (
+        <div className="bg-black py-7">
+          <StoreContainer>
             {f.securityBadgesTitle && (
-              <div className="mb-4 text-center text-[11px] uppercase tracking-[0.2em] text-white/60">
+              <div className="mb-4 text-center text-[11px] uppercase tracking-[0.2em] text-white/70">
                 {f.securityBadgesTitle}
               </div>
             )}
@@ -221,7 +258,7 @@ export function Footer() {
                     decoding="async"
                     style={{ height: b.height }}
                     height={h}
-                    className="w-auto object-contain opacity-80 hover:opacity-100"
+                    className="w-auto object-contain opacity-90 hover:opacity-100"
                   />
                 );
                 return b.href ? (
@@ -241,12 +278,12 @@ export function Footer() {
                 );
               })}
             </div>
-          </div>
-        )}
-
-        <div className="border-t border-white/15 py-6 text-center text-xs text-white/55">
-          {copyright}
+          </StoreContainer>
         </div>
+      )}
+
+      <StoreContainer>
+        <div className="py-6 text-center text-xs text-neutral-500">{copyright}</div>
       </StoreContainer>
     </footer>
   );

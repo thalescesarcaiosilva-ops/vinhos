@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingBag, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { brl } from "@/lib/format";
-import { useCart } from "@/lib/cart";
 import { useFavorites, useToggleFavorite } from "@/lib/favorites";
 import { ProductImage } from "@/components/store/ProductImage";
 import { useStoreSettings, installmentPlan } from "@/lib/store-settings";
@@ -20,7 +19,6 @@ export type Product = {
 };
 
 export function ProductCard({ p }: { p: Product }) {
-  const { add } = useCart();
   const { data: favs } = useFavorites();
   const toggleFav = useToggleFavorite();
   const isFav = favs?.has(p.id) ?? false;
@@ -31,25 +29,29 @@ export function ProductCard({ p }: { p: Product }) {
   const installment = installmentPreview[installmentPreview.length - 1];
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden border border-border/60 bg-card text-center">
-      <div className="relative aspect-[3/4] overflow-hidden">
+    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-transparent">
+      <div className="relative">
         <Link
           to="/produto/$slug"
           params={{ slug: p.slug }}
-          className="block h-full"
+          className="block"
           aria-label={`Ver ${p.name}`}
         >
-          {p.image_url && (
-            <ProductImage
-              src={p.image_url}
-              alt={p.name}
-              displaySize={320}
-              width={320}
-              height={427}
-              sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 25vw"
-              className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-[1.02]"
-            />
-          )}
+          <div className="flex h-56 items-center justify-center px-4 pt-5 sm:h-64 sm:px-5 sm:pt-6">
+            {p.image_url ? (
+              <ProductImage
+                src={p.image_url}
+                alt={p.name}
+                displaySize={320}
+                width={240}
+                height={320}
+                sizes="(max-width: 767px) 50vw, (max-width: 1279px) 20vw, 18vw"
+                className="h-full w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+              />
+            ) : (
+              <div className="h-full w-full bg-muted/30" aria-hidden />
+            )}
+          </div>
         </Link>
         <button
           type="button"
@@ -69,43 +71,54 @@ export function ProductCard({ p }: { p: Product }) {
               isFav,
             });
           }}
-          className="absolute right-2.5 top-2.5 z-10 grid h-8 w-8 place-items-center rounded-full bg-background/90 text-foreground ring-1 ring-border/50 transition-colors hover:bg-background hover:text-primary sm:right-3 sm:top-3 sm:h-9 sm:w-9"
+          className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full border border-neutral-200 bg-white text-foreground transition-colors hover:text-primary"
         >
           <Heart className={`h-4 w-4 ${isFav ? "fill-primary text-primary" : ""}`} />
         </button>
       </div>
-      <div className="flex flex-1 flex-col items-center gap-2 p-3 sm:p-4">
+
+      <div className="flex flex-1 flex-col gap-2 px-4 pb-4 pt-3 text-left sm:px-5 sm:pb-5">
+        {p.country && (
+          <div className="flex items-center gap-1.5 text-xs text-foreground sm:text-[13px]">
+            {flagUrl && (
+              <img
+                src={flagUrl}
+                alt=""
+                width={20}
+                height={14}
+                loading="lazy"
+                className="h-3.5 w-5 rounded-[2px] object-cover"
+              />
+            )}
+            <span className="line-clamp-1 font-medium">{p.country}</span>
+          </div>
+        )}
+
         <Link
           to="/produto/$slug"
           params={{ slug: p.slug }}
-          className="line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-[color:var(--product-name)] transition-colors hover:text-primary"
+          className="line-clamp-2 min-h-10 text-sm font-bold leading-5 text-foreground transition-colors hover:text-primary sm:text-[15px]"
         >
           {p.name}
         </Link>
-        <div className="min-h-10 space-y-1 text-[11px] leading-4 text-muted-foreground sm:text-xs">
-          {p.country && (
-            <div className="flex items-center justify-center gap-1.5">
-              {flagUrl && (
-                <img
-                  src={flagUrl}
-                  alt=""
-                  width={20}
-                  height={14}
-                  loading="lazy"
-                  className="h-3.5 w-5 object-cover"
-                />
-              )}
-              <span className="line-clamp-1">{p.country}</span>
-            </div>
-          )}
-          {p.grape && <p className="line-clamp-1">Uva: {p.grape}</p>}
-        </div>
-        <div className="mt-auto w-full pt-1">
-          <div className="font-serif text-xl font-bold leading-tight text-[color:var(--product-price)] sm:text-2xl">
+
+        {p.grape ? (
+          <p className="line-clamp-1 text-xs sm:text-[13px]">
+            <span className="text-muted-foreground">Uva: </span>
+            <span className="font-semibold text-primary">{p.grape}</span>
+          </p>
+        ) : (
+          <p className="min-h-4 text-xs sm:min-h-5" aria-hidden>
+            &nbsp;
+          </p>
+        )}
+
+        <div className="mt-1 border-t border-dashed border-border/80 pt-3">
+          <div className="text-xl font-bold leading-none tracking-tight text-primary sm:text-2xl">
             {brl(p.price)}
           </div>
           {settings?.payments?.pixEnabled && (settings.payments.pixDiscount ?? 0) > 0 && (
-            <div className="mt-0.5 text-[11px] font-semibold text-[color:var(--brand-primary)] sm:text-xs">
+            <div className="mt-1 text-[11px] font-semibold text-primary sm:text-xs">
               {brl(Number(p.price) * (1 - settings.payments.pixDiscount / 100))} no PIX
               <span className="ml-1 font-normal text-muted-foreground">
                 (-{settings.payments.pixDiscount}%)
@@ -113,27 +126,12 @@ export function ProductCard({ p }: { p: Product }) {
             </div>
           )}
           {installment && (
-            <div className="mt-0.5 text-[11px] leading-snug text-muted-foreground sm:text-xs">
+            <div className="mt-1 text-[11px] leading-snug text-muted-foreground sm:text-xs">
               ou {installment.n}x de {brl(installment.value)}{" "}
               {installment.hasInterest ? "com juros" : "sem juros"}
             </div>
           )}
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            add({
-              id: p.id,
-              name: p.name,
-              slug: p.slug,
-              price: Number(p.price),
-              image: p.image_url,
-            });
-          }}
-          className="mt-1 inline-flex min-h-10 w-full items-center justify-center gap-2 border border-primary bg-transparent px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-        >
-          <ShoppingBag className="h-4 w-4" /> Comprar
-        </button>
       </div>
     </article>
   );

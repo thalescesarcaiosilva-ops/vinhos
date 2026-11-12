@@ -69,8 +69,8 @@ function QuemSomosPage() {
     },
     { label: "Site", value: siteHost },
     {
-      label: "WhatsApp",
-      value: <StoreContactNumbers phone={STORE.phone} showIcon />,
+      label: "Telefone",
+      value: <StoreContactNumbers phone={STORE.phone} />,
     },
     { label: "Endereço", value: STORE.address },
   ];
@@ -223,7 +223,7 @@ function QuemSomosPage() {
                 <p className="text-muted-foreground">{STORE.address}</p>
               </div>
               <div className="flex items-center gap-3">
-                <StoreContactNumbers phone={STORE.phone} showIcon />
+                <StoreContactNumbers phone={STORE.phone} />
               </div>
               {emailHref && (
                 <div className="flex items-center gap-3">

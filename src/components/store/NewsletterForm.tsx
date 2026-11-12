@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Mail, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { z } from "zod";
 import { maskPhone } from "@/lib/validation";
 
@@ -46,37 +46,30 @@ export function NewsletterForm({ title }: { title?: string }) {
   }
 
   const inputClass =
-    "min-h-11 min-w-0 w-full border-0 bg-white px-4 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-white/45";
-  const heading = title?.trim() || "Assine nossa newsletter!";
+    "min-h-10 min-w-0 w-full rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-white/40";
+  const heading = title?.trim() || "Newsletter";
 
   return (
     <section
-      className="mt-8 bg-primary px-5 py-6 sm:px-8 lg:mt-10"
+      className="bg-primary px-4 py-3 sm:px-5"
       aria-labelledby="footer-newsletter-title"
     >
-      <div className="grid items-center gap-5 lg:grid-cols-[minmax(220px,0.7fr)_minmax(0,1.6fr)]">
-        <div className="flex items-center gap-3">
-          <Mail
-            className="h-7 w-7 shrink-0 text-primary-foreground"
-            strokeWidth={1.5}
-            aria-hidden
-          />
-          <div>
-            <h3
-              id="footer-newsletter-title"
-              className="text-base font-bold leading-tight text-primary-foreground sm:text-lg"
-            >
-              {heading}
-            </h3>
-            <p className="mt-0.5 text-xs leading-snug text-primary-foreground/75">
-              Receba ofertas e novidades.
-            </p>
-          </div>
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
+        <div className="shrink-0 lg:max-w-[220px]">
+          <h3
+            id="footer-newsletter-title"
+            className="text-sm font-bold leading-tight text-primary-foreground sm:text-base"
+          >
+            {heading}
+          </h3>
+          <p className="mt-0.5 text-[11px] leading-snug text-primary-foreground/75">
+            Receba ofertas e novidades.
+          </p>
         </div>
 
         <form
           onSubmit={onSubmit}
-          className="grid min-w-0 gap-2 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_1fr_auto]"
+          className="grid min-w-0 flex-1 gap-2 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_1fr_auto]"
         >
           <input
             type="text"
@@ -114,7 +107,7 @@ export function NewsletterForm({ title }: { title?: string }) {
           <button
             type="submit"
             disabled={loading}
-            className="min-h-11 bg-[#d6b36a] px-7 py-2.5 text-sm font-bold text-[#111111] hover:bg-[#e3c47f] disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2 xl:col-span-1"
+            className="min-h-10 bg-[#d6b36a] px-5 text-sm font-bold text-[#111111] transition hover:bg-[#e3c47f] disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2 xl:col-span-1"
           >
             {loading ? (
               <Loader2 className="mx-auto h-4 w-4 animate-spin" aria-label="Cadastrando" />

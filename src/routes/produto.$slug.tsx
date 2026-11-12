@@ -80,7 +80,6 @@ import { ProductHtmlContent } from "@/components/store/ProductHtmlContent";
 import { PixDiscountBanner } from "@/components/store/PixDiscountBanner";
 import { BenefitsBar } from "@/components/store/BenefitsBar";
 import { ProductShippingCalculator } from "@/components/store/ProductShippingCalculator";
-import { ProductTrustCards } from "@/components/store/ProductTrustCards";
 import { withRetry } from "@/lib/with-retry";
 
 type VideoInfo = {
@@ -731,8 +730,6 @@ function ProductPage() {
 
             <ProductShippingCalculator subtotal={price * qty} shipping={settings?.shipping} />
 
-            <ProductTrustCards />
-
             <SuggestedProducts productId={p.id} />
           </aside>
         </div>
@@ -1171,22 +1168,6 @@ function PaymentMethodsDialog({
             </section>
           )}
 
-          {pay.boletoEnabled && (
-            <section className="rounded-sm border border-border bg-cream p-4">
-              <h4 className="text-xs font-bold uppercase tracking-widest text-primary">
-                Boleto bancário
-              </h4>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span className="font-serif text-2xl font-bold text-[color:var(--buy)]">
-                  {brl(pixPrice)}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  à vista — compensação em até 3 dias úteis
-                </span>
-              </div>
-            </section>
-          )}
-
           {pay.cardEnabled && (
             <section className="border-y border-border py-4">
               <h4 className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary">
@@ -1217,7 +1198,7 @@ function PaymentMethodsDialog({
           )}
 
           <p className="text-[11px] text-muted-foreground">
-            Valor à vista no PIX/boleto: {brl(pixPrice)}. Preço cheio: {brl(price)}.
+            Valor à vista no PIX: {brl(pixPrice)}. Preço cheio: {brl(price)}.
           </p>
         </div>
       </DialogContent>

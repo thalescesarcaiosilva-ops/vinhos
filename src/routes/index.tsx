@@ -136,7 +136,7 @@ async function fetchHomeProducts(filter?: {
           .eq("product_categories.categories.slug", filter.categorySlug)
       : supabase.from("products").select(baseCols).eq("is_active", true);
     if (filter?.bestSeller) q = q.eq("best_seller", true);
-    q = q.limit(filter?.limit ?? 8);
+    q = q.limit(filter?.limit ?? 15);
     const { data, error } = await q;
     if (error) throw error;
     return (data ?? []) as unknown as Product[];
@@ -197,31 +197,31 @@ export const Route = createFileRoute("/")({
         staleTime: 5 * 60_000,
       }),
       context.queryClient.ensureQueryData({
-        queryKey: ["products", { bestSeller: true, limit: 8 }],
-        queryFn: () => fetchHomeProducts({ bestSeller: true, limit: 8 }),
+        queryKey: ["products", { bestSeller: true, limit: 15 }],
+        queryFn: () => fetchHomeProducts({ bestSeller: true, limit: 15 }),
         staleTime: 60_000,
       }),
     ]);
     // Prefetch seções abaixo (HTML com produtos reais para o bot; não bloqueia se falhar parcial)
     const [tintos, brancos, espumantes, kits] = await Promise.all([
       context.queryClient.ensureQueryData({
-        queryKey: ["products", { categorySlug: "tintos", limit: 4 }],
-        queryFn: () => fetchHomeProducts({ categorySlug: "tintos", limit: 4 }),
+        queryKey: ["products", { categorySlug: "tintos", limit: 15 }],
+        queryFn: () => fetchHomeProducts({ categorySlug: "tintos", limit: 15 }),
         staleTime: 60_000,
       }),
       context.queryClient.ensureQueryData({
-        queryKey: ["products", { categorySlug: "brancos", limit: 4 }],
-        queryFn: () => fetchHomeProducts({ categorySlug: "brancos", limit: 4 }),
+        queryKey: ["products", { categorySlug: "brancos", limit: 15 }],
+        queryFn: () => fetchHomeProducts({ categorySlug: "brancos", limit: 15 }),
         staleTime: 60_000,
       }),
       context.queryClient.ensureQueryData({
-        queryKey: ["products", { categorySlug: "so-espumantes", limit: 4 }],
-        queryFn: () => fetchHomeProducts({ categorySlug: "so-espumantes", limit: 4 }),
+        queryKey: ["products", { categorySlug: "so-espumantes", limit: 15 }],
+        queryFn: () => fetchHomeProducts({ categorySlug: "so-espumantes", limit: 15 }),
         staleTime: 60_000,
       }),
       context.queryClient.ensureQueryData({
-        queryKey: ["products", { categorySlug: "combos", limit: 4 }],
-        queryFn: () => fetchHomeProducts({ categorySlug: "combos", limit: 4 }),
+        queryKey: ["products", { categorySlug: "combos", limit: 15 }],
+        queryFn: () => fetchHomeProducts({ categorySlug: "combos", limit: 15 }),
         staleTime: 60_000,
       }),
     ]);
@@ -296,18 +296,18 @@ function ShowcaseSkeleton({ title, subtitle }: { title: string; subtitle?: strin
           </h2>
           {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
         </div>
-        <div className="grid grid-cols-2 gap-4 overflow-hidden md:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
+        <div className="grid grid-cols-2 gap-3 overflow-hidden md:grid-cols-3 lg:grid-cols-5">
+          {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className={`${i > 1 ? "hidden md:block" : ""} ${i > 2 ? "md:hidden lg:block" : ""} overflow-hidden rounded-sm border border-border/60 bg-card`}
+              className={`${i > 1 ? "hidden md:block" : ""} ${i > 2 ? "md:hidden lg:block" : ""} overflow-hidden rounded-xl border border-neutral-200 bg-transparent`}
             >
-              <div className="aspect-[3/4] animate-pulse bg-muted" />
-              <div className="space-y-2 p-3 sm:p-4">
+              <div className="h-56 animate-pulse bg-muted sm:h-64" />
+              <div className="space-y-2 p-4">
                 <div className="h-3 w-1/2 animate-pulse rounded bg-muted" />
                 <div className="h-10 w-full animate-pulse rounded bg-muted" />
+                <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
                 <div className="h-6 w-2/5 animate-pulse rounded bg-muted" />
-                <div className="h-10 w-full animate-pulse rounded bg-muted" />
               </div>
             </div>
           ))}
@@ -479,16 +479,16 @@ function Home() {
   const loaderData = Route.useLoaderData();
   const banners = useHomeBanners(loaderData.banners);
   const bestSellersQ = useProducts(
-    { bestSeller: true, limit: 8 },
+    { bestSeller: true, limit: 15 },
     loaderData.bestSellers,
   );
-  const tintosQ = useProducts({ categorySlug: "tintos", limit: 4 }, loaderData.tintos);
-  const brancosQ = useProducts({ categorySlug: "brancos", limit: 4 }, loaderData.brancos);
+  const tintosQ = useProducts({ categorySlug: "tintos", limit: 15 }, loaderData.tintos);
+  const brancosQ = useProducts({ categorySlug: "brancos", limit: 15 }, loaderData.brancos);
   const espumantesQ = useProducts(
-    { categorySlug: "so-espumantes", limit: 4 },
+    { categorySlug: "so-espumantes", limit: 15 },
     loaderData.espumantes,
   );
-  const kitsQ = useProducts({ categorySlug: "combos", limit: 4 }, loaderData.kits);
+  const kitsQ = useProducts({ categorySlug: "combos", limit: 15 }, loaderData.kits);
   const categoryTiles = useCategoryTiles(loaderData.categoryTiles);
   const storeCats = useStoreCategories(loaderData.storeCategories);
   const countries = countryTilesFromStore(storeCats.data ?? loaderData.storeCategories);

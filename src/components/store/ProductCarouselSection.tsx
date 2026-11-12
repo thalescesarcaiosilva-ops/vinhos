@@ -52,10 +52,16 @@ export function ProductCarouselSection({
         )}
       </div>
 
-      <Carousel opts={{ align: "start", loop: products.length > 4 }} className="w-full">
-        <CarouselContent>
+      <Carousel
+        opts={{ align: "start", dragFree: false, loop: products.length > 5 }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-3">
           {products.map((product) => (
-            <CarouselItem key={product.id} className="h-auto basis-1/2 md:basis-1/3 lg:basis-1/4">
+            <CarouselItem
+              key={product.id}
+              className="h-auto basis-[50%] pl-3 md:basis-[33.333%] lg:basis-[20%]"
+            >
               <ProductCard p={product} />
             </CarouselItem>
           ))}

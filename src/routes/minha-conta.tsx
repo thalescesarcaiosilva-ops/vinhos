@@ -618,9 +618,9 @@ function SupportTab() {
       <p className="text-muted-foreground">Nossa equipe está pronta para te ajudar. Escolha um canal de atendimento:</p>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="rounded-lg border border-border p-4">
-          <p className="text-sm text-muted-foreground">WhatsApp</p>
+          <p className="text-sm text-muted-foreground">Telefone</p>
           <div className="mt-1">
-            <StoreContactNumbers phone={phoneDisplay} showIcon />
+            <StoreContactNumbers phone={phoneDisplay} />
           </div>
         </div>
         {email ? (

@@ -1,27 +1,19 @@
-import { WhatsAppIcon } from "@/components/store/WhatsAppIcon";
 import { STORE } from "@/lib/settings";
+import { telHref } from "@/lib/contact-links";
 
-/** WhatsApp com link na frente; o telefone da loja continua visível, sem link. */
+/** Telefone da loja com link tel:. */
 export function StoreContactNumbers({
   phone,
-  showIcon = false,
 }: {
   phone?: string | null;
+  /** Mantido por compatibilidade; ícone de WhatsApp foi removido. */
   showIcon?: boolean;
 }) {
   const displayPhone = phone?.trim() || STORE.phone;
+  const href = telHref(displayPhone) ?? `tel:+55${STORE.phoneDigits}`;
   return (
-    <span className="inline-flex flex-col items-start gap-1 text-sm">
-      <a
-        href={`https://wa.me/${STORE.whatsappNumber}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 font-semibold text-foreground hover:text-primary"
-      >
-        {showIcon ? <WhatsAppIcon className="h-4 w-4 shrink-0 text-[#25D366]" /> : null}
-        WhatsApp: {STORE.whatsappDisplay}
-      </a>
-      <span className="text-muted-foreground">Telefone: {displayPhone}</span>
-    </span>
+    <a href={href} className="text-sm font-semibold text-foreground hover:text-primary">
+      Telefone: {displayPhone}
+    </a>
   );
 }

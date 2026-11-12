@@ -1,0 +1,911 @@
+sku,nome,slug,vendas_pagas,cliques_merchant,preco_mercado,preco_anterior,preco_novo,variacao_pct
+CDB-1336,"Aguardente Adega Velha 12 anos XO 500 ml",aguardente-adega-velha-12-anos-xo-500-ml,0,7,554.87,252.90,610.36,141.34
+CDB-4104,"Aguardente Antiquíssima Reserva 700ml",aguardente-antiquissima-reserva-700ml,0,9,647.00,420.90,711.70,69.09
+CDB-4923,"Aguardente G. E. Massenez Cereja 500 ML",aguardente-g-e-massenez-cereja-500-ml,2,42,274.86,128.90,302.35,134.56
+CDB-4925,"Aguardente G. E. Massenez Pera Williams 700 ML",aguardente-g-e-massenez-pera-williams-700-ml,2,28,685.63,177.90,754.19,323.94
+CDB-4924,"Aguardente G. E. Massenez Pera Willians 500 Ml",aguardente-g-e-massenez-pera-willians-500-ml,0,9,267.57,146.90,294.33,100.36
+CDB-3010,"Aguardente Vínica Velha CR&F Reserva Extra 700 ml",aguardente-vinica-velha-cr-f-reserva-extra-700-ml,0,6,556.12,262.90,611.73,132.69
+SPL-HC1F76411,"Albuquerque & Davo Espumante Nature",albuquerque-davo-espumante-nature,0,2,178.07,117.00,195.87,67.41
+SPL-H68074E0E,"Angelica Zapata Cabernet Franc 2021 | 95JS",angelica-zapata-cabernet-franc-2021-95js,0,6,251.55,228.00,276.70,21.36
+CDB-2725,"Aperitivo Cocchi Americano Branco 750 ml",aperitivo-cocchi-americano-branco-750-ml,0,16,252.54,190.53,277.80,45.80
+CDB-2726,"Aperitivo Cocchi Rosa 750 ml",aperitivo-cocchi-rosa-750-ml,0,3,341.50,231.20,375.65,62.48
+CDB-1391,"Aperitivo Cynar 70 1000 ml",aperitivo-cynar-70-1000-ml,3,68,144.02,71.90,158.43,120.35
+CDB-3079,"Aperitivo Lillet Rose 700ml",aperitivo-lillet-rose-700ml,1,56,171.26,45.90,188.39,310.44
+CDB-1750,"Aperitivo Ramazzotti Rosato 700 ml",aperitivo-ramazzotti-rosato-700-ml,1,199,44.86,39.90,49.35,23.68
+CDB-1760,"Aperitivo Ricard Anis 1000ml",aperitivo-ricard-anis-1000ml,2,40,308.82,128.90,339.71,163.55
+CDB-2143,"Azeite Esporão Extra Virgem Selecão 500 ml",azeite-esporao-extra-virgem-selecao-500-ml,1,237,85.51,53.90,94.06,74.51
+CDB-4785,"Bala de Cereja com Recheio de Limão Cavendish & Harvey 175g",bala-de-cereja-com-recheio-de-limao-cavendish-harvey-175g,2,51,32.67,17.90,35.93,100.73
+CDB-4530,"Barrel 49 Negroni 750ml",barrel-49-negroni-750ml,0,13,197.13,70.90,216.84,205.84
+CDB-4851,"Beg Modern Tropical Gin 750ml",beg-modern-tropical-gin-750ml,0,82,81.23,50.90,89.35,75.54
+CDB-4250,"Bitter Angostura Aromatic 473ml",bitter-angostura-aromatic-473ml,0,32,383.87,333.88,422.26,26.47
+CDB-4249,"Bitter Angostura Orange 200ml",bitter-angostura-orange-200ml,3,33,223.66,83.90,246.03,193.24
+CDB-2492,"Boulevardier Aptk 375 ml",boulevardier-aptk-375-ml,0,10,112.90,56.90,124.19,118.26
+SPL-H533D9881,"Bourgogne Rouge 2022",bourgogne-rouge-2022,0,5,501.22,455.63,551.34,21.01
+CDB-1753,"Box Cartuxa Colheita 750ml 3gfs Cxa Madeira",box-cartuxa-colheita-750ml-3gfs-cxa-madeira,2,218,607.17,553.90,667.89,20.58
+CDB-3177,"Brandy Brancoveanu X.O. 700ml",brandy-brancoveanu-x-o-700ml,0,9,624.43,374.11,686.88,83.60
+CDB-3194,"Brandy Conhaque Alexandrion 7 Stars 700ml",brandy-conhaque-alexandrion-7-stars-700ml,1,28,150.06,39.90,165.06,313.68
+CDB-4151,"Brandy Luiz Argenta 15 Anos 700ml",brandy-luiz-argenta-15-anos-700ml,0,99,501.15,281.90,551.27,95.56
+CDB-2730,"Brandy Vecchia Romana 700 ml",brandy-vecchia-romana-700-ml,2,62,308.40,111.90,339.23,203.15
+CDB-4300,"Brandy Xo Aurora 12 Anos 750ml",brandy-xo-aurora-12-anos-750ml,1,25,426.43,166.90,469.07,181.05
+CDB-527,"Bulldog London Dry Gin 750ml",bulldog-london-dry-gin-750ml,1,112,114.32,58.90,125.75,113.50
+CDB-3205,"Cachaça 1922 Envelhecida 700 ml",cachaca-1922-envelhecida-700-ml,0,9,74.62,38.90,82.08,111.00
+CDB-4137,"Cachaça Bananazinha 900 ml",cachaca-bananazinha-900-ml,5,277,50.56,25.90,55.61,114.71
+CDB-4330,"Cachaça Cê Double Wood 700ml",cachaca-ce-double-wood-700ml,0,3,275.41,140.90,302.95,115.01
+CDB-4331,"Cachaça Cê Triple Wood 700ml",cachaca-ce-triple-wood-700ml,0,3,383.39,161.90,421.73,160.49
+CDB-1031,"Cachaça Companheira EXTRA PREMIUM 8 anos Carvalho 700 ml",cachaca-companheira-extra-premium-8-anos-carvalho-700-ml,1,142,382.50,235.85,420.75,78.40
+CDB-2010,"Cachaça Companheira Prata 48% 600 ml",cachaca-companheira-prata-48-600-ml,0,9,63.65,45.44,70.02,54.09
+CDB-1030,"Cachaça Companheira Prata 670 ml",cachaca-companheira-prata-670-ml,0,2,100.76,67.29,110.84,64.72
+CDB-1956,"Cachaça Espírito de Minas 700 ml",cachaca-espirito-de-minas-700-ml,3,111,93.63,49.75,103.00,107.04
+CDB-2224,"Cachaça Estancia Moretti 8 Anos Extra Premium 700 ml",cachaca-estancia-moretti-8-anos-extra-premium-700-ml,0,5,469.12,379.18,516.03,36.09
+CDB-1044,"Cachaça Gatinha 600 ml – Blend de Madeiras",cachaca-gatinha-600-ml-blend-de-madeiras,0,14,69.59,49.22,76.55,55.53
+CDB-2527,"Cachaça Janeiro 700 ml",cachaca-janeiro-700-ml,0,2,66.25,31.90,72.88,128.46
+CDB-4358,"Cachaça Mae Santa Premium 700ml",cachaca-mae-santa-premium-700ml,0,2,157.17,69.90,172.89,147.34
+CDB-1236,"Cachaça Nêga Fulô Jequitibá 750ml",cachaca-nega-fulo-jequitiba-750ml,1,18,78.08,37.90,85.89,126.62
+CDB-4356,"Cachaça Princesa Isabel Amburana 700ml",cachaca-princesa-isabel-amburana-700ml,0,13,141.64,69.90,155.80,122.89
+CDB-4357,"Cachaça Princesa Isabel Carvalho 700ml",cachaca-princesa-isabel-carvalho-700ml,0,31,160.90,76.90,176.99,130.16
+CDB-4353,"Cachaça Princesa Isabel Jequitiba Rosa 700ml",cachaca-princesa-isabel-jequitiba-rosa-700ml,1,27,128.40,58.90,141.24,139.80
+CDB-4352,"Cachaça Princesa Isabel Prata 700ml",cachaca-princesa-isabel-prata-700ml,4,35,122.07,47.90,134.28,180.33
+CDB-4305,"Cachaça Saliníssima Amburana 750ml",cachaca-salinissima-amburana-750ml,2,259,33.73,15.90,37.11,133.40
+CDB-1947,"Cachaça Santo Grau Coronel Xavier Chaves 750 ml",cachaca-santo-grau-coronel-xavier-chaves-750-ml,0,20,73.77,70.32,81.15,15.40
+CDB-2017,"Cachaça Santo Grau Paraty 750 ml",cachaca-santo-grau-paraty-750-ml,1,76,89.00,28.90,97.90,238.75
+CDB-4422,"Cachaça Santo Grau Reserva Amontillado Coronel Xavier Chaves 750ml",cachaca-santo-grau-reserva-amontillado-coronel-xavier-chaves-750ml,0,7,93.11,70.32,102.42,45.65
+CDB-1951,"Cachaça Santo Grau Reserva Paraty 750 ml",cachaca-santo-grau-reserva-paraty-750-ml,0,3,84.87,61.90,93.35,50.81
+CDB-1952,"Cachaça Santo Grau Solera Pedro Ximenes 750 ml",cachaca-santo-grau-solera-pedro-ximenes-750-ml,0,10,134.02,70.90,147.42,107.93
+CDB-2107,"Cachaça Velho Pescador Extra Premium 5 Anos 700 ml",cachaca-velho-pescador-extra-premium-5-anos-700-ml,0,10,299.82,224.14,329.80,47.14
+CDB-1318,"Cachaça Weber Haus Bálsamo 700 ml – Orgânica",cachaca-weber-haus-balsamo-700-ml-organica,0,20,97.60,78.21,107.36,37.27
+CDB-1317,"Cachaça Weber Haus Canela Sassafrás 700 ml",cachaca-weber-haus-canela-sassafras-700-ml,0,23,93.00,51.90,102.30,97.11
+CDB-1315,"Cachaça Weber Haus Carvalho e Cabriúva 700 ml",cachaca-weber-haus-carvalho-e-cabriuva-700-ml,3,18,79.53,47.90,87.48,82.63
+CDB-2551,"Cachaça Weber Haus Extra Premium Reserva Solera 5 Anos 750ml",cachaca-weber-haus-extra-premium-reserva-solera-5-anos-750ml,3,208,273.30,185.22,300.62,62.30
+CDB-1314,"Cachaça Weber Haus Prata 700 ml",cachaca-weber-haus-prata-700-ml,3,45,44.62,25.90,49.08,89.50
+CDB-1297,"Cachaça Weber Haus Prata Clássica Orgânica 750 ml",cachaca-weber-haus-prata-classica-organica-750-ml,0,43,174.58,139.65,192.03,37.51
+CDB-1294,"Cachaça Weber Haus Premium Black 3 anos 750 ml",cachaca-weber-haus-premium-black-3-anos-750-ml,1,43,228.80,111.90,251.68,124.92
+CDB-1293,"Cachaça Weber Haus Premium Gold 750 ml – Orgânica",cachaca-weber-haus-premium-gold-750-ml-organica,0,13,239.24,131.90,263.16,99.51
+CDB-2622,"Cachaça Weber Haus Single Barrel 10 anos 700ml",cachaca-weber-haus-single-barrel-10-anos-700ml,0,92,2014.66,1841.87,2216.13,20.32
+CDB-4921,"Campari 3L",campari-3l,3,727,857.63,703.18,943.40,34.16
+CDB-1761,"Campari Cask Tales 1000ml",campari-cask-tales-1000ml,5,381,516.07,221.90,567.68,155.83
+SPL-HC8B71725,"Catena Alta Malbec 2021 | 95AG 94WS",catena-alta-malbec-2021-95ag-94ws,0,10,446.86,350.00,491.55,40.44
+97281-5pjw3RJlWV32lQq,"Cava Don Román Brut 750ml",cava-don-roman-brut-750ml,1,18,86.42,52.86,95.06,79.83
+SPL-HE7903125,"Cave Antiga Iridium 2020",cave-antiga-iridium-2020,0,7,307.19,182.00,337.91,85.66
+CDB-613,"Cerveja Erdinger Pikantus (bock)",cerveja-erdinger-pikantus-bock,1,0,33.39,17.90,36.73,105.20
+CDB-1905,"Champagne Deutz Brut Rosé 750 ml",champagne-deutz-brut-rose-750-ml,0,7,851.09,453.13,936.20,106.61
+CDB-1411,"Champagne G.H. Mumm Cordon Rouge Brut 750ml",champagne-g-h-mumm-cordon-rouge-brut-750ml,0,45,442.26,400.43,486.49,21.49
+CDB-1485,"Champagne Louis Roederer Brut Vintage 750 ml",champagne-louis-roederer-brut-vintage-750-ml,0,7,951.79,421.90,1046.97,148.16
+CDB-1366,"Champagne Magnum Ruinart Blanc de Blancs Brut 1,5 litros",champagne-magnum-ruinart-blanc-de-blancs-brut-1-5-litros,0,52,1660.19,1033.77,1826.20,76.65
+CDB-1375,"Champagne Magnum Veuve Clicquot Rosé 1,5 Litros",champagne-magnum-veuve-clicquot-rose-1-5-litros,0,6,1118.30,789.90,1230.13,55.73
+CDB-4051,"Champagne Montaudon Grande Brut Rose 750ml",champagne-montaudon-grande-brut-rose-750ml,0,13,435.60,362.45,479.16,32.20
+CDB-1409,"Champagne Perrier-Jouët Belle Epoque Brut 750 ml",champagne-perrier-jouet-belle-epoque-brut-750-ml,0,53,1592.20,789.90,1751.42,121.73
+CDB-1408,"Champagne Perrier-Jouët Belle Epoque Rosé 750 ml",champagne-perrier-jouet-belle-epoque-rose-750-ml,0,20,2695.26,1399.48,2964.79,111.85
+CDB-1404,"Champagne Perrier-Jouët Blason Rosé 750ml",champagne-perrier-jouet-blason-rose-750ml,0,105,576.12,198.90,633.74,218.62
+CDB-4713,"Champagne Taittinger Brut Millesime 750ml",champagne-taittinger-brut-millesime-750ml,0,1,847.69,515.90,932.46,80.74
+CDB-4450,"Champagne Taittinger Comtes Blanc De Blancs 750ml",champagne-taittinger-comtes-blanc-de-blancs-750ml,0,14,2827.86,1121.90,3110.65,177.27
+CDB-3952,"Champagne Veuve Clicquot Jacket Rose Brut 750 ml",champagne-veuve-clicquot-jacket-rose-brut-750-ml,0,10,608.99,552.92,669.89,21.15
+CDB-1378,"Champagne Veuve Clicquot La Grande Dame 750 ml",champagne-veuve-clicquot-la-grande-dame-750-ml,0,22,1746.20,1465.46,1920.82,31.07
+CDB-2402,"Combo 3 Jack Daniels 1000 ml",combo-3-jack-daniels-1000-ml,0,610,516.99,244.90,568.69,132.21
+CDB-3701,"Conhaque Imperial Miolo 15 Anos 750ml",conhaque-imperial-miolo-15-anos-750ml,3,97,135.45,72.90,148.99,104.38
+CDB-2662,"Copo Térmico Everyday Stanley Azul 296ml",copo-termico-everyday-stanley-azul-296ml,3,93,190.94,63.90,210.04,228.70
+CDB-2333,"Copo Térmico Stanley Azul sem Tampa de Cerveja 473 ml",copo-termico-stanley-azul-sem-tampa-de-cerveja-473-ml,2,93,144.08,59.90,158.49,164.59
+CDB-2739,"Copo Térmico Stanley Guava sem Tampa de Cerveja 473 ml",copo-termico-stanley-guava-sem-tampa-de-cerveja-473-ml,3,84,115.79,45.90,127.37,177.49
+CDB-2326,"Copo Térmico Stanley Verde Com Tampa de Cerveja 473 ml",copo-termico-stanley-verde-com-tampa-de-cerveja-473-ml,3,394,207.05,131.96,227.75,72.59
+CDB-4632,"Coqueteleira Luxo Paris Inox Cobreado Barpro 600ml",coqueteleira-luxo-paris-inox-cobreado-barpro-600ml,0,1,102.77,97.51,113.05,15.94
+SPL-HBDB9FC66,"Cordero con Piel de Lobo Tinto de Tintas 2025",cordero-con-piel-de-lobo-tinto-de-tintas-2025,1,85,48.64,25.00,53.50,114.00
+CDB-4626,"Dosador Duplo Tipo Japones 25/50Ml Barpro",dosador-duplo-tipo-japones-25-50ml-barpro,0,42,34.37,19.90,37.80,89.95
+CDB-2447,"Easy Drinks Spray Espuma de Gengibre – Moscow Mule",easy-drinks-spray-espuma-de-gengibre-moscow-mule,0,45,48.50,30.90,53.35,72.65
+CDB-2455,"Easy Drinks Whiskey Sour Gold & Apple",easy-drinks-whiskey-sour-gold-apple,0,4,35.07,27.90,38.57,38.24
+SPL-HE192647C,"El Enemigo Malbec 2022 | 95JS 94AG",el-enemigo-malbec-2022-95js-94ag,0,5,230.44,191.00,253.49,32.72
+97028-5pjw3RJlWV32lQq,"Espumante Adolfo Lona Brut Rosé Método Charmat 750ml",espumante-adolfo-lona-brut-rose-metodo-charmat-750ml,5,31,87.67,52.86,96.44,82.44
+97024-5pjw3RJlWV32lQq,"Espumante Aurora Moscatel Rosé 750ml",espumante-aurora-moscatel-rose-750ml,5,37,36.18,34.36,39.80,15.83
+97508-5pjw3RJlWV32lQq,"Espumante Aurora Procedências Brut Chardonnay 750ml",espumante-aurora-procedencias-brut-chardonnay-750ml,1,27,64.07,31.10,70.47,126.59
+97289-5pjw3RJlWV32lQq,"Espumante Aurora Prosecco 750ml",espumante-aurora-prosecco-750ml,1,5,36.40,34.36,40.04,16.53
+CDB-3225,"Espumante Beau Rocher Brut Rose 750 ml",espumante-beau-rocher-brut-rose-750-ml,0,5,63.84,31.90,70.23,120.16
+CDB-3949,"Espumante Bottega Millesimato Brut 750ml",espumante-bottega-millesimato-brut-750ml,1,58,92.88,46.90,102.17,117.85
+97040-5pjw3RJlWV32lQq,"Espumante Casa Valduga Arte Tradicional Brut Rosé 750ml",espumante-casa-valduga-arte-tradicional-brut-rose-750ml,3,24,74.73,46.98,82.20,74.97
+97204-5pjw3RJlWV32lQq,"Espumante Casa Valduga Arte Tradicional Demi-Sec 750ml",espumante-casa-valduga-arte-tradicional-demi-sec-750ml,3,88,72.68,62.10,79.94,28.73
+97509-5pjw3RJlWV32lQq,"Espumante Cava Freixenet Ice 750ml",espumante-cava-freixenet-ice-750ml,1,44,101.75,58.74,111.93,90.55
+CDB-1879,"Espumante Cava Segura Viudas Brut Rosé 750 ml",espumante-cava-segura-viudas-brut-rose-750-ml,0,8,88.53,67.66,97.39,43.94
+97507-5pjw3RJlWV32lQq,"Espumante Cave Geisse Nature 750ml",espumante-cave-geisse-nature-750ml,5,65,182.56,105.19,200.81,90.90
+CDB-207,"Espumante Chandon Brut 750 ml",espumante-chandon-brut-750-ml,1,246,104.78,58.90,115.26,95.69
+CDB-1440,"Espumante Chandon Excellence Rosé Cuvée Prestige 750 ml",espumante-chandon-excellence-rose-cuvee-prestige-750-ml,0,32,253.70,104.90,279.07,166.03
+CDB-502,"Espumante Chandon Réserve Brut Magnum 1,5L",espumante-chandon-reserve-brut-magnum-1-5l,1,145,213.46,103.90,234.80,125.99
+97018-5pjw3RJlWV32lQq,"Espumante Conde de Foucauld Brut Rosé 750ml",espumante-conde-de-foucauld-brut-rose-750ml,3,12,31.81,25.96,34.99,34.78
+97042-5pjw3RJlWV32lQq,"Espumante Conde de Foucauld Demi-Sec 750ml",espumante-conde-de-foucauld-demi-sec-750ml,4,8,35.95,25.96,39.54,52.31
+97015-5pjw3RJlWV32lQq,"Espumante Conde de Foucauld Demi-Sec Rosé 750ml",espumante-conde-de-foucauld-demi-sec-rose-750ml,1,6,34.73,25.96,38.20,47.15
+CDB-2998,"Espumante Cordero con Piel de Lobo Demi Sec 750 ml",espumante-cordero-con-piel-de-lobo-demi-sec-750-ml,0,57,58.31,47.23,64.14,35.80
+CDB-4335,"Espumante Cremant Gratien Et Meyer Brut",espumante-cremant-gratien-et-meyer-brut,0,24,170.41,168.68,187.45,11.13
+97355-5pjw3RJlWV32lQq,"Espumante Di Mallo Prosecco Brut 750ml",espumante-di-mallo-prosecco-brut-750ml,2,15,52.56,26.80,57.81,115.71
+CDB-3222,"Espumante Don Roman Brut Rose 750 ml",espumante-don-roman-brut-rose-750-ml,0,4,112.86,108.81,124.15,14.10
+CDB-3446,"Espumante Frances Jp Chenet Brut 750 ml",espumante-frances-jp-chenet-brut-750-ml,1,40,93.32,34.90,102.65,194.13
+CDB-3073,"Espumante Freixenet Cava Malvasía 750ml",espumante-freixenet-cava-malvasia-750ml,0,4,187.61,176.49,206.37,16.93
+SPL-145,"Espumante Freixenet Cordon Negro Brut 750 ml",espumante-freixenet-cordon-negro-brut-750-ml,0,73,79.57,72.62,87.53,20.53
+CDB-3071,"Espumante Freixenet Cuvée de Prestige Cuvée D.S. Extra Brut 2017",espumante-freixenet-cuvee-de-prestige-cuvee-d-s-extra-brut-2017,0,4,121.25,82.90,133.38,60.89
+CDB-1349,"Espumante Freixenet Elyssia Rosé Pinot Noir 750 ml",espumante-freixenet-elyssia-rose-pinot-noir-750-ml,0,34,121.60,38.90,133.77,243.88
+CDB-1346,"Espumante Freixenet Kosher Brut 750 ml",espumante-freixenet-kosher-brut-750-ml,0,42,109.89,39.90,120.88,202.96
+CDB-1345,"Espumante Freixenet Vintage 750 ml",espumante-freixenet-vintage-750-ml,0,20,109.71,41.90,120.69,188.04
+97036-5pjw3RJlWV32lQq,"Espumante Garibaldi Pinot Noir Brut Rosé 750ml",espumante-garibaldi-pinot-noir-brut-rose-750ml,1,59,43.46,29.34,47.80,62.92
+97026-5pjw3RJlWV32lQq,"Espumante Garibaldi Prosecco Ice 750ml",espumante-garibaldi-prosecco-ice-750ml,0,8,39.66,30.16,43.63,44.66
+97034-5pjw3RJlWV32lQq,"Espumante Garibaldi Prosecco Rosé 750ml",espumante-garibaldi-prosecco-rose-750ml,0,48,39.66,24.64,43.63,77.07
+96981-5pjw3RJlWV32lQq,"Espumante Garibaldi Vero Demi-Sec 750ml",espumante-garibaldi-vero-demi-sec-750ml,1,26,33.34,30.16,36.67,21.58
+97523-5pjw3RJlWV32lQq,"Espumante Garibaldi VG Brut Rosé 750ml",espumante-garibaldi-vg-brut-rose-750ml,3,97,96.01,44.04,105.61,139.80
+CDB-1567,"Espumante Gran Codorniu Pinot Noir 750 ml",espumante-gran-codorniu-pinot-noir-750-ml,0,2,199.34,66.90,219.27,227.76
+97526-5pjw3RJlWV32lQq,"Espumante Gran Legado Brut Champenoise Rosé 750ml",espumante-gran-legado-brut-champenoise-rose-750ml,0,4,63.30,61.74,69.63,12.78
+97020-5pjw3RJlWV32lQq,"Espumante Gran Legado Brut Charmat Rose 750ml",espumante-gran-legado-brut-charmat-rose-750ml,1,3,34.80,24.64,38.28,55.36
+CDB-4195,"Espumante Jaume Serra Cava Brut 750ml",espumante-jaume-serra-cava-brut-750ml,0,26,59.61,35.90,65.57,82.65
+CDB-503,"Espumante Jeroboam Chandon Brut 3000 ml",espumante-jeroboam-chandon-brut-3000-ml,1,141,608.66,279.90,669.53,139.20
+CDB-3447,"Espumante Jp Chenet Demi Sec 750 ml",espumante-jp-chenet-demi-sec-750-ml,0,42,99.11,77.88,109.03,40.00
+CDB-3442,"Espumante JP Chenet Ice Edition Demi-Sec 750 ml",espumante-jp-chenet-ice-edition-demi-sec-750-ml,0,75,95.45,85.28,105.00,23.12
+CDB-1195,"Espumante JP CHENET ICE Rosé Demi-Sec 750 ml",espumante-jp-chenet-ice-rose-demi-sec-750-ml,3,116,104.94,29.90,115.43,286.05
+CDB-4150,"Espumante Luiz Argenta Cave 48 Meses Brut 750ml",espumante-luiz-argenta-cave-48-meses-brut-750ml,0,6,251.74,136.90,276.91,102.27
+97519-5pjw3RJlWV32lQq,"Espumante Luiz Argenta Jovem Brut 750ml",espumante-luiz-argenta-jovem-brut-750ml-2,0,45,108.85,90.59,119.73,32.17
+CDB-2912,"Espumante Maria Valduga Brut Rosé Com Embalagem 750ml",espumante-maria-valduga-brut-rose-com-embalagem-750ml,0,47,573.34,201.90,630.68,212.37
+CDB-1165,"Espumante Martini Rosé Demi-Sec 750 ml",espumante-martini-rose-demi-sec-750-ml,0,26,75.62,39.90,83.19,108.50
+CDB-1541,"Espumante Mateus Rosé Sparkling Brut 750 ml",espumante-mateus-rose-sparkling-brut-750-ml,0,24,56.72,36.90,62.40,69.11
+97278-5pjw3RJlWV32lQq,"Espumante Miolo Cuvée Nature 750ml",espumante-miolo-cuvee-nature-750ml,3,13,65.94,55.21,72.54,31.39
+CDB-1402,"Espumante Mumm Cuvée Brut Rosé 750ml",espumante-mumm-cuvee-brut-rose-750ml,3,77,58.55,34.90,64.40,84.53
+97350-5pjw3RJlWV32lQq,"Espumante Panizzon Prosecco 750ml",espumante-panizzon-prosecco-750ml,2,20,32.80,28.16,36.08,28.12
+95837-5pjw3RJlWV32lQq,"Espumante Ponto Nero Cult Brut Rosé 750ml",espumante-ponto-nero-cult-brut-rose-750ml,0,3,101.44,61.12,111.59,82.58
+97531-5pjw3RJlWV32lQq,"Espumante Ponto Nero Cult SO2 Free 750ml",espumante-ponto-nero-cult-so2-free-750ml,0,6,88.37,60.23,97.21,61.40
+97014-5pjw3RJlWV32lQq,"Espumante Ponto Nero Live Celebration Moscatel Rosé 750ml",espumante-ponto-nero-live-celebration-moscatel-rose-750ml,3,33,45.40,25.22,49.94,98.02
+96978-5pjw3RJlWV32lQq,"Espumante Salton Classic Brut 750ml",espumante-salton-classic-brut-750ml,4,56,30.38,25.12,33.42,33.04
+97522-5pjw3RJlWV32lQq,"Espumante Salton Evidence 750ml",espumante-salton-evidence-750ml,3,93,120.93,74.62,133.02,78.26
+97516-5pjw3RJlWV32lQq,"Espumante Salton Moscato Rosé 750ml",espumante-salton-moscato-rose-750ml,4,128,34.23,23.46,37.66,60.53
+97206-5pjw3RJlWV32lQq,"Espumante Salton Prosecco Rosé 750ml",espumante-salton-prosecco-rose-750ml,3,11,37.20,33.52,40.92,22.08
+96988-5pjw3RJlWV32lQq,"Espumante San Martin Demi Sec 660ml",espumante-san-martin-demi-sec-660ml,2,34,39.00,22.60,42.91,89.87
+CDB-286,"Espumante Santa Colina Brut 750 ml",espumante-santa-colina-brut-750-ml,0,19,37.62,36.72,41.38,12.69
+97038-5pjw3RJlWV32lQq,"Espumante Séries by Salton Rosé Moscato 750ml",espumante-series-by-salton-rose-moscato-750ml,0,10,34.23,32.41,37.66,16.20
+CDB-4360,"Espumante Sperone Red 750ml",espumante-sperone-red-750ml,4,14,66.16,21.90,72.78,232.33
+96984-5pjw3RJlWV32lQq,"Espumante Wave Brut Rosé 660ml",espumante-wave-brut-rose-660ml,2,1,34.25,21.76,37.67,73.12
+97518-5pjw3RJlWV32lQq,"Espumante Wave Moscatel Branco 660ml",espumante-wave-moscatel-branco-660ml,5,8,26.45,16.72,29.09,73.98
+97215-5pjw3RJlWV32lQq,"Espumante Wave Moscatel Rosé 660ml",espumante-wave-moscatel-rose-660ml,0,0,28.25,24.52,31.08,26.75
+CDB-776,"Fernet Italiano Amaro SeSiBon 700 ml",fernet-italiano-amaro-sesibon-700-ml,2,112,140.35,33.90,154.39,355.43
+CDB-850,"FireBall 750 ml",fireball-750-ml,4,250,82.77,47.39,91.04,92.11
+CDB-4489,"Fiu Fiu Licor De Brigadeiro 750ml",fiu-fiu-licor-de-brigadeiro-750ml,0,30,66.44,36.90,73.09,98.08
+CDB-4488,"Fiu Fiu Licor De Churros 750ml",fiu-fiu-licor-de-churros-750ml,1,24,56.47,41.90,62.11,48.23
+CDB-4396,"Fiu Fiu Licor De Suspiro 750ml",fiu-fiu-licor-de-suspiro-750ml,1,91,52.62,39.90,57.88,45.06
+CDB-2355,"Garrafa Térmica Classic Hydration Stanley Preta 750ml",garrafa-termica-classic-hydration-stanley-preta-750ml,2,170,312.77,113.90,344.05,202.06
+CDB-2356,"Garrafa Térmica Classic Hydration Stanley Verde 750ml",garrafa-termica-classic-hydration-stanley-verde-750ml,5,966,211.77,101.90,232.94,128.60
+CDB-2348,"Garrafa Térmica Classic Stanley Verde 1,3 litros",garrafa-termica-classic-stanley-verde-1-3-litros,0,53,373.82,195.90,411.20,109.90
+CDB-2350,"Garrafa Térmica Classic Vacuum Growler Stanley Verde 1,9L",garrafa-termica-classic-vacuum-growler-stanley-verde-1-9l,0,22,447.31,393.80,492.04,24.95
+CDB-2885,"Garrafa Térmica Quick Flip Stanley Lagoon 710 ml",garrafa-termica-quick-flip-stanley-lagoon-710-ml,3,510,308.60,111.90,339.46,203.36
+CDB-2347,"Garrafa Térmica Stanley Adventure Verde 1000 Ml",garrafa-termica-stanley-adventure-verde-1000-ml,1,90,332.51,161.90,365.76,125.92
+CDB-2345,"Garrafa Térmica Stanley Classic Vermelha 1000 ml",garrafa-termica-stanley-classic-vermelha-1000-ml,3,240,332.83,172.34,366.12,112.44
+CDB-2857,"Garrafa Térmica Stanley Flip Straw Lagoon 651ml",garrafa-termica-stanley-flip-straw-lagoon-651ml,0,106,344.34,124.90,378.77,203.26
+CDB-2858,"Garrafa Térmica Stanley Flip Straw Polar 651ml",garrafa-termica-stanley-flip-straw-polar-651ml,0,411,338.84,280.88,372.73,32.70
+CDB-2860,"Garrafa Térmica Stanley Flip Straw Saffron 651ml",garrafa-termica-stanley-flip-straw-saffron-651ml,2,237,277.81,206.18,305.60,48.22
+CDB-2354,"Garrafa Térmica Stanley Switchback Branco 473ml",garrafa-termica-stanley-switchback-branco-473ml,0,104,204.33,120.90,224.77,85.91
+CDB-2353,"Garrafa Térmica Stanley Switchback Preto 473ml",garrafa-termica-stanley-switchback-preto-473ml,4,122,238.59,108.90,262.45,141.00
+CDB-1157,"Gentleman Jack 1000ml + 1 copo Vidro",gentleman-jack-1000ml-1-copo-vidro,1,49,255.46,90.90,281.01,209.14
+CDB-2363,"Gin Amázzoni Maniuara 750ml",gin-amazzoni-maniuara-750ml,0,11,110.31,103.91,121.34,16.77
+CDB-1622,"Gin Amázzoni Rio Negro 750 ml",gin-amazzoni-rio-negro-750-ml,0,7,198.71,191.62,218.58,14.07
+CDB-1362,"Gin Arapuru 750 ml",gin-arapuru-750-ml,0,18,88.26,33.90,97.09,186.40
+CDB-1848,"Gin Beefeater 24 750 ml + Taça",gin-beefeater-24-750-ml-taca,0,34,139.92,81.90,153.91,87.92
+CDB-1801,"Gin Beefeater London Dry 750 ml + Taça",gin-beefeater-london-dry-750-ml-taca,0,30,139.92,70.90,153.91,117.08
+CDB-4107,"Gin Beefeater Pink 700ml",gin-beefeater-pink-700ml,5,672,74.99,49.90,82.49,65.31
+CDB-2970,"Gin Bickens London Dry Premium 1000 ml",gin-bickens-london-dry-premium-1000-ml,0,0,179.89,43.90,197.87,350.73
+CDB-368,"Gin Bombay Sapphire Dry London 750 ml",gin-bombay-sapphire-dry-london-750-ml,1,225,113.78,57.90,125.16,116.17
+CDB-1206,"Gin Bosford London Dry 700 ml",gin-bosford-london-dry-700-ml,1,11,63.62,21.90,69.98,219.54
+CDB-4504,"Gin Drumshanbo Gunpowder Sardinian Citrus 700ml",gin-drumshanbo-gunpowder-sardinian-citrus-700ml,0,1,325.19,312.72,357.71,14.39
+CDB-4578,"Gin Drumshanbo Original Gf Ceramica 700ml",gin-drumshanbo-original-gf-ceramica-700ml,0,6,351.35,153.90,386.48,151.12
+CDB-1252,"Gin Greenall’s 700 ml",gin-greenall-s-700-ml,0,1,119.90,52.90,131.89,149.32
+CDB-1751,"Gin Greenalls Wild Berry 700 Ml",gin-greenalls-wild-berry-700-ml,0,0,105.63,60.90,116.19,90.79
+CDB-572,"Gin Hendricks 750 ml",gin-hendricks-750-ml,3,99,182.20,76.90,200.42,160.62
+CDB-1799,"Gin Hendricks 750 ml + Taça",gin-hendricks-750-ml-taca,0,10,181.85,170.89,200.04,17.06
+CDB-3889,"Gin Hendricks Flora Adora 750 ml",gin-hendricks-flora-adora-750-ml,0,5,240.92,106.63,265.01,148.53
+CDB-3888,"Gin Hendricks Neptunia 750 ml",gin-hendricks-neptunia-750-ml,3,23,216.04,71.90,237.64,230.51
+CDB-2567,"Gin Hidden Garden London Dry 1000ml – Itália",gin-hidden-garden-london-dry-1000ml-italia,0,0,76.20,69.86,83.82,19.98
+CDB-3629,"Gin Kalvelage London Dry 750 ml",gin-kalvelage-london-dry-750-ml,0,2,78.91,39.90,86.80,117.54
+CDB-4479,"Gin Mare 700ml",gin-mare-700ml,0,17,253.22,192.17,278.54,44.94
+CDB-1588,"Gin Mom Love 700 ml",gin-mom-love-700-ml,0,0,251.98,102.90,277.18,169.37
+CDB-1250,"Gin Monkey 47 500ml",gin-monkey-47-500ml,0,28,350.91,234.90,386.00,64.33
+CDB-4115,"Gin Monkey 47 A Bathing Ape 500ml",gin-monkey-47-a-bathing-ape-500ml,0,3,505.21,280.77,555.73,97.93
+CDB-2032,"Gin Monkey 47 Sloe 500 ml",gin-monkey-47-sloe-500-ml,0,5,362.09,211.90,398.30,87.97
+CDB-3057,"Gin O´GIN Brazilian Dry 750 ml",gin-o-gin-brazilian-dry-750-ml,0,24,126.61,44.98,139.27,209.63
+CDB-1759,"Gin Ondina 700ml",gin-ondina-700ml,0,0,327.50,129.90,360.24,177.32
+CDB-1705,"Gin Tanqueray 750 ml + Taça",gin-tanqueray-750-ml-taca,1,142,118.61,68.90,130.48,89.38
+CDB-1210,"Gin Tanqueray Flor De Sevilla 700 ml",gin-tanqueray-flor-de-sevilla-700-ml,1,141,178.57,72.90,196.42,169.44
+CDB-2589,"Gin Tanqueray Royale 700ml",gin-tanqueray-royale-700ml,5,541,92.44,72.04,101.68,41.14
+CDB-1775,"Gin Tanqueray Ten 750 ml + Taça",gin-tanqueray-ten-750-ml-taca,0,10,168.66,119.87,185.53,54.78
+CDB-1334,"Gin The Botanist Scotch Dry 700 ml",gin-the-botanist-scotch-dry-700-ml,1,43,315.76,100.90,347.33,244.23
+CDB-1300,"Gin Weber Haus 48 Amburana 750 ml – Orgânico",gin-weber-haus-48-amburana-750-ml-organico,1,5,172.43,69.90,189.67,171.34
+CDB-1299,"Gin Weber Haus 48 Dry 750 ml – Orgânico",gin-weber-haus-48-dry-750-ml-organico,0,13,149.24,124.89,164.16,31.44
+CDB-2633,"Gin ZIM Gold Spark 750 ml",gin-zim-gold-spark-750-ml,0,3,229.40,218.35,252.33,15.56
+CDB-1826,"Gin ZIM Magic Fusion 750 ml",gin-zim-magic-fusion-750-ml,0,29,175.08,134.48,192.58,43.20
+CDB-4278,"Jack Daniel´s Fire 700 ml",jack-daniel-s-fire-700-ml,2,175,84.28,70.73,92.71,31.08
+CDB-4275,"Jack Daniels Apple 700 ml",jack-daniels-apple-700-ml,1,338,126.97,56.90,139.66,145.45
+CDB-4834,"Jack Daniels Bonded 700 Ml",jack-daniels-bonded-700-ml,1,24,225.38,96.90,247.91,155.84
+CDB-753,"Johnnie Walker Gold Label Reserve Dourado Limited Edition Bottle 750 ml",johnnie-walker-gold-label-reserve-dourado-limited-edition-bottle-750-ml,1,865,319.12,123.90,351.03,183.32
+CDB-822,"Kit 12 Miniatura Chivas Regal 12 anos 50 ml",kit-12-miniatura-chivas-regal-12-anos-50-ml,2,96,145.81,88.90,160.39,80.42
+CDB-4712,"Kit 3 Vinhos Bom Juiz Tinto 750ml",kit-3-vinhos-bom-juiz-tinto-750ml,1,34,462.39,284.90,508.63,78.53
+CDB-1547,"Kit 3 Vinhos Pera Manca Branco 750 ml Caixa de Madeira",kit-3-vinhos-pera-manca-branco-750-ml-caixa-de-madeira,0,61,2198.17,967.90,2417.99,149.82
+CDB-1298,"Kit 5 Miniatura Cachaça Weber Haus 50 ml",kit-5-miniatura-cachaca-weber-haus-50-ml,4,70,115.87,40.90,127.45,211.61
+CDB-4668,"Kit 6 Copos Para Whisky De Vidro Bangkok 300ML",kit-6-copos-para-whisky-de-vidro-bangkok-300ml,0,41,36.60,21.90,40.25,83.79
+CDB-3976,"Kit 6 Freixenet Collection Prosecco +1 1500 ml",kit-6-freixenet-collection-prosecco-1-1500-ml,3,212,990.86,476.90,1089.94,128.55
+CDB-1816,"Kit Caipirinha Weber Haus",kit-caipirinha-weber-haus,0,6,102.90,51.90,113.19,118.09
+CDB-2975,"Kit Champagne Veuve Clicquot Brut ICE BOX 750 ml",kit-champagne-veuve-clicquot-brut-ice-box-750-ml,0,317,489.17,350.14,538.09,53.68
+CDB-4417,"Kit Chandon Brut Rose 6 un 750 ml + 1 un 1500ml",kit-chandon-brut-rose-6-un-750-ml-1-un-1500ml,5,568,730.03,363.90,803.03,120.67
+CDB-1221,"Kit FireBall + 2 Copos Shot 750 ml",kit-fireball-2-copos-shot-750-ml,1,60,187.17,55.90,205.89,268.32
+CDB-3607,"Kit Freixenet Collection 6 Und Carta Nevada 750ml + 1 Carta Nevada 1500ml",kit-freixenet-collection-6-und-carta-nevada-750ml-1-carta-nevada-1500ml,1,134,548.59,172.90,603.45,249.02
+CDB-1530,"Kit Gin Hendricks + Cortador 750 ml",kit-gin-hendricks-cortador-750-ml,0,17,301.24,135.90,331.36,143.83
+CDB-3049,"Kit Gin Silver Seagers 750 ml + 2 Taças",kit-gin-silver-seagers-750-ml-2-tacas,0,23,84.18,64.18,92.60,44.28
+CDB-3046,"Kit Gin Star Of Bombay 750 ml + Taça Vidro",kit-gin-star-of-bombay-750-ml-taca-vidro,0,169,202.68,129.90,222.95,71.63
+CDB-2542,"Kit Jack Daniels Fire 1000 ml + Copo",kit-jack-daniels-fire-1000-ml-copo,1,34,176.16,78.90,193.78,145.60
+CDB-661,"Kit José Cuervo Ouro + Margarita Mix Limon c/ Caixa",kit-jose-cuervo-ouro-margarita-mix-limon-c-caixa,4,84,201.84,60.90,222.02,264.56
+CDB-3026,"Licor 35 – Creme de Pastel de Nata 500ml",licor-35-creme-de-pastel-de-nata-500ml,1,50,207.07,73.90,227.78,208.23
+CDB-3025,"Licor 35 Creme de Pastel de Nata 700 ml",licor-35-creme-de-pastel-de-nata-700-ml,3,77,203.33,105.90,223.66,111.20
+CDB-4514,"Licor 43 Creme Brulee 700ml",licor-43-creme-brulee-700ml,3,441,161.83,103.90,178.01,71.33
+CDB-1233,"Licor Amaro Di Angostura 750 ml",licor-amaro-di-angostura-750-ml,0,11,267.63,258.02,294.39,14.10
+CDB-2539,"Licor Amarula Coffee 750 ml",licor-amarula-coffee-750-ml,3,196,150.49,77.64,165.54,113.21
+CDB-2976,"Licor Amarula Raspberry 750 ml",licor-amarula-raspberry-750-ml,0,113,110.21,70.90,121.23,70.99
+CDB-3329,"Licor Amendoeirinha Amendoa Amarga 700 ml",licor-amendoeirinha-amendoa-amarga-700-ml,0,63,217.34,47.90,239.07,399.10
+CDB-1502,"Licor Anis Escarchado Albergaria 1000 ml",licor-anis-escarchado-albergaria-1000-ml,1,20,120.73,88.90,132.80,49.38
+CDB-1147,"Licor Barenjager Honey 700 ml",licor-barenjager-honey-700-ml,1,7,148.02,101.90,162.82,59.78
+CDB-396,"Licor Bols Blue Curaçao 700 ml",licor-bols-blue-curacao-700-ml,1,19,89.50,42.90,98.45,129.49
+CDB-395,"Licor Bols Creme de Cassis 700 ml",licor-bols-creme-de-cassis-700-ml,0,20,118.53,38.90,130.38,235.17
+CDB-3211,"Licor Bottega Cappuccino 500ml",licor-bottega-cappuccino-500ml,1,55,208.63,97.90,229.49,134.41
+CDB-3213,"Licor Bottega Raspberry 500 ml",licor-bottega-raspberry-500-ml,0,79,187.63,114.90,206.39,79.63
+CDB-3212,"Licor Bottega Tiramsù 500 ml",licor-bottega-tiramsu-500-ml,0,40,233.42,152.90,256.77,67.93
+CDB-546,"Licor Chambord 750 ml",licor-chambord-750-ml,4,173,189.99,94.90,208.99,120.22
+CDB-1323,"Licor Chartreuse Yellow 700 ml",licor-chartreuse-yellow-700-ml,0,64,498.01,415.22,547.81,31.93
+CDB-4103,"Licor Costa Dei Limoni Limoncello 700ml",licor-costa-dei-limoni-limoncello-700ml,0,5,177.89,67.90,195.68,188.19
+CDB-1683,"Licor De Kuyper Creme De Café 700 ml",licor-de-kuyper-creme-de-cafe-700-ml,0,6,164.66,65.90,181.13,174.86
+CDB-1680,"Licor De Kuyper Creme De Menthe 700 ml",licor-de-kuyper-creme-de-menthe-700-ml,0,4,132.68,69.65,145.95,109.55
+CDB-2901,"Licor De Kuyper Elderflower 700 ml",licor-de-kuyper-elderflower-700-ml,2,41,175.31,82.90,192.84,132.62
+CDB-2903,"Licor De Kuyper Grapefruit 700 ml",licor-de-kuyper-grapefruit-700-ml,0,10,188.31,58.90,207.14,251.68
+CDB-4522,"Licor De Whisky Mr Lion Honey 720ml",licor-de-whisky-mr-lion-honey-720ml,4,623,180.77,62.90,198.84,216.12
+CDB-58,"Licor Drambuie 750 ml",licor-drambuie-750-ml,5,201,135.69,89.90,149.26,66.03
+CDB-3264,"Licor Familia Deicas Tannat 500 ml",licor-familia-deicas-tannat-500-ml,0,7,279.63,126.90,307.60,142.40
+CDB-325,"Licor Fragoli Toschi",licor-fragoli-toschi,0,7,108.10,67.41,118.91,76.40
+CDB-684,"Licor Gabriel Boudier Creme de Cassis 700 ml",licor-gabriel-boudier-creme-de-cassis-700-ml,1,106,229.84,110.05,252.82,129.73
+CDB-4402,"Licor Gatinha Cafe 750ml",licor-gatinha-cafe-750ml,0,30,92.15,33.90,101.36,199.00
+CDB-3066,"Licor Gran Arthurium Doce de Leite Viçosa 750 ml",licor-gran-arthurium-doce-de-leite-vicosa-750-ml,0,35,149.69,78.90,164.66,108.69
+CDB-388,"Licor Hpnotiq 750 ml",licor-hpnotiq-750-ml,1,31,380.86,121.90,418.95,243.68
+CDB-809,"Licor Illyquore de Café 700 ml",licor-illyquore-de-cafe-700-ml,0,11,110.88,55.90,121.97,118.19
+CDB-4689,"Licor Jagermeister Manifest 500ml",licor-jagermeister-manifest-500ml,3,70,225.77,94.90,248.35,161.70
+CDB-1027,"Licor Marie Brizard Cacao Brun nº 41 – 700 ml",licor-marie-brizard-cacao-brun-n-41-700-ml,2,11,56.86,33.90,62.55,84.51
+CDB-1026,"Licor Marie Brizard Curaçao Bleu nº 3 – 700 ml",licor-marie-brizard-curacao-bleu-n-3-700-ml,1,31,71.95,26.90,79.14,194.20
+CDB-3982,"Licor Mirtilli Toschi 700 ml",licor-mirtilli-toschi-700-ml,1,8,101.21,40.90,111.33,172.20
+CDB-1037,"Licor Molinari Sambuca Cafe 700 ml",licor-molinari-sambuca-cafe-700-ml,0,5,263.60,244.42,289.96,18.63
+CDB-1075,"Licor Mozart Strawberry 500 ml",licor-mozart-strawberry-500-ml,1,28,95.11,59.90,104.62,74.66
+CDB-4424,"Licor Quaglia Limoncello 700ml",licor-quaglia-limoncello-700ml,0,61,164.33,49.90,180.76,262.24
+CDB-3180,"Licor Saber Elyzia Blueberry 500ml",licor-saber-elyzia-blueberry-500ml,0,0,114.45,75.90,125.89,65.86
+CDB-2441,"Licor Sambuca Strega Anis 700 ml",licor-sambuca-strega-anis-700-ml,0,10,231.29,72.90,254.42,249.00
+CDB-3583,"Licor Seco De Ervas Haeger Kräuter Doble W Garrafa 750ml",licor-seco-de-ervas-haeger-krauter-doble-w-garrafa-750ml,1,61,118.90,32.62,130.79,300.95
+CDB-2469,"Licor Stock Chocolate Branco 720 ml",licor-stock-chocolate-branco-720-ml,1,44,81.60,36.90,89.76,143.25
+CDB-2457,"Licor Stock Chocolate Orange 720 ml",licor-stock-chocolate-orange-720-ml,0,80,52.79,24.90,58.07,133.21
+CDB-3879,"Licor Stock Doce De Leite 720 ml",licor-stock-doce-de-leite-720-ml,2,54,99.37,33.90,109.31,222.45
+CDB-1938,"Licor Stock Lemon Cream 720 ml",licor-stock-lemon-cream-720-ml,0,18,74.03,37.90,81.44,114.88
+CDB-1939,"Licor Stock Mandarino 720 ml",licor-stock-mandarino-720-ml,0,35,59.34,58.18,65.28,12.20
+CDB-1980,"Licor Stock Piña Colada Cream 720 ml",licor-stock-pina-colada-cream-720-ml,0,52,98.28,41.90,108.11,158.02
+CDB-987,"Licor Strega Sambuca 700 ml",licor-strega-sambuca-700-ml,0,12,264.37,122.90,290.81,136.62
+CDB-59,"Licor Tia Maria 700 ml",licor-tia-maria-700-ml,2,37,224.66,108.90,247.12,126.92
+CDB-3137,"Licor Weber Haus Creme De Milho 500ml",licor-weber-haus-creme-de-milho-500ml,0,10,73.15,64.41,80.47,24.93
+CDB-2874,"Licor Weber Haus de Cappuccino 500ml",licor-weber-haus-de-cappuccino-500ml,0,15,74.14,58.28,81.56,39.95
+CDB-2636,"Licor Weber Haus de Creme de Leite 500ml",licor-weber-haus-de-creme-de-leite-500ml,0,4,77.92,73.34,85.71,16.87
+CDB-2875,"Licor Weber Haus de Damasco 500ml",licor-weber-haus-de-damasco-500ml,0,4,78.91,34.90,86.81,148.74
+CDB-4468,"Licor Weber Haus Limone Siciliano 750ml",licor-weber-haus-limone-siciliano-750ml,0,6,271.52,92.90,298.67,221.50
+SPL-H50B266B3,"Los Vascos Cabernet Sauvignon Reserva 2022 | 91DES",los-vascos-cabernet-sauvignon-reserva-2022-91des,0,5,148.78,93.00,163.65,75.97
+CDB-575,"Magnum Chandon Brut Rosé 1500 ml",magnum-chandon-brut-rose-1500-ml,3,88,264.29,90.90,290.72,219.82
+CDB-1355,"Magnun Freixenet Brut Cordon Negro 1,5 Litros",magnun-freixenet-brut-cordon-negro-1-5-litros,0,37,172.04,83.90,189.24,125.55
+CDB-1193,"Margarita Mix Strawberry 1000 ml – José Cuervo",margarita-mix-strawberry-1000-ml-jose-cuervo,1,19,51.97,21.90,57.16,161.00
+CDB-3455,"Mini Espumante Jp Chenet Ice Edition Rose 200 ml",mini-espumante-jp-chenet-ice-edition-rose-200-ml,0,13,39.58,38.53,43.54,13.00
+CDB-3018,"Mini Whisky Chivas Regal Extra 13 Anos 200 ml",mini-whisky-chivas-regal-extra-13-anos-200-ml,1,40,65.64,25.90,72.20,178.76
+CDB-4298,"Miniatura Whisky Singleton 12 Anos Dufftown 50ml",miniatura-whisky-singleton-12-anos-dufftown-50ml,1,15,33.60,20.90,36.96,76.84
+CDB-4608,"Mostarda Em Grãos Com Vinho Branco Maille Vidro 210 G",mostarda-em-graos-com-vinho-branco-maille-vidro-210-g,0,57,47.90,32.27,52.69,63.28
+CDB-2708,"Mug Térmico Stanley Classic Wine Azul 354ml",mug-termico-stanley-classic-wine-azul-354ml,3,701,144.35,100.90,158.79,57.37
+CDB-2557,"Negroni N45 1L",negroni-n45-1l,0,32,141.93,53.90,156.12,189.65
+CDB-2490,"Old Fashioned Aptk 375 ml",old-fashioned-aptk-375-ml,0,15,94.74,49.99,104.21,108.46
+98088-5pjw3RJlWV32lQq,"Pack 6 Espumantes Aurora Brut 750ml",pack-6-espumantes-aurora-brut-750ml,3,80,271.46,153.45,298.61,94.60
+CDB-255,"Patrón Citrónge Orange Licor 750 ml",patron-citronge-orange-licor-750-ml,0,4,196.20,88.55,215.82,143.73
+CDB-4623,"Peneira Cônica Fina Barpro",peneira-conica-fina-barpro,0,5,63.89,23.90,70.28,194.06
+CDB-2989,"Pisco Barsol Puro Quebranta 750 ml – Perú",pisco-barsol-puro-quebranta-750-ml-peru,0,17,165.91,128.43,182.50,42.10
+SPL-H1170D886,"Pizzato Allumé Pinot Noir 2023",pizzato-allume-pinot-noir-2023,0,15,118.75,68.00,130.63,92.10
+SPL-HE7AB0085,"Pizzato DNA99 Single Vineyard Merlot 2022 | 95TA",pizzato-dna99-single-vineyard-merlot-2022-95ta,3,103,428.47,298.00,471.31,58.16
+SPL-HDE8705F3,"Pizzato Veludo Azul Alicante Bouschet Reserva 2023",pizzato-veludo-azul-alicante-bouschet-reserva-2023,0,31,152.77,93.00,168.05,80.70
+CDB-3909,"Pure Monin Coco 1 L",pure-monin-coco-1-l,1,38,128.90,45.90,141.79,208.91
+CDB-3911,"Pure Monin Jabuticaba 1 L",pure-monin-jabuticaba-1-l,2,61,127.30,54.90,140.02,155.05
+CDB-3916,"Pure Monin Pessego 1 L",pure-monin-pessego-1-l,2,63,98.07,44.61,107.87,141.81
+CDB-3914,"Pure Monin Toranja 1 L",pure-monin-toranja-1-l,2,29,86.71,49.90,95.38,91.14
+SPL-H3329C67E,"Rio de los Pájaros Tannat Reserva 2020",rio-de-los-pajaros-tannat-reserva-2020,0,2,208.71,143.00,229.58,60.55
+CDB-4246,"Rum Angostura Tamboo 750ml",rum-angostura-tamboo-750ml,1,2,263.52,115.90,289.87,150.10
+CDB-1230,"Rum Angostura White Oak 1000 ml",rum-angostura-white-oak-1000-ml,0,2,125.49,42.90,138.04,221.77
+CDB-1060,"Rum Bacardi 8 anos Gran Reserva 750 ml",rum-bacardi-8-anos-gran-reserva-750-ml,1,79,152.69,85.90,167.96,95.53
+CDB-50,"Rum Bacardi Big Apple 980 ml",rum-bacardi-big-apple-980-ml,1,373,29.87,18.88,32.85,73.99
+CDB-48,"Rum Bacardi Carta Blanca Superior 980 ml",rum-bacardi-carta-blanca-superior-980-ml,1,235,44.31,33.47,48.74,45.62
+CDB-4563,"Rum Bacardi Carta Ouro 700ml",rum-bacardi-carta-ouro-700ml,5,109,37.37,27.90,41.10,47.31
+CDB-47,"Rum Bacardi Limon 980 ml",rum-bacardi-limon-980-ml,0,28,47.48,21.90,52.22,138.45
+CDB-266,"Rum Bacardi Mojito 980 ml",rum-bacardi-mojito-980-ml,3,171,63.44,26.90,69.79,159.44
+SPL-1179,"Rum Havana Club Seleccion de Maestros 700 ml",rum-havana-club-seleccion-de-maestros-700-ml,0,137,442.75,127.90,487.02,280.78
+CDB-1332,"Rum Mount Gay XO Gold 700 ml",rum-mount-gay-xo-gold-700-ml,0,11,522.74,286.90,575.02,100.43
+CDB-1319,"Rum Señor Weber Haus Branco 700 ml",rum-senor-weber-haus-branco-700-ml,0,2,103.74,90.45,114.12,26.17
+CDB-667,"Rum Zacapa Centenário 23 anos 750 ml",rum-zacapa-centenario-23-anos-750-ml,3,173,564.29,300.90,620.72,106.29
+CDB-777,"Rum Zacapa XO 750 ml",rum-zacapa-xo-750-ml,2,155,697.00,646.90,766.70,18.52
+CDB-1981,"Steinhaeger Stock 980 ml",steinhaeger-stock-980-ml,0,34,31.13,17.90,34.24,91.28
+CDB-240,"Tabasco Molho de Pimenta Suave",tabasco-molho-de-pimenta-suave,0,15,41.55,35.57,45.70,28.48
+CDB-3651,"Taça Prime Speyside Degustação Whisky",taca-prime-speyside-degustacao-whisky,5,97,114.59,40.90,126.05,208.19
+CDB-3999,"Tanqueray No Ten Gift Pack 750 ml",tanqueray-no-ten-gift-pack-750-ml,0,159,227.65,79.90,250.41,213.40
+CDB-4154,"Tequila 1800 Blanco Essential 750ml -1 Unidade",tequila-1800-blanco-essential-750ml-1-unidade,0,45,191.47,149.06,210.62,41.30
+CDB-203,"Tequila 1800 Reposado 750 ml",tequila-1800-reposado-750-ml,0,33,236.38,114.90,260.02,126.30
+CDB-205,"Tequila Don Julio Reposado 750 ml",tequila-don-julio-reposado-750-ml,0,123,374.80,148.90,412.28,176.88
+CDB-1506,"Tequila El Charro Reposado 750 ml",tequila-el-charro-reposado-750-ml,0,2,178.55,161.05,196.41,21.96
+CDB-1505,"Tequila El Charro Reposado Premium 750 ml",tequila-el-charro-reposado-premium-750-ml,0,0,178.55,161.05,196.41,21.96
+CDB-1161,"Tequila El Jimador Reposado 750 ml",tequila-el-jimador-reposado-750-ml,0,45,109.08,59.90,119.99,100.32
+CDB-882,"Tequila Herradura Anejo 750 ml",tequila-herradura-anejo-750-ml,0,6,333.49,168.90,366.83,117.19
+CDB-881,"Tequila Herradura Reposado 750 ml",tequila-herradura-reposado-750-ml,0,59,249.92,108.90,274.91,152.44
+CDB-232,"Tequila José Cuervo Reserva de La Família 750 ml",tequila-jose-cuervo-reserva-de-la-familia-750-ml,0,14,1138.87,407.90,1252.75,207.12
+CDB-34,"Tequila Jose Cuervo Silver 750 ml",tequila-jose-cuervo-silver-750-ml,3,214,118.81,74.90,130.69,74.49
+CDB-1544,"Tequila José Cuervo Tradicional Calavera 750 ml",tequila-jose-cuervo-tradicional-calavera-750-ml,0,18,263.74,75.90,290.11,282.23
+CDB-201,"Tequila Patrón Reposado 700 ml",tequila-patron-reposado-700-ml,0,21,304.43,182.90,334.88,83.09
+CDB-4933,"Tequila Teremana Reposado 700 ml",tequila-teremana-reposado-700-ml,0,12,365.02,153.90,401.52,160.90
+CDB-4477,"Tequila Volcan X.a Luminous 700ml",tequila-volcan-x-a-luminous-700ml,0,3,1773.15,638.90,1950.46,205.28
+SPL-H11A0F4AC,"Thera Montepulciano Tinto 2022",thera-montepulciano-tinto-2022,0,19,230.04,114.00,253.04,121.96
+CDB-2865,"Tumbler Térmico Stanley Flip Straw Charcoal 887ml",tumbler-termico-stanley-flip-straw-charcoal-887ml,2,60,311.05,173.90,342.16,96.76
+CDB-2864,"Tumbler Térmico Stanley Flip Straw Polar 887ml",tumbler-termico-stanley-flip-straw-polar-887ml,1,103,374.51,135.90,411.96,203.13
+CDB-2866,"Tumbler Térmico Stanley Flip Straw Saffron 887ml",tumbler-termico-stanley-flip-straw-saffron-887ml,1,80,279.99,142.90,307.99,115.53
+CDB-1327,"Vermouth Dolin Rouge 750 ml",vermouth-dolin-rouge-750-ml,4,39,171.76,72.90,188.94,159.18
+CDB-1146,"Vermouth Martini Riserva Speciale Rubino di Torino 750 ml",vermouth-martini-riserva-speciale-rubino-di-torino-750-ml,1,31,142.29,63.90,156.52,144.95
+SPL-HF80FC277,"Vik 100 Pontos Tinto 2021 | 100 JS",vik-100-pontos-tinto-2021-100-js,0,53,1037.07,740.00,1140.77,54.16
+CDB-2232,"Vinho .Com Premium Tinto 750 ml – Tiago Cabaço",vinho-com-premium-tinto-750-ml-tiago-cabaco,3,33,68.58,42.90,75.43,75.83
+96360-5pjw3RJlWV32lQq,"Vinho 5 Cepas Casa Silva 750ml",vinho-5-cepas-casa-silva-750ml,4,27,88.06,64.03,96.87,51.29
+CDB-4669,"Vinho 7 Colores Cabernet Sauvignon 750ml",vinho-7-colores-cabernet-sauvignon-750ml,0,12,70.39,65.26,77.43,18.65
+CDB-4675,"Vinho 7 Colores Gran Reserva Pinot Noir Semillon 750ml",vinho-7-colores-gran-reserva-pinot-noir-semillon-750ml,0,8,99.64,68.78,109.61,59.36
+CDB-4672,"Vinho 7 Colores Rosé 750ml",vinho-7-colores-rose-750ml,0,5,58.61,22.90,64.47,181.53
+CDB-4671,"Vinho 7 Colores Sauvignon Blanc 750ml",vinho-7-colores-sauvignon-blanc-750ml,0,5,52.77,50.56,58.04,14.79
+CDB-1271,"Vinho Achaval Ferrer Finca Bella Vista 750 ml",vinho-achaval-ferrer-finca-bella-vista-750-ml,0,6,922.23,609.35,1014.46,66.48
+CDB-4759,"Vinho Achaval Ferrer Quimera Blend 750ml",vinho-achaval-ferrer-quimera-blend-750ml,0,23,435.48,221.90,479.02,115.87
+CDB-1260,"Vinho Achaval-Ferrer Quimera 750 ml",vinho-achaval-ferrer-quimera-750-ml,0,45,187.22,166.38,205.94,23.78
+CDB-2204,"Vinho Adega de Borba DOC 750 ml",vinho-adega-de-borba-doc-750-ml,0,12,118.85,86.57,130.73,51.01
+CDB-2208,"Vinho Adega de Borba Rótulo Cortiça Reserva Tinto 750 ml",vinho-adega-de-borba-rotulo-cortica-reserva-tinto-750-ml,1,38,176.43,93.90,194.07,106.68
+CDB-4023,"Vinho Adriano Ramos Pinto Tinto 500 ml",vinho-adriano-ramos-pinto-tinto-500-ml,0,106,160.59,137.39,176.65,28.58
+CDB-465,"Vinho Alambre Moscatel de Setúbal D.O.C.",vinho-alambre-moscatel-de-setubal-d-o-c,5,55,156.44,40.90,172.08,320.73
+CDB-3565,"Vinho Albert Bichot Petit Chablis 750 ml",vinho-albert-bichot-petit-chablis-750-ml,0,25,212.65,133.90,233.92,74.70
+SPL-1669,"Vinho Albert Bichot Petit Chablis Branco 750 ml",vinho-albert-bichot-petit-chablis-branco-750-ml,0,10,212.65,117.90,233.92,98.41
+CDB-2271,"Vinho Aldeias das Serras DOC Reserva Tinto 750 ml",vinho-aldeias-das-serras-doc-reserva-tinto-750-ml,0,1,46.22,45.45,50.84,11.86
+CDB-2269,"Vinho Aldeias das Serras Regional Tinto 750 ml",vinho-aldeias-das-serras-regional-tinto-750-ml,0,12,46.22,45.45,50.84,11.86
+CDB-1587,"Vinho Alfonso Jerez Oloroso Gonzales Byass 750 ml",vinho-alfonso-jerez-oloroso-gonzales-byass-750-ml,3,55,216.67,71.90,238.34,231.49
+96514-5pjw3RJlWV32lQq,"Vinho Alfredo Roca Fincas Cabernet Sauvignon 750ml",vinho-alfredo-roca-fincas-cabernet-sauvignon-750ml,5,25,59.45,45.31,65.40,44.34
+96867-5pjw3RJlWV32lQq,"Vinho Aliança Pinot Noir 750ml",vinho-alianca-pinot-noir-750ml,1,9,83.07,26.99,91.38,238.57
+SPL-4784,"Vinho Alma Negra Pinot Noir 750ml",vinho-alma-negra-pinot-noir-750ml,2,35,222.06,112.90,244.26,116.35
+96321-5pjw3RJlWV32lQq,"Vinho Almadén Cabernet Suave 750ml",vinho-almaden-cabernet-suave-750ml,4,34,34.89,25.12,38.37,52.75
+96636-5pjw3RJlWV32lQq,"Vinho Almaúnica Reserva Malbec 750ml",vinho-almaunica-reserva-malbec-750ml,2,98,173.74,98.14,191.11,94.73
+96572-5pjw3RJlWV32lQq,"Vinho Almaúnica Reserva Syrah 750ml",vinho-almaunica-reserva-syrah-750ml,3,41,213.37,136.36,234.70,72.12
+97314-5pjw3RJlWV32lQq,"Vinho Amitié Colheitas Cabernet Franc 750ml",vinho-amitie-colheitas-cabernet-franc-750ml,0,5,115.15,107.04,126.66,18.33
+96885-5pjw3RJlWV32lQq,"Vinho Amitié Pinot Noir 750ml",vinho-amitie-pinot-noir-750ml,0,54,105.45,70.89,115.99,63.62
+97165-5pjw3RJlWV32lQq,"Vinho Anciano Crianza 2 Anos Tempranillo 750ml",vinho-anciano-crianza-2-anos-tempranillo-750ml,0,41,76.82,45.91,84.50,84.06
+CDB-2563,"Vinho Angelica Zapata Cabernet Franc 750 ml",vinho-angelica-zapata-cabernet-franc-750-ml,1,46,251.55,167.90,276.70,64.80
+CDB-2378,"Vinho Antinori Bramito Castello Della Sala 750 ml",vinho-antinori-bramito-castello-della-sala-750-ml,0,13,296.01,263.00,325.61,23.81
+96623-5pjw3RJlWV32lQq,"Vinho Arbo Cabernet Sauvignon 750ml",vinho-arbo-cabernet-sauvignon-750ml,4,23,36.52,29.32,40.17,37.01
+CDB-1734,"Vinho Argiano NC Toscana IGT TTO 750 ml",vinho-argiano-nc-toscana-igt-tto-750-ml,0,26,179.17,164.95,197.09,19.48
+CDB-2005,"Vinho Argiano Solengo LGT 750 ml",vinho-argiano-solengo-lgt-750-ml,2,43,1288.21,555.90,1417.03,154.91
+96869-5pjw3RJlWV32lQq,"Vinho Arrivo 31 Sauvignon Blanc 750ml",vinho-arrivo-31-sauvignon-blanc-750ml,1,2,29.07,22.75,31.98,40.57
+96768-5pjw3RJlWV32lQq,"Vinho Arrivo 31 Syrah 750ml",vinho-arrivo-31-syrah-750ml,0,5,132.72,31.07,145.99,369.87
+CDB-3304,"Vinho Arte Blend Fruitè Marselan Malbec 750 ml",vinho-arte-blend-fruite-marselan-malbec-750-ml,2,17,55.07,23.90,60.58,153.47
+96695-5pjw3RJlWV32lQq,"Vinho Aurora Gioia D.O. Merlot 750ml",vinho-aurora-gioia-d-o-merlot-750ml,0,54,165.56,105.65,182.12,72.38
+CDB-3341,"Vinho Aurora Millesime Cabernet Sauvignon 1,5L",vinho-aurora-millesime-cabernet-sauvignon-1-5l,0,56,370.36,176.28,407.40,131.11
+96312-5pjw3RJlWV32lQq,"Vinho Aurora Pequenas Partilhas Cabernet Franc 750ml",vinho-aurora-pequenas-partilhas-cabernet-franc-750ml,1,34,74.67,42.28,82.13,94.25
+96384-5pjw3RJlWV32lQq,"Vinho Aurora Reserva Rosé 750ml",vinho-aurora-reserva-rose-750ml,0,18,55.87,53.76,61.46,14.32
+97439-5pjw3RJlWV32lQq,"Vinho Aurora Varietal Malvásia Aromática 750ml",vinho-aurora-varietal-malvasia-aromatica-750ml,1,36,42.92,29.32,47.21,61.02
+96790-5pjw3RJlWV32lQq,"Vinho Aurora Varietal Rebo 750ml",vinho-aurora-varietal-rebo-750ml,3,85,40.98,29.32,45.08,53.75
+97313-5pjw3RJlWV32lQq,"Vinho Aurora Varietal Viognier 750ml",vinho-aurora-varietal-viognier-750ml,1,16,38.29,28.20,42.12,49.36
+CDB-2409,"Vinho Aveleda Fonte Rose 750 ml",vinho-aveleda-fonte-rose-750-ml,0,4,68.49,61.01,75.34,23.49
+CDB-3526,"Vinho B&G Reserve Cabernet Sauvignon 750 ml",vinho-b-g-reserve-cabernet-sauvignon-750-ml,0,17,122.80,97.82,135.08,38.09
+CDB-3498,"Vinho Banfi Rosso Di Montalcino 750 ml",vinho-banfi-rosso-di-montalcino-750-ml,1,39,268.27,185.90,295.10,58.74
+CDB-4271,"Vinho Barolo Giorno Nuovo Docg 750 Ml",vinho-barolo-giorno-nuovo-docg-750-ml,2,38,272.26,147.90,299.49,102.49
+CDB-4865,"Vinho Barrabas Cabernet Franc 750ml",vinho-barrabas-cabernet-franc-750ml,0,47,199.47,99.90,219.42,119.64
+CDB-3522,"Vinho Barton & Guestier Bordeaux 750 ml",vinho-barton-guestier-bordeaux-750-ml,0,14,162.83,117.53,179.11,52.40
+CDB-4252,"Vinho Barton & Guestier Margaux 750ml",vinho-barton-guestier-margaux-750ml,0,3,162.83,117.53,179.11,52.40
+CDB-3521,"Vinho Barton & Guestier Reserve Pinot Noir 750 ml",vinho-barton-guestier-reserve-pinot-noir-750-ml,0,20,115.17,46.90,126.69,170.13
+96589-5pjw3RJlWV32lQq,"Vinho Batalha Cabernet Sauvignon 750ml",vinho-batalha-cabernet-sauvignon-750ml,0,2,143.68,132.59,158.05,19.20
+97092-5pjw3RJlWV32lQq,"Vinho Batalha Ideologia Tinto 750ml",vinho-batalha-ideologia-tinto-750ml,0,1,80.26,64.30,88.29,37.31
+CDB-4757,"Vinho Belle Glos Pinot Noir Clark & Telephone Tinto 750ml",vinho-belle-glos-pinot-noir-clark-telephone-tinto-750ml,0,23,579.63,458.90,637.60,38.94
+97177-5pjw3RJlWV32lQq,"Vinho Benildo Perini Vintage Blend 750ml",vinho-benildo-perini-vintage-blend-750ml,5,42,341.93,192.22,376.12,95.67
+CDB-2819,"Vinho Benmarco Expressivo 750ml",vinho-benmarco-expressivo-750ml,0,10,185.56,167.61,204.12,21.78
+CDB-457,"Vinho Beronia Gran Reserva Rioja D.O.Ca.",vinho-beronia-gran-reserva-rioja-d-o-ca,1,19,496.91,211.90,546.61,157.96
+CDB-2091,"Vinho Beronia Rosé 750 ml",vinho-beronia-rose-750-ml,0,0,107.24,93.49,117.97,26.18
+CDB-3450,"Vinho Bicicleta Chardonay 750 ml",vinho-bicicleta-chardonay-750-ml,0,44,57.78,51.61,63.55,23.14
+CDB-3451,"Vinho Bicicleta Pinot Noir Rose 750 ml",vinho-bicicleta-pinot-noir-rose-750-ml,0,45,76.54,74.44,84.20,13.11
+CDB-3454,"Vinho Bicicleta Reserva Cabernet Sauvignon 750 ml",vinho-bicicleta-reserva-cabernet-sauvignon-750-ml,0,30,67.33,65.45,74.06,13.16
+CDB-3489,"Vinho Bisquertt Reserva Petirrojo Cabernet Sauvignon 750ml",vinho-bisquertt-reserva-petirrojo-cabernet-sauvignon-750ml,0,57,65.31,57.79,71.84,24.31
+CDB-3465,"Vinho Bisquertt Reserva Petirrojo Carmenere 750ml",vinho-bisquertt-reserva-petirrojo-carmenere-750ml,0,14,84.92,75.03,93.41,24.50
+97102-5pjw3RJlWV32lQq,"Vinho Bodega Vieja Tinto Suave 750ml",vinho-bodega-vieja-tinto-suave-750ml,5,31,40.32,26.99,44.36,64.36
+CDB-2297,"Vinho Bom Juiz Reserva Tinto 750 ml",vinho-bom-juiz-reserva-tinto-750-ml,1,71,157.35,76.90,173.08,125.07
+96576-5pjw3RJlWV32lQq,"Vinho Boscato Cave Cabernet Franc 750ml",vinho-boscato-cave-cabernet-franc-750ml,0,36,84.02,64.22,92.42,43.91
+96635-5pjw3RJlWV32lQq,"Vinho Boscato Cave Touriga Nacional 750ml",vinho-boscato-cave-touriga-nacional-750ml,0,14,84.02,70.94,92.42,30.28
+CDB-3566,"Vinho Braccobosca Ombu Tannat 750 ml",vinho-braccobosca-ombu-tannat-750-ml,0,18,95.75,88.65,105.33,18.82
+CDB-3426,"Vinho Branco Argentino Aime Ruca Malen 750 ml",vinho-branco-argentino-aime-ruca-malen-750-ml,3,16,49.63,29.90,54.59,82.58
+CDB-3424,"Vinho Branco La Nave Pinot Grigio 750ml",vinho-branco-la-nave-pinot-grigio-750ml,0,7,72.52,69.54,79.77,14.71
+CDB-3242,"Vinho Branco Oh01 Riesling Dry 750 ml",vinho-branco-oh01-riesling-dry-750-ml,0,12,95.05,92.99,104.55,12.43
+CDB-3215,"Vinho branco Poderi del Paradiso Vin Santo 750ml",vinho-branco-poderi-del-paradiso-vin-santo-750ml,2,7,302.11,166.90,332.32,99.11
+CDB-4892,"Vinho Branco Português Porta 6 750 Ml",vinho-branco-portugues-porta-6-750-ml,2,34,61.52,18.90,67.67,258.04
+CDB-3400,"Vinho Branco Uruguai Garzon Pinot Grigio 750 ml",vinho-branco-uruguai-garzon-pinot-grigio-750-ml,0,17,97.30,59.90,107.03,78.68
+VIN025,"Vinho Branco Yellow Tail Chardonnay 750ml",vinho-branco-yellow-tail-chardonnay-750ml,0,24,80.97,78.40,89.06,13.60
+CDB-2513,"Vinho Cabo de Hornos Cabernet Sauvignon 750 ml",vinho-cabo-de-hornos-cabernet-sauvignon-750-ml,0,33,548.87,292.90,603.75,106.13
+CDB-2799,"Vinho Caleo Pinot Grigio 750ml",vinho-caleo-pinot-grigio-750ml,0,8,77.94,66.01,85.73,29.87
+CDB-2798,"Vinho Caleo Sicilia Nero D`Avola 750ml",vinho-caleo-sicilia-nero-d-avola-750ml,2,14,82.61,32.90,90.87,176.20
+CDB-3559,"Vinho Calvet Bordeaux Supérieur Metal Tinto 750 ml",vinho-calvet-bordeaux-superieur-metal-tinto-750-ml,0,20,150.34,54.90,165.38,201.24
+CDB-1896,"Vinho Camigliano Rosso di Montalcino 750 ml",vinho-camigliano-rosso-di-montalcino-750-ml,1,2,287.47,140.90,316.21,124.42
+CDB-4198,"Vinho Cartuxa Colheita Magnun 3 L",vinho-cartuxa-colheita-magnun-3-l,0,70,1002.36,599.21,1102.59,84.01
+CDB-4490,"Vinho Cartuxa Colheita Magnun 5 L",vinho-cartuxa-colheita-magnun-5-l,0,46,1596.19,1255.88,1755.81,39.81
+CDB-4189,"Vinho Cartuxa Colheita Tardia Branco 375ml",vinho-cartuxa-colheita-tardia-branco-375ml,0,7,470.08,286.84,517.09,80.27
+CDB-4182,"Vinho Cartuxa De Curtimenta Branco 750ml",vinho-cartuxa-de-curtimenta-branco-750ml,0,5,371.30,113.90,408.43,258.59
+CDB-3001,"Vinho Carvalhais Mélange á Trois Tinto 750 ml",vinho-carvalhais-melange-a-trois-tinto-750-ml,0,2,85.21,72.94,93.73,28.50
+97251-5pjw3RJlWV32lQq,"Vinho Casa Perini Drella Rosé 750ml",vinho-casa-perini-drella-rose-750ml,0,8,84.87,69.51,93.35,34.30
+96318-5pjw3RJlWV32lQq,"Vinho Casa Perini Fração Única Merlot 750ml",vinho-casa-perini-fracao-unica-merlot-750ml,3,53,88.79,43.45,97.67,124.79
+97425-5pjw3RJlWV32lQq,"Vinho Casa Perini Fração Única Rosé de Pinot Noir 750ml",vinho-casa-perini-fracao-unica-rose-de-pinot-noir-750ml,0,7,84.87,69.51,93.35,34.30
+96414-5pjw3RJlWV32lQq,"Vinho Casa Perini Nuances Suave 750ml",vinho-casa-perini-nuances-suave-750ml,0,50,62.83,60.03,69.12,15.14
+97484-5pjw3RJlWV32lQq,"Vinho Casa Silva Estate Grown Carmenère 750ml",vinho-casa-silva-estate-grown-carmenere-750ml,4,44,60.13,34.04,66.15,94.33
+96551-5pjw3RJlWV32lQq,"Vinho Casa Silva Gran Terroir Cabernet Sauvignon Los Lingues 750ml",vinho-casa-silva-gran-terroir-cabernet-sauvignon-los-lingues-750ml,0,47,143.84,93.62,158.22,69.00
+96486-5pjw3RJlWV32lQq,"Vinho Casa Valduga Arte Gewurztraminer e Malbec 750ml",vinho-casa-valduga-arte-gewurztraminer-e-malbec-750ml,2,17,56.13,32.28,61.74,91.26
+96556-5pjw3RJlWV32lQq,"Vinho Casa Valduga Naturelle Reserva Tinto 750ml",vinho-casa-valduga-naturelle-reserva-tinto-750ml,4,117,111.54,68.23,122.70,79.83
+97254-5pjw3RJlWV32lQq,"Vinho Casa Valduga Origem Sauvignon Blanc 750ml",vinho-casa-valduga-origem-sauvignon-blanc-750ml,1,50,53.93,35.22,59.32,68.43
+96628-5pjw3RJlWV32lQq,"Vinho Casa Valduga Terroir Exclusivo Marselan 750ml",vinho-casa-valduga-terroir-exclusivo-marselan-750ml,0,22,146.48,143.67,161.13,12.15
+96865-5pjw3RJlWV32lQq,"Vinho Casa Valduga Terroir Exclusivo Tannat 750ml",vinho-casa-valduga-terroir-exclusivo-tannat-750ml,2,24,132.01,80.50,145.22,80.40
+96637-5pjw3RJlWV32lQq,"Vinho Casa Valduga Villa-Lobos 750ml",vinho-casa-valduga-villa-lobos-750ml,2,55,277.77,166.93,305.55,83.04
+96571-5pjw3RJlWV32lQq,"Vinho Casa Venturini Reserva Cabernet Franc 750ml",vinho-casa-venturini-reserva-cabernet-franc-750ml,0,18,89.12,79.05,98.04,24.02
+96595-5pjw3RJlWV32lQq,"Vinho Casa Venturini Reserva Cabernet Sauvignon 750ml",vinho-casa-venturini-reserva-cabernet-sauvignon-750ml,0,8,81.89,77.33,90.08,16.49
+96615-5pjw3RJlWV32lQq,"Vinho Casa Venturini Reserva Merlot 750ml",vinho-casa-venturini-reserva-merlot-750ml,0,4,88.45,83.10,97.30,17.09
+96386-5pjw3RJlWV32lQq,"Vinho Casas Del Bosque Reserva Carmenere 750ml",vinho-casas-del-bosque-reserva-carmenere-750ml,1,23,59.45,52.86,65.40,23.72
+CDB-2313,"Vinho Casillero Jimenez 750 ml",vinho-casillero-jimenez-750-ml,5,140,76.00,25.90,83.60,222.78
+CDB-4015,"Vinho Catena Cabernet Sauvignon 750 ml",vinho-catena-cabernet-sauvignon-750-ml,1,67,188.68,104.90,207.55,97.86
+97169-5pjw3RJlWV32lQq,"Vinho Cavalleri Merlot 750ml",vinho-cavalleri-merlot-750ml,0,5,75.61,65.18,83.17,27.60
+CDB-4747,"Vinho Chablis Charles Vienot Branco 750ml",vinho-chablis-charles-vienot-branco-750ml,5,226,271.48,108.90,298.63,174.22
+CDB-4045,"Vinho Chac Chac Sauvignon Blanc 750ml",vinho-chac-chac-sauvignon-blanc-750ml,0,66,35.28,21.90,38.80,77.17
+CDB-3536,"Vinho Chateau Haut Riot Cabernet Sauvignon 750 Ml",vinho-chateau-haut-riot-cabernet-sauvignon-750-ml,0,1,125.50,100.28,138.05,37.66
+CDB-1447,"Vinho Cheval des Andes 750 ml",vinho-cheval-des-andes-750-ml,1,42,722.56,421.90,794.82,88.39
+CDB-2369,"Vinho Chianti Superiori Santa Cristina 750 ml",vinho-chianti-superiori-santa-cristina-750-ml,0,4,150.17,108.90,165.19,51.69
+CDB-2257,"Vinho Chorinho 750 ml",vinho-chorinho-750-ml,0,5,100.55,48.90,110.60,126.18
+CDB-4679,"Vinho Churchill’s Grafite Douro Tinta Roriz Tinto 750ml",vinho-churchill-s-grafite-douro-tinta-roriz-tinto-750ml,0,3,265.50,90.90,292.05,221.29
+CDB-4680,"Vinho Churchill’s Grafite Douro Touriga Nacional 750ml",vinho-churchill-s-grafite-douro-touriga-nacional-750ml,0,0,311.58,96.90,342.74,253.70
+96746-5pjw3RJlWV32lQq,"Vinho Circus Red Blend 750ml",vinho-circus-red-blend-750ml,0,7,75.58,74.76,83.13,11.20
+CDB-1475,"Vinho Cloudy Bay Pinot Noir 750 ml",vinho-cloudy-bay-pinot-noir-750-ml,0,11,358.12,110.90,393.94,255.22
+CDB-1473,"Vinho Cloudy Bay Sauvignon Blanc 750 ml",vinho-cloudy-bay-sauvignon-blanc-750-ml,0,48,303.44,254.92,333.78,30.94
+CDB-3592,"Vinho Cohiba Atmosphere Reserva Doca Rioja 750ml",vinho-cohiba-atmosphere-reserva-doca-rioja-750ml,0,15,533.60,466.32,586.96,25.87
+CDB-3453,"Vinho Cono Sur Bicicleta Reserva Carmenere 750 ml",vinho-cono-sur-bicicleta-reserva-carmenere-750-ml,0,43,64.73,61.99,71.20,14.86
+CDB-2935,"Vinho Cont’ugo Tenuta Guado Al Tasso – Antinori 750ml",vinho-cont-ugo-tenuta-guado-al-tasso-antinori-750ml,0,4,546.63,407.90,601.30,47.41
+CDB-2229,"Vinho Convento da Serra 750 ml",vinho-convento-da-serra-750-ml,0,10,56.56,47.19,62.22,31.85
+CDB-2288,"Vinho Corbelli Sangiovese 750 ml",vinho-corbelli-sangiovese-750-ml,0,26,64.81,33.90,71.29,110.29
+CDB-2986,"Vinho Cordero Con Piel de Lobo Cabernet Sauvignon 750 ml",vinho-cordero-con-piel-de-lobo-cabernet-sauvignon-750-ml,2,137,49.98,29.90,54.97,83.85
+CDB-2220,"Vinho Crux Malbec 750 ml",vinho-crux-malbec-750-ml,0,8,124.05,117.59,136.45,16.04
+97249-5pjw3RJlWV32lQq,"Vinho Dal Pizzol Gamay Beaujolais 750ml",vinho-dal-pizzol-gamay-beaujolais-750ml,2,12,112.49,92.08,123.74,34.38
+96612-5pjw3RJlWV32lQq,"Vinho Dal Pizzol PRIVATUM Pinot Noir 750ml",vinho-dal-pizzol-privatum-pinot-noir-750ml,0,4,128.10,79.34,140.91,77.60
+96745-5pjw3RJlWV32lQq,"Vinho Dal Pizzol PRIVATUM Touriga Nacional 750ml",vinho-dal-pizzol-privatum-touriga-nacional-750ml,1,6,145.06,79.34,159.57,101.12
+96466-5pjw3RJlWV32lQq,"Vinho Di Mallo Carménère 750ml",vinho-di-mallo-carmenere-750ml,0,26,40.10,39.11,44.11,12.78
+96465-5pjw3RJlWV32lQq,"Vinho Di Mallo Malbec 750ml",vinho-di-mallo-malbec-750ml,3,23,36.28,26.80,39.91,48.92
+96390-5pjw3RJlWV32lQq,"Vinho Di Mallo Rosé 750ml",vinho-di-mallo-rose-750ml,2,24,32.98,26.80,36.28,35.37
+96924-5pjw3RJlWV32lQq,"Vinho Dom Cândido 4ª Geração Marselan 750ml",vinho-dom-candido-4-geracao-marselan-750ml,2,10,135.61,75.20,149.17,98.36
+97245-5pjw3RJlWV32lQq,"Vinho Dom Cândido Merlot Documento D.O. 750ml",vinho-dom-candido-merlot-documento-d-o-750ml,0,12,146.40,80.50,161.04,100.05
+97116-5pjw3RJlWV32lQq,"Vinho Don Guerino Chardonnay Terroir Selection 750ml",vinho-don-guerino-chardonnay-terroir-selection-750ml,5,28,186.72,108.72,205.39,88.92
+96355-5pjw3RJlWV32lQq,"Vinho Don Guerino El Gaucho Tannat 750ml",vinho-don-guerino-el-gaucho-tannat-750ml,0,24,114.24,103.67,125.66,21.21
+96651-5pjw3RJlWV32lQq,"Vinho Don Guerino Reserva Cabernet Sauvignon 750ml",vinho-don-guerino-reserva-cabernet-sauvignon-750ml,0,23,107.17,98.14,117.88,20.11
+96573-5pjw3RJlWV32lQq,"Vinho Don Guerino Reserva Merlot 750ml",vinho-don-guerino-reserva-merlot-750ml,0,22,101.92,97.87,112.11,14.55
+96437-5pjw3RJlWV32lQq,"Vinho Don Guerino Reserva Pinot Noir 750ml",vinho-don-guerino-reserva-pinot-noir-750ml,0,55,97.87,95.04,107.66,13.28
+96439-5pjw3RJlWV32lQq,"Vinho Don Guerino Sinais Cabernet Sauvignon 750ml",vinho-don-guerino-sinais-cabernet-sauvignon-750ml,0,83,73.00,58.27,80.30,37.81
+96365-5pjw3RJlWV32lQq,"Vinho Don Guerino Teroldego Origine 1880 750ml",vinho-don-guerino-teroldego-origine-1880-750ml,1,56,114.55,67.56,126.00,86.50
+96611-5pjw3RJlWV32lQq,"Vinho Don Guerino Traços Red Blend 2021 750mL",vinho-don-guerino-tracos-red-blend-2021-750ml,4,51,304.08,165.17,334.49,102.51
+96594-5pjw3RJlWV32lQq,"Vinho Don Laurindo Assemblage 750ml",vinho-don-laurindo-assemblage-750ml,0,11,127.26,110.64,139.99,26.53
+96634-5pjw3RJlWV32lQq,"Vinho Don Laurindo Reserva Malbec 750ml",vinho-don-laurindo-reserva-malbec-750ml,1,41,126.83,71.68,139.51,94.63
+96462-5pjw3RJlWV32lQq,"Vinho Don Laurindo Reserva Merlot 750ml",vinho-don-laurindo-reserva-merlot-750ml,0,15,101.92,97.87,112.11,14.55
+CDB-1930,"Vinho Don Nicanor Malbec 750 ml",vinho-don-nicanor-malbec-750-ml,0,26,180.94,69.90,199.03,184.74
+CDB-2121,"Vinho Dr Loosen Riesling Dry Blue Slate Branco 750 ml",vinho-dr-loosen-riesling-dry-blue-slate-branco-750-ml,0,9,241.47,77.90,265.62,240.98
+CDB-2028,"Vinho Dr. Loosen Riesling 750 ml",vinho-dr-loosen-riesling-750-ml,0,33,150.83,112.15,165.92,47.94
+SPL-940,"Vinho DV Catena Cabernet – Malbec 750 ml",vinho-dv-catena-cabernet-malbec-750-ml,1,493,144.47,110.90,158.91,43.29
+CDB-2782,"Vinho E. Guigal Châteauneuf-Du-Pape 750ml",vinho-e-guigal-chateauneuf-du-pape-750ml,1,35,644.69,358.90,709.16,97.59
+SPL-2207,"Vinho EA Cartuxa Branco 750 ml",vinho-ea-cartuxa-branco-750-ml,1,149,63.62,29.90,69.98,134.05
+CDB-2282,"Vinho EA Cartuxa Tinto 3 Litros",vinho-ea-cartuxa-tinto-3-litros,1,145,346.57,162.56,381.23,134.52
+CDB-4587,"Vinho El Supremo Blend Branco 750ml",vinho-el-supremo-blend-branco-750ml,2,4,38.97,21.90,42.87,95.75
+CDB-4586,"Vinho El Supremo Blend Tinto 750ml",vinho-el-supremo-blend-tinto-750ml,2,4,40.86,20.90,44.94,115.02
+SPL-3435,"Vinho Emiliana Adobe Reserva Cabernet Sauvignon 750 ml",vinho-emiliana-adobe-reserva-cabernet-sauvignon-750-ml,2,43,67.08,42.90,73.79,72.00
+96910-5pjw3RJlWV32lQq,"Vinho Emiliana Adobe Reserva Rosé 750ml",vinho-emiliana-adobe-reserva-rose-750ml,5,42,65.99,45.22,72.59,60.53
+CDB-3959,"Vinho Epu Cabernet Sauvignon 750 ml – 2022",vinho-epu-cabernet-sauvignon-750-ml-2022,0,38,535.86,419.73,589.45,40.44
+97247-5pjw3RJlWV32lQq,"Vinho Errazuriz Max Carménère Reserva 750ml",vinho-errazuriz-max-carmenere-reserva-750ml,0,34,169.39,153.28,186.33,21.56
+96553-5pjw3RJlWV32lQq,"Vinho Escorihuela Familia Gascón Cabernet Sauvignon 750ml",vinho-escorihuela-familia-gascon-cabernet-sauvignon-750ml,0,52,100.02,67.56,110.02,62.85
+97096-5pjw3RJlWV32lQq,"Vinho Escorihuela Familia Gascón Syrah 750ml",vinho-escorihuela-familia-gascon-syrah-750ml,0,5,102.95,100.41,113.25,12.79
+CDB-4229,"Vinho Escorihuela Gascón Pequenas Producciones Chardonnay 750ml",vinho-escorihuela-gascon-pequenas-producciones-chardonnay-750ml,0,12,180.51,151.90,198.56,30.72
+97107-5pjw3RJlWV32lQq,"Vinho Escorihuela Gascón Syrah 750ml",vinho-escorihuela-gascon-syrah-750ml,0,10,102.95,100.41,113.25,12.79
+CDB-2202,"Vinho Esporão Aragones Canto Do Zé Cruz 750 ml",vinho-esporao-aragones-canto-do-ze-cruz-750-ml,0,2,453.54,200.90,498.90,148.33
+CDB-2147,"Vinho Esporão Colheita Branco Orgânico 750 ml",vinho-esporao-colheita-branco-organico-750-ml,0,4,116.75,105.19,128.42,22.08
+SPL-2148,"Vinho Esporão Colheita Tinto 750 ml",vinho-esporao-colheita-tinto-750-ml,1,21,116.37,51.90,128.00,146.63
+CDB-2150,"Vinho Esporão Private Selection Tinto 750 ml",vinho-esporao-private-selection-tinto-750-ml,0,12,811.64,740.10,892.80,20.63
+SPL-2153,"Vinho Esporão Reserva Tinto 750 ml",vinho-esporao-reserva-tinto-750-ml,1,97,172.22,137.90,189.44,37.37
+CDB-2644,"Vinho Esporão Vinho de Talha 750 ml",vinho-esporao-vinho-de-talha-750-ml,1,4,442.52,290.90,486.77,67.33
+96844-5pjw3RJlWV32lQq,"Vinho Família Bebber Reserva Malbec 750ml",vinho-familia-bebber-reserva-malbec-750ml,2,16,105.40,62.86,115.94,84.44
+96887-5pjw3RJlWV32lQq,"Vinho Família Bebber Reserva Marselan 750ml",vinho-familia-bebber-reserva-marselan-750ml,0,12,127.55,101.89,140.30,37.70
+97105-5pjw3RJlWV32lQq,"Vinho Família Bebber Reserva Touriga Nacional 750ml",vinho-familia-bebber-reserva-touriga-nacional-750ml,0,2,117.91,104.58,129.70,24.02
+96797-5pjw3RJlWV32lQq,"Vinho Faro Chardonnay 750ml",vinho-faro-chardonnay-750ml,0,16,57.81,50.62,63.59,25.62
+97118-5pjw3RJlWV32lQq,"Vinho Faro Torrontés 750ml",vinho-faro-torrontes-750ml,4,15,49.73,35.22,54.70,55.31
+CDB-2392,"Vinho Fattoria Aldobrandesca Vie Cave Malbec 750 ml",vinho-fattoria-aldobrandesca-vie-cave-malbec-750-ml,0,3,335.08,205.90,368.59,79.01
+96854-5pjw3RJlWV32lQq,"Vinho Fausto (de Pizzato) Merlot Rosé 750ml",vinho-fausto-de-pizzato-merlot-rose-750ml,4,15,80.04,46.98,88.05,87.42
+CDB-3681,"Vinho Feixa Negra Priorat D.O.Q 750 ml",vinho-feixa-negra-priorat-d-o-q-750-ml,0,11,303.70,94.90,334.07,252.02
+CDB-428,"Vinho Ferreira Quinta do Porto Tawny 10 Anos 750 ml",vinho-ferreira-quinta-do-porto-tawny-10-anos-750-ml,1,10,333.74,137.90,367.12,166.22
+CDB-1869,"Vinho Filipa Pato Dinamica Baga 750 ml",vinho-filipa-pato-dinamica-baga-750-ml,0,21,191.39,73.90,210.53,184.88
+CDB-486,"Vinho Finca Constancia Altozano Verdejo Sauvignon Blanc 750 ml",vinho-finca-constancia-altozano-verdejo-sauvignon-blanc-750-ml,0,3,55.77,31.90,61.35,92.32
+97322-5pjw3RJlWV32lQq,"Vinho Flamingo Merlot 750ml",vinho-flamingo-merlot-750ml,1,0,49.78,38.75,54.76,41.32
+CDB-3117,"Vinho Flor D Penalva Dao Branco D.O.C 750ml",vinho-flor-d-penalva-dao-branco-d-o-c-750ml,0,15,78.38,20.90,86.21,312.49
+CDB-3126,"Vinho Fonte Da Perdiz Douro Tinto 750ml",vinho-fonte-da-perdiz-douro-tinto-750ml,0,6,78.32,24.90,86.16,246.02
+96927-5pjw3RJlWV32lQq,"Vinho Freixenet Fino Mia Rose Demi Sec 750ml",vinho-freixenet-fino-mia-rose-demi-sec-750ml,1,12,59.00,30.52,64.90,112.65
+CDB-2612,"Vinho Freixenet Rioja Tempranillo 750 ml",vinho-freixenet-rioja-tempranillo-750-ml,0,49,98.47,58.90,108.31,83.89
+CDB-438,"Vinho Fuzion Chardonnay",vinho-fuzion-chardonnay,0,6,64.54,19.90,70.99,256.73
+CDB-3502,"Vinho Garzon Cabernet De Corte 750 ml",vinho-garzon-cabernet-de-corte-750-ml,0,66,105.88,38.90,116.46,199.38
+CDB-3492,"Vinho Garzon Estate Sauvignon Blanc 750ml",vinho-garzon-estate-sauvignon-blanc-750ml,1,18,89.25,46.90,98.18,109.34
+CDB-3290,"Vinho Gato Negro 9 Lives Reserva Cabernet Sauvignon 750ml",vinho-gato-negro-9-lives-reserva-cabernet-sauvignon-750ml,0,24,54.81,35.90,60.29,67.94
+97430-5pjw3RJlWV32lQq,"Vinho Giaretta Rosé Cabernet Sauvignon/Merlot 750ml",vinho-giaretta-rose-cabernet-sauvignon-merlot-750ml,0,4,47.49,44.58,52.24,17.18
+97503-5pjw3RJlWV32lQq,"Vinho Guatambu Lendas do Pampa Tempranillo 750ml",vinho-guatambu-lendas-do-pampa-tempranillo-750ml,0,8,256.69,171.52,282.36,64.62
+96518-5pjw3RJlWV32lQq,"Vinho Guatambu Rastros do Pampa Merlot 750ml",vinho-guatambu-rastros-do-pampa-merlot-750ml,2,34,107.75,69.32,118.53,70.99
+96823-5pjw3RJlWV32lQq,"Vinho Habitat Tannat 750ml",vinho-habitat-tannat-750ml,0,2,104.73,86.71,115.20,32.86
+CDB-2125,"Vinho Hardys Stamp Chardonnay Semillon 750 ml",vinho-hardys-stamp-chardonnay-semillon-750-ml,0,2,100.42,28.90,110.46,282.21
+CDB-413,"Vinho Hardys Stamp Shiraz Cabernet Sauvignon",vinho-hardys-stamp-shiraz-cabernet-sauvignon,0,4,103.24,42.90,113.57,164.73
+CDB-3686,"Vinho Henri Kieffer Winzenberg Riesling Grand Cru 750 ml",vinho-henri-kieffer-winzenberg-riesling-grand-cru-750-ml,0,5,303.07,222.92,333.38,49.55
+CDB-3405,"Vinho Herdade Do Arrepiado Velho Collection 750ml",vinho-herdade-do-arrepiado-velho-collection-750ml,0,10,388.16,358.25,426.97,19.18
+CDB-3968,"Vinho Humberto Black River Reserva Malbec 750 ml",vinho-humberto-black-river-reserva-malbec-750-ml,0,9,60.32,56.85,66.36,16.73
+CDB-3253,"Vinho I Heart Shiraz 750 ml",vinho-i-heart-shiraz-750-ml,0,1,50.43,28.35,55.47,95.66
+CDB-3250,"Vinho Jacobs Creek Cabernet Sauvignon 750 ml",vinho-jacobs-creek-cabernet-sauvignon-750-ml,0,9,80.78,68.31,88.86,30.08
+CDB-3249,"Vinho Jacobs Creek Shiraz 750 ml",vinho-jacobs-creek-shiraz-750-ml,0,5,143.96,52.90,158.36,199.36
+CDB-3262,"Vinho João Pires Rose 750 ml",vinho-joao-pires-rose-750-ml,0,3,81.54,79.97,89.69,12.15
+96357-5pjw3RJlWV32lQq,"Vinho Jota Pe Branco Suave 750ml",vinho-jota-pe-branco-suave-750ml,1,9,27.32,18.40,30.05,63.32
+CDB-3283,"Vinho Judas Malbec 750ml",vinho-judas-malbec-750ml,4,261,446.63,261.50,491.30,87.88
+CDB-2035,"Vinho Justino’s Madeira 3 anos Seco 750 ml",vinho-justino-s-madeira-3-anos-seco-750-ml,1,85,173.54,82.90,190.89,130.27
+CDB-2157,"Vinho Kaiken Estate Cabernet Sauvignon 750 ml",vinho-kaiken-estate-cabernet-sauvignon-750-ml,0,17,83.90,82.61,92.29,11.72
+CDB-2159,"Vinho Kaiken Estate Malbec Tinto 750 ml",vinho-kaiken-estate-malbec-tinto-750-ml,0,35,80.95,68.94,89.05,29.17
+CDB-2162,"Vinho Kaiken Obertura Cabernet Franc 750 ml",vinho-kaiken-obertura-cabernet-franc-750-ml,0,0,371.78,349.68,408.96,16.95
+CDB-2166,"Vinho Kaiken Ultra Cabernet Sauvignon 750 ml",vinho-kaiken-ultra-cabernet-sauvignon-750-ml,0,5,113.06,71.90,124.37,72.98
+CDB-2167,"Vinho Kaiken Ultra Malbec 750 ml",vinho-kaiken-ultra-malbec-750-ml,1,37,137.69,132.63,151.45,14.19
+CDB-2817,"Vinho Kalós Cru Gran Reserva Malbec 750ml",vinho-kalos-cru-gran-reserva-malbec-750ml,0,71,399.58,119.90,439.54,266.59
+SPL-2929,"Vinho Kleinkloof Chenin Blanc 2020 750 ml",vinho-kleinkloof-chenin-blanc-2020-750-ml,1,50,96.04,48.90,105.65,116.05
+CDB-3124,"Vinho La Cacciatora Chianti Tinto 750ml",vinho-la-cacciatora-chianti-tinto-750ml,1,6,111.32,23.90,122.45,412.34
+CDB-3491,"Vinho La Joya Gran Reserva Carmenere 750ml",vinho-la-joya-gran-reserva-carmenere-750ml,0,5,111.74,65.90,122.91,86.51
+CDB-4935,"Vinho Laranja Emiliana Animalia Orange 750 ml",vinho-laranja-emiliana-animalia-orange-750-ml,0,27,170.84,86.90,187.92,116.25
+CDB-4065,"Vinho Las Perdices Malbec 750 ml",vinho-las-perdices-malbec-750-ml,0,52,57.23,26.90,62.95,134.01
+CDB-4054,"Vinho Las Perdices Tinto Blend 750ml",vinho-las-perdices-tinto-blend-750ml,0,12,55.52,33.90,61.07,80.15
+CDB-4904,"Vinho Le Petit Cochonnet I.g.p. Pays Doc Grenache Rose 2024",vinho-le-petit-cochonnet-i-g-p-pays-doc-grenache-rose-2024,1,54,62.98,18.24,69.28,279.82
+CDB-2783,"Vinho Leon Beyer La Cuvee 750ml",vinho-leon-beyer-la-cuvee-750ml,0,0,228.43,187.99,251.28,33.67
+CDB-2786,"Vinho Leon Beyer Riesling Reserve 750ml",vinho-leon-beyer-riesling-reserve-750ml,0,1,313.04,81.90,344.35,320.45
+CDB-2775,"Vinho Leonis Sweet Szamorodni Tokaji 500ml",vinho-leonis-sweet-szamorodni-tokaji-500ml,0,18,244.63,155.42,269.09,73.14
+96592-5pjw3RJlWV32lQq,"Vinho Leyda Reserva Carmenere 750ml",vinho-leyda-reserva-carmenere-750ml,2,16,113.43,61.68,124.77,102.29
+96633-5pjw3RJlWV32lQq,"Vinho Lidio Carraro Agnus Cabernet Sauvignon 750ml",vinho-lidio-carraro-agnus-cabernet-sauvignon-750ml,0,89,126.72,96.94,139.39,43.79
+96739-5pjw3RJlWV32lQq,"Vinho Lidio Carraro Dádivas Merlot/Cabernet Sauvignon 750ml",vinho-lidio-carraro-dadivas-merlot-cabernet-sauvignon-750ml,1,16,115.51,72.85,127.06,74.41
+96574-5pjw3RJlWV32lQq,"Vinho Lidio Carraro Faces do Chile Cabernet Sauvignon 750ml",vinho-lidio-carraro-faces-do-chile-cabernet-sauvignon-750ml,0,34,102.02,39.92,112.22,181.11
+CDB-474,"Vinho Los Vascos Cabernet Sauvignon Reserva 750 ml",vinho-los-vascos-cabernet-sauvignon-reserva-750-ml,0,14,148.78,33.90,163.65,382.74
+CDB-476,"Vinho Los Vascos Le Dix 750 ml",vinho-los-vascos-le-dix-750-ml,0,1,856.38,189.90,942.01,396.06
+CDB-2412,"Vinho Louis Jadot Bourgogne Chardonnay 750ml",vinho-louis-jadot-bourgogne-chardonnay-750ml,1,106,316.55,110.90,348.20,213.98
+CDB-3226,"Vinho Luccarelli Bianco Pugia 750 ml",vinho-luccarelli-bianco-pugia-750-ml,0,9,109.91,96.58,120.90,25.18
+CDB-3227,"Vinho Luccarelli Rosato Puglia 750 ml",vinho-luccarelli-rosato-puglia-750-ml,0,1,115.61,75.90,127.18,67.56
+CDB-2298,"Vinho Luccarelli Rosso Puglia IGP 750 ml",vinho-luccarelli-rosso-puglia-igp-750-ml,2,184,92.87,47.90,102.15,113.26
+CDB-4700,"Vinho M De Minuty 1,5Lt Magnum 2024",vinho-m-de-minuty-1-5lt-magnum-2024,0,2,392.06,371.13,431.27,16.20
+CDB-3539,"Vinho Mandriola De Lisboa 750ml",vinho-mandriola-de-lisboa-750ml,0,9,76.47,32.90,84.12,155.68
+96866-5pjw3RJlWV32lQq,"Vinho Manon Côtes de Provence Rosé 750ml",vinho-manon-cotes-de-provence-rose-750ml,1,7,219.82,154.00,241.80,57.01
+CDB-3635,"Vinho Margarita Para Los Chanchos Malbec 750 ml",vinho-margarita-para-los-chanchos-malbec-750-ml,2,44,61.43,28.90,67.57,133.81
+CDB-3618,"Vinho Mariflor Blend 750 ml",vinho-mariflor-blend-750-ml,0,3,290.86,257.16,319.95,24.42
+CDB-4709,"Vinho Marques De Caceres Verdejo Rueda 750ml",vinho-marques-de-caceres-verdejo-rueda-750ml,0,3,102.93,45.90,113.22,146.67
+CDB-1110,"Vinho Marques de Casa Concha Carmenere 750 ml",vinho-marques-de-casa-concha-carmenere-750-ml,2,104,108.67,66.90,119.53,78.67
+CDB-2523,"Vinho Marques de Riscal Gran Reserva 750ml",vinho-marques-de-riscal-gran-reserva-750ml,0,29,954.55,784.15,1050.00,33.90
+CDB-2521,"Vinho Marques De Riscal Rueda Verdejo 750 ml",vinho-marques-de-riscal-rueda-verdejo-750-ml,4,17,146.28,84.90,160.91,89.53
+CDB-3245,"Vinho Marques De Tomares Excellenc Rioja 750 ml",vinho-marques-de-tomares-excellenc-rioja-750-ml,0,5,96.23,84.99,105.85,24.54
+SPL-4169,"Vinho Marquesa De Alorna Grande Reserva 750ml",vinho-marquesa-de-alorna-grande-reserva-750ml,0,18,315.20,296.47,346.72,16.95
+96626-5pjw3RJlWV32lQq,"Vinho Mayos Jovem Branco 750ml",vinho-mayos-jovem-branco-750ml,0,11,50.91,41.56,56.00,34.74
+CDB-4460,"Vinho Mazzei Concerto Di Fonterutoli 750ml",vinho-mazzei-concerto-di-fonterutoli-750ml,0,0,1224.61,277.90,1347.07,384.73
+96846-5pjw3RJlWV32lQq,"Vinho Messias Branco 750ml",vinho-messias-branco-750ml,0,5,61.32,56.56,67.46,19.27
+CDB-3616,"Vinho Michel Rolland Mariflor Cabernet Franc 750 ml",vinho-michel-rolland-mariflor-cabernet-franc-750-ml,0,4,317.07,150.90,348.78,131.13
+CDB-3615,"Vinho Michel Rolland Mariflor Merlot 750 ml",vinho-michel-rolland-mariflor-merlot-750-ml,0,6,208.67,182.74,229.54,25.61
+CDB-2648,"Vinho Miguel Torres Andica Pinot Noir 750 ml",vinho-miguel-torres-andica-pinot-noir-750-ml,0,15,64.29,28.90,70.72,144.71
+CDB-2171,"Vinho Miguel Torres Cordillera Cabernet Sauvignon 750 ml",vinho-miguel-torres-cordillera-cabernet-sauvignon-750-ml,0,3,123.02,68.90,135.32,96.40
+CDB-2172,"Vinho Miguel Torres Cordillera Carignan 750 ml",vinho-miguel-torres-cordillera-carignan-750-ml,0,12,132.44,62.90,145.68,131.61
+CDB-2650,"Vinho Miguel Torres Cordillera Chardonnay 750ml",vinho-miguel-torres-cordillera-chardonnay-750ml,0,1,113.83,107.91,125.22,16.04
+CDB-4701,"Vinho Minuty Prestige 750 Ml 2023",vinho-minuty-prestige-750-ml-2023,0,8,194.15,109.90,213.57,94.33
+96516-5pjw3RJlWV32lQq,"Vinho Miolo Cuvée Giuseppe Chardonnay D.O.V.V. 750ml",vinho-miolo-cuvee-giuseppe-chardonnay-d-o-v-v-750ml,5,31,102.99,65.80,113.29,72.17
+96618-5pjw3RJlWV32lQq,"Vinho Miolo Single Vineyard Alvarinho 750ml",vinho-miolo-single-vineyard-alvarinho-750ml,0,41,83.17,77.75,91.48,17.66
+97175-5pjw3RJlWV32lQq,"Vinho Miolo Wild Trebbiano 750ml",vinho-miolo-wild-trebbiano-750ml,3,32,68.78,48.74,75.65,55.21
+96442-5pjw3RJlWV32lQq,"Vinho Monte Paschoal Reserva Pinot Noir Rosé 750ml",vinho-monte-paschoal-reserva-pinot-noir-rose-750ml,4,3,53.54,30.52,58.89,92.96
+CDB-3724,"Vinho Montes Alpha Special Cuvee Cabernet Sauvignon 750 ml",vinho-montes-alpha-special-cuvee-cabernet-sauvignon-750-ml,0,30,247.44,127.90,272.18,112.81
+CDB-3722,"Vinho Montes Alpha Special Cuvee Chardonnay 750 ml",vinho-montes-alpha-special-cuvee-chardonnay-750-ml,0,6,221.06,94.90,243.16,156.23
+CDB-3704,"Vinho Montes Cabernet Sauvignon Reserva 750ml",vinho-montes-cabernet-sauvignon-reserva-750ml,0,27,122.52,56.90,134.77,136.85
+CDB-3725,"Vinho Montes Outer Limits Cinsault 750 ml",vinho-montes-outer-limits-cinsault-750-ml,0,2,244.87,103.90,269.36,159.25
+96723-5pjw3RJlWV32lQq,"Vinho Morande Selección de Parcelas Carmenere 187ml",vinho-morande-seleccion-de-parcelas-carmenere-187ml,4,61,36.81,16.72,40.49,142.17
+CDB-4210,"Vinho Morandé Terrarum Single Estate Gewürztramine 750ml",vinho-morande-terrarum-single-estate-gewurztramine-750ml,0,20,125.20,43.90,137.72,213.71
+CDB-4025,"Vinho Muga El Andén De La Estación Tinto 750 ml",vinho-muga-el-anden-de-la-estacion-tinto-750-ml,0,8,181.74,65.90,199.92,203.37
+CDB-4024,"Vinho Muga Reserva Rioja Tinto 750 ml",vinho-muga-reserva-rioja-tinto-750-ml,1,92,295.12,142.90,324.63,127.17
+96747-5pjw3RJlWV32lQq,"Vinho Namaqua Pinotage 750ml",vinho-namaqua-pinotage-750ml,0,1,89.44,78.74,98.38,24.94
+96872-5pjw3RJlWV32lQq,"Vinho Namaqua Sauvignon Blanc 750ml",vinho-namaqua-sauvignon-blanc-750ml,0,0,83.26,57.16,91.59,60.23
+CDB-2308,"Vinho Nederburg 1791 Cabernet Sauvignon 750 ml",vinho-nederburg-1791-cabernet-sauvignon-750-ml,3,20,95.46,29.90,105.01,251.20
+96485-5pjw3RJlWV32lQq,"Vinho Nederburg 1791 Pinotage 750ml",vinho-nederburg-1791-pinotage-750ml,3,25,83.56,46.39,91.92,98.15
+CDB-2311,"Vinho Nederburg Baronne Cabernet Sauvignon Shiraz 750 ml",vinho-nederburg-baronne-cabernet-sauvignon-shiraz-750-ml,0,2,166.15,47.90,182.76,281.54
+CDB-2309,"Vinho Nederburg Pinotage 750 ml",vinho-nederburg-pinotage-750-ml,0,89,93.55,54.90,102.90,87.43
+CDB-3218,"Vinho Nederburg Shiraz 750 ml",vinho-nederburg-shiraz-750-ml,3,65,80.76,36.90,88.84,140.76
+CDB-3233,"Vinho Nederburg Winemasters Pinotage 750 ml",vinho-nederburg-winemasters-pinotage-750-ml,0,2,127.58,79.90,140.34,75.64
+CDB-3235,"Vinho Nederburg Winemasters Sauvignon Blanc 750 ml",vinho-nederburg-winemasters-sauvignon-blanc-750-ml,0,1,83.72,60.90,92.10,51.23
+CDB-2933,"Vinho Niel Joubert Pinotage 750 ml",vinho-niel-joubert-pinotage-750-ml,0,10,96.53,74.98,106.18,41.61
+CDB-1927,"Vinho Nieto Senetiner Malbec 750 ml",vinho-nieto-senetiner-malbec-750-ml,5,48,103.89,58.90,114.28,94.02
+CDB-3012,"Vinho Norton Select Cabernet Sauvignon 750 ml",vinho-norton-select-cabernet-sauvignon-750-ml,0,18,99.67,90.68,109.64,20.91
+CDB-3011,"Vinho Norton Select Malbec 750 ml",vinho-norton-select-malbec-750-ml,0,93,75.18,64.73,82.70,27.76
+CDB-495,"Vinho Obikwa Merlot 750ml",vinho-obikwa-merlot-750ml,0,1,68.12,26.90,74.93,178.55
+CDB-496,"Vinho Obikwa Shiraz 750ml",vinho-obikwa-shiraz-750ml,0,10,76.43,34.90,84.07,140.89
+96769-5pjw3RJlWV32lQq,"Vinho Olas Y Vientos Reserva Tannat 750ml",vinho-olas-y-vientos-reserva-tannat-750ml,1,12,71.03,29.34,78.13,166.29
+CDB-2082,"Vinho Orube Crianza Alta Expressión D.O. La Rioja 750 ml",vinho-orube-crianza-alta-expression-d-o-la-rioja-750-ml,0,0,160.12,126.44,176.13,39.30
+CDB-2084,"Vinho Orube Crianza D.O. La Rioja 750 ml",vinho-orube-crianza-d-o-la-rioja-750-ml,0,3,160.12,126.44,176.13,39.30
+96339-5pjw3RJlWV32lQq,"Vinho Panizzon Chardonnay 750ml",vinho-panizzon-chardonnay-750ml,3,12,39.31,31.00,43.24,39.48
+CDB-2303,"Vinho Pata Negra Reserva Tempranillo 750 ml",vinho-pata-negra-reserva-tempranillo-750-ml,0,70,93.02,79.94,102.33,28.01
+CDB-1921,"Vinho Pata Negra Verdejo Branco 750 ml",vinho-pata-negra-verdejo-branco-750-ml,4,34,63.96,28.90,70.36,143.46
+CDB-2999,"Vinho Patricius Tokaji Aszu 6 Puttonyos 500ml",vinho-patricius-tokaji-aszu-6-puttonyos-500ml,0,34,580.76,476.43,638.84,34.09
+CDB-1788,"Vinho Penfolds Bin 28 Kalimna Shiraz 750 ml",vinho-penfolds-bin-28-kalimna-shiraz-750-ml,0,8,634.70,366.68,698.17,90.40
+CDB-1786,"Vinho Penfolds Max’s Shiraz Cabernet 750 ml",vinho-penfolds-max-s-shiraz-cabernet-750-ml,0,5,404.40,233.90,444.84,90.18
+SPL-3709,"Vinho Peppoli Chianti Classico 750 ml",vinho-peppoli-chianti-classico-750-ml,0,10,254.26,169.90,279.68,64.61
+SPL-3668,"Vinho Perez Cruz Piedra Seca Cabernet Sauvignon 750ml",vinho-perez-cruz-piedra-seca-cabernet-sauvignon-750ml,5,174,131.39,43.90,144.53,229.23
+CDB-3669,"Vinho Perez Cruz Pircas Cabernet Sauvignon 750ml",vinho-perez-cruz-pircas-cabernet-sauvignon-750ml,0,16,247.56,226.51,272.32,20.22
+CDB-2512,"Vinho Periquita Classico 750 ml",vinho-periquita-classico-750-ml,0,7,153.50,72.93,168.85,131.52
+CDB-3267,"Vinho Periquita Red Bled 750 ml",vinho-periquita-red-bled-750-ml,0,30,73.63,38.90,81.00,108.23
+CDB-2405,"Vinho Periquita Reserva 1,5 Litros",vinho-periquita-reserva-1-5-litros,0,4,199.01,122.06,218.91,79.35
+SPL-1181,"Vinho Periquita Reserva 750 ml",vinho-periquita-reserva-750-ml,2,166,97.97,70.62,107.76,52.59
+96909-5pjw3RJlWV32lQq,"Vinho Periquita Tinto 750ml",vinho-periquita-tinto-750ml,2,233,73.53,54.62,80.89,48.10
+CDB-2982,"Vinho Perro Callejero Blend de Malbec 750 ml",vinho-perro-callejero-blend-de-malbec-750-ml,3,81,98.57,44.90,108.42,141.47
+CDB-3638,"Vinho Perro Callejero Blend Sauvignon Blanc 750 ml",vinho-perro-callejero-blend-sauvignon-blanc-750-ml,0,8,77.96,74.49,85.76,15.13
+CDB-2984,"Vinho Perro Callejero Pinot Noir 750 ml",vinho-perro-callejero-pinot-noir-750-ml,0,18,81.55,44.90,89.71,99.80
+CDB-3483,"Vinho Petirrojo Sauvignon Blanc 750ml",vinho-petirrojo-sauvignon-blanc-750ml,0,9,67.87,46.90,74.66,59.19
+CDB-4900,"Vinho Piccini I.g.t. Toscana Rosso 2024 750ml",vinho-piccini-i-g-t-toscana-rosso-2024-750ml,0,28,70.69,67.44,77.75,15.29
+97256-5pjw3RJlWV32lQq,"Vinho Pichilemu Carmenere 750ml",vinho-pichilemu-carmenere-750ml,0,4,63.21,57.23,69.53,21.49
+SPL-4012,"Vinho Pintia Vega Sicilia 750 ml",vinho-pintia-vega-sicilia-750-ml,0,92,1042.38,792.90,1146.62,44.61
+96744-5pjw3RJlWV32lQq,"Vinho Pizzato Concentus D.O.V.V 750ml",vinho-pizzato-concentus-d-o-v-v-750ml,2,46,200.31,102.84,220.34,114.26
+96487-5pjw3RJlWV32lQq,"Vinho Pizzato Merlot Reserva D.O.V.V. 750ml",vinho-pizzato-merlot-reserva-d-o-v-v-750ml,3,130,129.38,78.73,142.32,80.77
+96905-5pjw3RJlWV32lQq,"Vinho Pizzato Sauvignon Blanc 750ml",vinho-pizzato-sauvignon-blanc-750ml,1,4,94.60,60.50,104.06,72.00
+96630-5pjw3RJlWV32lQq,"Vinho Pizzato Tannat Reserva 750ml",vinho-pizzato-tannat-reserva-750ml,1,26,126.40,78.73,139.04,76.60
+SPL-3477,"Vinho Poeme Gran Reserva Cabernet Syrah 750ml",vinho-poeme-gran-reserva-cabernet-syrah-750ml,3,53,124.94,62.90,137.44,118.51
+96821-5pjw3RJlWV32lQq,"Vinho Porta 6 Branco 750ml",vinho-porta-6-branco-750ml,0,14,61.52,55.38,67.67,22.19
+CDB-425,"Vinho Porto Ferreira Dona Antónia Reserva Tawny 750 ml",vinho-porto-ferreira-dona-antonia-reserva-tawny-750-ml,1,52,297.71,100.90,327.48,224.56
+CDB-2054,"Vinho Porto Messias 30 Anos 750 ml",vinho-porto-messias-30-anos-750-ml,0,7,1119.06,483.90,1230.96,154.38
+CDB-4280,"Vinho Porto Ramos Pinto White 750ml",vinho-porto-ramos-pinto-white-750ml,0,12,165.13,89.90,181.64,102.05
+CDB-4319,"Vinho Português Herdade Dos Coteis 750ml",vinho-portugues-herdade-dos-coteis-750ml,1,12,56.40,44.90,62.03,38.15
+SPL-3192,"Vinho Prahova Valley Feteasca Neagra Tinto 750ML",vinho-prahova-valley-feteasca-neagra-tinto-750ml,1,27,98.66,34.90,108.53,210.97
+CDB-2253,"Vinho Procura Tinto 750 ml",vinho-procura-tinto-750-ml,0,0,278.90,224.90,306.80,36.42
+CDB-2243,"Vinho Quinta da Manoella Vinhas Velhas Tinto 750 ml",vinho-quinta-da-manoella-vinhas-velhas-tinto-750-ml,0,11,1237.24,1037.37,1360.96,31.19
+CDB-2186,"Vinho Quinta do Crasto Touriga Nacional 750 ml",vinho-quinta-do-crasto-touriga-nacional-750-ml,0,10,812.69,714.34,893.95,25.14
+CDB-4792,"Vinho Quinta Do Noval 20 Anos Tn 750ml",vinho-quinta-do-noval-20-anos-tn-750ml,0,3,845.30,796.67,929.83,16.71
+CDB-4183,"Vinho Quinta Do Noval Porto Ruby 750ml",vinho-quinta-do-noval-porto-ruby-750ml,0,11,109.51,76.16,120.46,58.17
+CDB-4180,"Vinho Quinta Do Noval Tawny 10 Anos 750ml",vinho-quinta-do-noval-tawny-10-anos-750ml,0,4,272.65,180.90,299.92,65.79
+CDB-2188,"Vinho Quinta dos Murças Margem 750 ml",vinho-quinta-dos-murcas-margem-750-ml,0,0,501.68,155.90,551.85,253.98
+CDB-2190,"Vinho Quinta dos Murças Reserva 750 ml",vinho-quinta-dos-murcas-reserva-750-ml,0,3,353.10,185.90,388.41,108.93
+CDB-2191,"Vinho Quinta dos Murças VV47 750 ml",vinho-quinta-dos-murcas-vv47-750-ml,0,0,916.90,339.90,1008.59,196.73
+CDB-4289,"Vinho Ramos Pinto Tawny 750ml",vinho-ramos-pinto-tawny-750ml,0,21,180.67,137.57,198.74,44.46
+CDB-1887,"Vinho Reguengos Garrafeira dos Sócios 750 ml",vinho-reguengos-garrafeira-dos-socios-750-ml,1,20,434.34,242.90,477.78,96.70
+CDB-1917,"Vinho Reguengos Reserva DOC Branco 750 ml",vinho-reguengos-reserva-doc-branco-750-ml,0,5,127.18,54.90,139.90,154.83
+CDB-1918,"Vinho Reguengos Reserva DOC Tinto 750ml",vinho-reguengos-reserva-doc-tinto-750ml,1,67,98.15,44.90,107.97,140.47
+CDB-452,"Vinho Robert Mondavi Napa Valley Cabernet Sauvignon 750 ml",vinho-robert-mondavi-napa-valley-cabernet-sauvignon-750-ml,0,12,545.75,319.90,600.33,87.66
+CDB-4314,"Vinho Robert Mondavi Private Selection 100% Cabernet Sauvignon 750ml",vinho-robert-mondavi-private-selection-100-cabernet-sauvignon-750ml,1,8,164.33,108.90,180.76,65.99
+CDB-451,"Vinho Robert Mondavi Private Selection Chardonnay 750 ml",vinho-robert-mondavi-private-selection-chardonnay-750-ml,0,18,160.51,62.90,176.56,180.70
+CDB-449,"Vinho Robert Mondavi Private Selection Pinot Noir 750 ml",vinho-robert-mondavi-private-selection-pinot-noir-750-ml,0,4,147.89,81.90,162.68,98.63
+CDB-1831,"Vinho Robert Mondavi Private Selection Rum Barrels Merlot 750 ml",vinho-robert-mondavi-private-selection-rum-barrels-merlot-750-ml,0,5,198.22,111.48,218.04,95.59
+CDB-1834,"Vinho Robert Mondavi Private Selection RYE Barrels Red Blend 750 ml",vinho-robert-mondavi-private-selection-rye-barrels-red-blend-750-ml,0,14,203.57,122.65,223.93,82.58
+CDB-447,"Vinho Robert Mondavi Woodbridge Chardonnay",vinho-robert-mondavi-woodbridge-chardonnay,0,14,105.90,44.90,116.49,159.44
+CDB-676,"Vinho Robert Mondavi Woodbridge Pinot Noir 750 ml",vinho-robert-mondavi-woodbridge-pinot-noir-750-ml,1,21,78.30,43.90,86.13,96.20
+CDB-731,"Vinho Robert Mondavi Woodbridge White Zinfandel 750ml",vinho-robert-mondavi-woodbridge-white-zinfandel-750ml,1,26,104.00,34.90,114.40,227.79
+CDB-729,"Vinho Robert Mondavi Woodbridge Zinfandel 750 ml",vinho-robert-mondavi-woodbridge-zinfandel-750-ml,0,46,103.34,88.54,113.67,28.38
+96926-5pjw3RJlWV32lQq,"Vinho Romeira Reserva Regional Alentejano 750ml",vinho-romeira-reserva-regional-alentejano-750ml,1,5,97.37,66.38,107.11,61.36
+CDB-1548,"Vinho Rose Piscine Sea Sun Baby 750 ml",vinho-rose-piscine-sea-sun-baby-750-ml,0,21,81.15,62.38,89.27,43.11
+CDB-1583,"Vinho Rosso Di Montalcino Pian de Le Vigne 750 ml",vinho-rosso-di-montalcino-pian-de-le-vigne-750-ml,1,53,297.92,123.90,327.71,164.50
+CDB-4099,"Vinho Rouge Piscine Tinto 750 Ml",vinho-rouge-piscine-tinto-750-ml,0,15,84.21,65.39,92.63,41.66
+CDB-3457,"Vinho Ruca Malen Aime Rose 750ml",vinho-ruca-malen-aime-rose-750ml,3,8,54.89,34.90,60.38,73.01
+CDB-4491,"Vinho Salbide Rioja 750ml",vinho-salbide-rioja-750ml,0,26,129.49,100.62,142.44,41.56
+CDB-4340,"Vinho Salentein Cabernet Franc 750ml",vinho-salentein-cabernet-franc-750ml,0,17,91.38,80.90,100.52,24.25
+96863-5pjw3RJlWV32lQq,"Vinho Salton Domênico Campanha Marselan 750ml",vinho-salton-domenico-campanha-marselan-750ml,0,22,114.02,79.91,125.42,56.95
+96619-5pjw3RJlWV32lQq,"Vinho Salton Domênico Campanha Marselan e Tannat 750ml",vinho-salton-domenico-campanha-marselan-e-tannat-750ml,4,5,114.02,62.27,125.42,101.41
+96795-5pjw3RJlWV32lQq,"Vinho Salton Domênico Campanha Tannat 750ml",vinho-salton-domenico-campanha-tannat-750ml,0,5,114.02,79.91,125.42,56.95
+96440-5pjw3RJlWV32lQq,"Vinho Salton Paradoxo Pinot Noir 750ml",vinho-salton-paradoxo-pinot-noir-750ml,1,21,63.95,36.98,70.35,90.24
+96489-5pjw3RJlWV32lQq,"Vinho Salton Septimum 750ml",vinho-salton-septimum-750ml,3,35,208.00,129.30,228.80,76.95
+96724-5pjw3RJlWV32lQq,"Vinho Salton Virtude Chardonnay 750ml",vinho-salton-virtude-chardonnay-750ml,0,13,144.76,117.15,159.24,35.93
+CDB-3687,"Vinho San Felice Chianti Classico Docg 750 ml",vinho-san-felice-chianti-classico-docg-750-ml,0,13,270.61,117.90,297.68,152.49
+96522-5pjw3RJlWV32lQq,"Vinho San Marzano Miluna Bianco Puglia IGP 750ml",vinho-san-marzano-miluna-bianco-puglia-igp-750ml,1,17,89.11,46.98,98.02,108.64
+CDB-1859,"Vinho Sang Mele Rouge 750 ml",vinho-sang-mele-rouge-750-ml,0,1,115.85,85.46,127.44,49.12
+96721-5pjw3RJlWV32lQq,"Vinho Santa Alba Winemaker Selection Cabernet Sauvignon 750ml",vinho-santa-alba-winemaker-selection-cabernet-sauvignon-750ml,2,5,36.38,31.84,40.02,25.69
+96638-5pjw3RJlWV32lQq,"Vinho Santa Alba Winemaker Selection Malbec 750ml",vinho-santa-alba-winemaker-selection-malbec-750ml,2,6,34.17,31.84,37.58,18.03
+CDB-191,"Vinho Santa Alicia Reserva Cabernet Sauvignon",vinho-santa-alicia-reserva-cabernet-sauvignon,0,10,67.40,21.90,74.14,238.54
+97326-5pjw3RJlWV32lQq,"Vinho Santa Colina Cabernet Sauvignon Suave 750ml",vinho-santa-colina-cabernet-sauvignon-suave-750ml,0,19,37.32,32.12,41.05,27.80
+97111-5pjw3RJlWV32lQq,"Vinho Santa Colina Merlot Rosé Suave 750ml",vinho-santa-colina-merlot-rose-suave-750ml,2,6,29.68,23.44,32.65,39.29
+CDB-2365,"Vinho Santa Cristina Bianco Igt Umbria 750 ml",vinho-santa-cristina-bianco-igt-umbria-750-ml,0,3,108.13,38.90,118.94,205.76
+CDB-3736,"Vinho Santa Cristina Giardino Rosé Toscana 750ml",vinho-santa-cristina-giardino-rose-toscana-750ml,0,0,93.68,73.90,103.05,39.45
+CDB-3268,"Vinho Santa Helena Gran Rerserva Carmenere 750 ml",vinho-santa-helena-gran-rerserva-carmenere-750-ml,1,11,139.11,43.90,153.02,248.56
+CDB-3266,"Vinho Santa Helena Reservado Chardonnay 750 ml",vinho-santa-helena-reservado-chardonnay-750-ml,0,76,29.61,25.04,32.57,30.07
+CDB-3276,"Vinho Santa Helena Reservado Malbec 750 ml",vinho-santa-helena-reservado-malbec-750-ml,0,75,33.24,18.90,36.57,93.49
+97478-5pjw3RJlWV32lQq,"Vinho Santa Helena Reservado Rosé 750ml",vinho-santa-helena-reservado-rose-750ml,1,10,31.13,27.58,34.25,24.18
+CDB-3269,"Vinho Santa Helena Reservado Sauvignon Blanc 375 ml",vinho-santa-helena-reservado-sauvignon-blanc-375-ml,1,6,33.71,15.90,37.08,133.21
+CDB-184,"Vinho Santa Helena Siglo de Oro Merlot",vinho-santa-helena-siglo-de-oro-merlot,0,9,49.68,40.09,54.65,36.32
+CDB-2980,"Vinho Sapo de Otro Pozo Blend de Tintas 750 ml",vinho-sapo-de-otro-pozo-blend-de-tintas-750-ml,2,211,139.41,55.90,153.35,174.33
+96837-5pjw3RJlWV32lQq,"Vinho Sebrumo Cabernet Sauvignon 750ml",vinho-sebrumo-cabernet-sauvignon-750ml,2,13,144.82,111.07,159.30,43.42
+CDB-2825,"Vinho Septima Gran Reserva Blend 750 ml",vinho-septima-gran-reserva-blend-750-ml,2,108,180.35,102.90,198.39,92.80
+CDB-2824,"Vinho Septima Malbec 750ml",vinho-septima-malbec-750ml,0,78,80.77,38.90,88.85,128.41
+CDB-3053,"Vinho Sexy Fish Cabernet Franc 750 ml",vinho-sexy-fish-cabernet-franc-750-ml,0,7,55.63,30.90,61.20,98.06
+SPL-3876,"Vinho Solaia Antinori Toscana 750 ml",vinho-solaia-antinori-toscana-750-ml,0,10,7249.14,2728.90,7974.05,192.21
+CDB-430,"Vinho Solera 1847 Jerez Dulce Gonzalez Byass 750 ml",vinho-solera-1847-jerez-dulce-gonzalez-byass-750-ml,0,48,185.38,154.63,203.91,31.87
+CDB-3464,"Vinho Sophenia Altosur Reserve Malbec 750 Ml",vinho-sophenia-altosur-reserve-malbec-750-ml,0,17,80.83,78.83,88.92,12.80
+CDB-4878,"Vinho Sottano Junior Malbec 750ml",vinho-sottano-junior-malbec-750ml,3,21,48.97,18.90,53.87,185.03
+CDB-4199,"Vinho Susana Esteban Special Edition Tinto 750ml",vinho-susana-esteban-special-edition-tinto-750ml,1,5,2731.77,1027.90,3004.95,192.34
+CDB-2273,"Vinho Tapada do Chaves Reserva Tinto 750 ml",vinho-tapada-do-chaves-reserva-tinto-750-ml,0,61,267.08,119.90,293.79,145.03
+CDB-4021,"Vinho Tarapacá Gran Reserva Etiqueta Negra Carmenere 750 ml",vinho-tarapaca-gran-reserva-etiqueta-negra-carmenere-750-ml,1,231,205.27,128.79,225.80,75.32
+CDB-4285,"Vinho Tarapacá Gran Reserva Sauvignon Blanc 750ml",vinho-tarapaca-gran-reserva-sauvignon-blanc-750ml,4,64,106.11,48.90,116.72,138.69
+CDB-2485,"Vinho Taylor’s Porto Ruby 750 ml",vinho-taylor-s-porto-ruby-750-ml,3,145,128.18,80.87,141.00,74.35
+CDB-2198,"Vinho Taylor’s Porto Tawny 750 ml",vinho-taylor-s-porto-tawny-750-ml,1,75,147.90,72.90,162.69,123.17
+CDB-2197,"Vinho Taylor’s Ruby Reserve Select 750 ml",vinho-taylor-s-ruby-reserve-select-750-ml,0,12,167.20,59.90,183.92,207.05
+CDB-3713,"Vinho Tecedeiras Lilas Douro 750 ml",vinho-tecedeiras-lilas-douro-750-ml,0,10,100.71,82.13,110.78,34.88
+CDB-4594,"Vinho Telmo E Ruth Cabernet E Merlot 750ml",vinho-telmo-e-ruth-cabernet-e-merlot-750ml,1,45,108.73,56.90,119.60,110.19
+96410-5pjw3RJlWV32lQq,"Vinho Teresa & Alberto Gran Reserva 750ml",vinho-teresa-alberto-gran-reserva-750ml,4,54,107.53,61.82,118.29,91.35
+97167-5pjw3RJlWV32lQq,"Vinho Terrapura Reserva Cabernet Sauvignon 750ml",vinho-terrapura-reserva-cabernet-sauvignon-750ml,0,3,75.45,71.18,83.00,16.61
+96908-5pjw3RJlWV32lQq,"Vinho Terrapura Reserva Carménère 750ml",vinho-terrapura-reserva-carmenere-750ml,1,0,75.05,46.98,82.56,75.73
+CDB-4670,"Vinho Tinto 7 Colores Carmenere 750ml",vinho-tinto-7-colores-carmenere-750ml,2,8,64.54,17.06,71.00,316.18
+SPL-3425,"Vinho Tinto Adobe Reserva Carmenere Emiliana 750 ml",vinho-tinto-adobe-reserva-carmenere-emiliana-750-ml,2,114,74.68,37.90,82.15,116.75
+CDB-2023,"Vinho Tinto Doravante 750 ml",vinho-tinto-doravante-750-ml,0,0,223.52,86.90,245.87,182.93
+CDB-3452,"Vinho Tinto Frances Baron D’arignac Moel 750 ml",vinho-tinto-frances-baron-d-arignac-moel-750-ml,0,59,66.02,33.90,72.62,114.22
+CDB-3738,"Vinho Tinto Haras De Pirque Antinori Albis 750ml",vinho-tinto-haras-de-pirque-antinori-albis-750ml,0,9,460.62,236.90,506.68,113.88
+SPL-4942,"Vinho Tinto Jacopo Biondi Santi Sassoalloro 750 ml",vinho-tinto-jacopo-biondi-santi-sassoalloro-750-ml,0,106,472.69,294.22,519.96,76.72
+CDB-3419,"Vinho Tinto Orgânico Coyam Los Robles Estate 750ml",vinho-tinto-organico-coyam-los-robles-estate-750ml,0,66,274.70,143.90,302.17,109.99
+VIN010,"Vinho Tinto Origem Merlot 750ml",vinho-tinto-origem-merlot-750ml,0,2,65.97,54.39,72.57,33.43
+96725-5pjw3RJlWV32lQq,"Vinho Tinto Saludas 750ml",vinho-tinto-saludas-750ml,3,4,39.60,32.68,43.56,33.29
+CDB-4837,"Vinho Tinto Sena Safra 2023 750ml",vinho-tinto-sena-safra-2023-750ml,0,49,708.08,535.63,778.88,45.41
+CDB-429,"Vinho Tio Pepe Jerez 750 ml",vinho-tio-pepe-jerez-750-ml,3,47,210.80,127.90,231.88,81.30
+CDB-2829,"Vinho Trapiche Astica Malbec 750ml",vinho-trapiche-astica-malbec-750ml,0,19,37.26,20.90,40.98,96.08
+CDB-4407,"Vinho Trapiche Tesoro Malbec 750ml",vinho-trapiche-tesoro-malbec-750ml,3,7,119.99,81.90,131.99,61.16
+CDB-2831,"Vinho Trapiche Vineyards Malbec 750ml",vinho-trapiche-vineyards-malbec-750ml,0,207,45.82,21.90,50.40,130.14
+CDB-3939,"Vinho Trivento Reserva Malbec 750 ml",vinho-trivento-reserva-malbec-750-ml,4,264,55.20,40.90,60.72,48.46
+CDB-3595,"Vinho Truffle Hunter Leda Barbaresco 750ml",vinho-truffle-hunter-leda-barbaresco-750ml,0,0,341.10,141.90,375.21,164.42
+96892-5pjw3RJlWV32lQq,"Vinho Ulian Levato Moscato Giallo 750ml",vinho-ulian-levato-moscato-giallo-750ml,0,13,82.07,52.58,90.28,71.70
+CDB-3641,"Vinho Ultimo Nativo Malbec 750 ml",vinho-ultimo-nativo-malbec-750-ml,0,4,121.96,51.90,134.15,158.48
+CDB-1796,"Vinho Undurraga Aliwen Reserva Caménère 750 ml",vinho-undurraga-aliwen-reserva-camenere-750-ml,0,8,65.62,64.63,72.19,11.70
+CDB-837,"Vinho Undurraga Altazor 750 ml",vinho-undurraga-altazor-750-ml,0,15,367.78,301.90,404.55,34.00
+CDB-4082,"Vinho Undurraga Cabernet Sauvgnon 375ml",vinho-undurraga-cabernet-sauvgnon-375ml,0,43,28.85,19.90,31.74,59.50
+CDB-833,"Vinho Undurraga Merlot 750 ml",vinho-undurraga-merlot-750-ml,0,8,38.04,36.15,41.84,15.74
+CDB-4086,"Vinho Undurraga Sibaris Gran Reserva Pinot Noir 750ml",vinho-undurraga-sibaris-gran-reserva-pinot-noir-750ml,0,8,91.93,90.83,101.13,11.34
+CDB-1285,"Vinho Undurraga T.H. Carignan Maule 750 ml",vinho-undurraga-t-h-carignan-maule-750-ml,0,11,170.59,89.90,187.65,108.73
+CDB-1347,"Vinho Undurraga T.H. Pinot Noir 750 ml – Leyda",vinho-undurraga-t-h-pinot-noir-750-ml-leyda,0,8,147.44,132.96,162.19,21.98
+CDB-3617,"Vinho Val De Flores Malbec 750 ml",vinho-val-de-flores-malbec-750-ml,0,51,472.01,156.28,519.21,232.23
+CDB-2410,"Vinho Vale D. Maria Rufo Tinto Douro DOC 750 ml",vinho-vale-d-maria-rufo-tinto-douro-doc-750-ml,0,8,106.47,52.69,117.11,122.26
+CDB-3577,"Vinho Ventisquero Reserva Pinot Noir 750 ml",vinho-ventisquero-reserva-pinot-noir-750-ml,1,59,65.24,36.90,71.76,94.47
+CDB-4518,"Vinho Verde Amarante 750ml",vinho-verde-amarante-750ml,1,199,42.60,18.64,46.85,151.34
+96468-5pjw3RJlWV32lQq,"Vinho Verde Santola DOC 750ML",vinho-verde-santola-doc-750ml,2,9,57.63,39.34,63.39,61.13
+CDB-3418,"Vinho Vicente Faria Lolita 750ml",vinho-vicente-faria-lolita-750ml,0,12,80.60,37.90,88.66,133.93
+96389-5pjw3RJlWV32lQq,"Vinho Viejo Feo Grand Reserve Cabernet Sauvignon 750ml",vinho-viejo-feo-grand-reserve-cabernet-sauvignon-750ml,0,1,182.58,153.95,200.83,30.45
+CDB-4590,"Vinho Viejo Feo Reserva Carmenere 750ml",vinho-viejo-feo-reserva-carmenere-750ml,0,60,63.68,27.90,70.05,151.08
+CDB-4592,"Vinho Viejo Feo Reserva Pinot Noir Rose 750ml",vinho-viejo-feo-reserva-pinot-noir-rose-750ml,0,8,66.93,44.86,73.62,64.11
+96346-5pjw3RJlWV32lQq,"Vinho Viejo Feo Reserva Sauvignon Blanc 750ml",vinho-viejo-feo-reserva-sauvignon-blanc-750ml,1,4,66.09,36.98,72.70,96.59
+CDB-1244,"Vinho Vietti Barolo Castiglione 750 ml",vinho-vietti-barolo-castiglione-750-ml,0,14,965.90,421.90,1062.49,151.83
+SPL-2510,"Vinho Vik La Piu Belle 750 ml",vinho-vik-la-piu-belle-750-ml,0,34,475.94,331.27,523.54,58.04
+SPL-3975,"Vinho Vik Milla Cala Tinto 750 ml",vinho-vik-milla-cala-tinto-750-ml,5,364,247.36,105.90,272.10,156.94
+CDB-1599,"Vinho Villa Antinori Riserva Chianti Classico DOCG 750 ml",vinho-villa-antinori-riserva-chianti-classico-docg-750-ml,0,33,342.99,142.90,377.29,164.02
+CDB-2889,"Vinho Vinea Cartuxa Branco 750 ml",vinho-vinea-cartuxa-branco-750-ml,0,1,42.53,22.90,46.78,104.28
+CDB-3620,"Vinho Vistalba Corte A 750 ml",vinho-vistalba-corte-a-750-ml,0,29,457.92,373.34,503.71,34.92
+96515-5pjw3RJlWV32lQq,"Vinho Vistaña Cabernet Sauvignon e Merlot 750ml",vinho-vistana-cabernet-sauvignon-e-merlot-750ml,0,2,58.01,53.21,63.81,19.92
+97098-5pjw3RJlWV32lQq,"Vinho Volantin Chardonnay 750ml",vinho-volantin-chardonnay-750ml,0,1,48.82,45.76,53.70,17.35
+CDB-3667,"Vinho Von Siebenthal Carmenere 750 ml",vinho-von-siebenthal-carmenere-750-ml,0,12,177.17,163.72,194.88,19.03
+CDB-3666,"Vinho Von Siebenthal Montelig 750 ml",vinho-von-siebenthal-montelig-750-ml,0,17,808.26,255.90,889.08,247.43
+CDB-4703,"Vinho Whispering Angel 375 Ml 2023",vinho-whispering-angel-375-ml-2023,0,4,95.14,70.76,104.66,47.91
+97248-5pjw3RJlWV32lQq,"Vinho Yali Wetland Reserva Sauvignon Blanc 750ml",vinho-yali-wetland-reserva-sauvignon-blanc-750ml,0,3,84.31,82.19,92.74,12.84
+97432-5pjw3RJlWV32lQq,"Vinho Yali Wild Swan Chardonnay 750ml",vinho-yali-wild-swan-chardonnay-750ml,0,9,75.09,69.96,82.60,18.07
+96850-5pjw3RJlWV32lQq,"Vinho Yali Wild Swan Merlot 750ml",vinho-yali-wild-swan-merlot-750ml,0,2,67.61,52.18,74.37,42.53
+CDB-1736,"Vinho Yarden Chardonnay 750 ml",vinho-yarden-chardonnay-750-ml,0,4,206.01,84.90,226.61,166.91
+96906-5pjw3RJlWV32lQq,"Vinho Zanotto Malbec 750ml",vinho-zanotto-malbec-750ml,0,19,72.19,64.53,79.41,23.06
+96868-5pjw3RJlWV32lQq,"Vinho Zanotto Sangiovese 750ml",vinho-zanotto-sangiovese-750ml,5,77,80.53,39.92,88.58,121.89
+CDB-3640,"Vinho Zorzal Eggo De Tiza Malbec 750ml",vinho-zorzal-eggo-de-tiza-malbec-750ml,0,31,197.20,98.90,216.92,119.33
+96591-5pjw3RJlWV32lQq,"Vinho Zuccardi Serie A Malbec 750ml",vinho-zuccardi-serie-a-malbec-750ml,0,92,149.51,127.87,164.47,28.62
+CDB-4673,"Vino 7 Colores Gran Reserva Cabernet Sauvignon Muscat 750ml",vino-7-colores-gran-reserva-cabernet-sauvignon-muscat-750ml,0,14,114.48,41.90,125.93,200.55
+CDB-1,"Vodka Absolut 1L",vodka-absolut-1l,5,508,69.86,41.90,76.84,83.39
+CDB-2,"Vodka Absolut Apeach 750 ml",vodka-absolut-apeach-750-ml,0,72,75.09,53.26,82.60,55.09
+CDB-3,"Vodka Absolut Citron 750 ml",vodka-absolut-citron-750-ml,1,168,87.50,33.90,96.25,183.92
+CDB-1137,"Vodka Absolut Elyx 4,5 Litros",vodka-absolut-elyx-4-5-litros,0,59,1281.97,484.90,1410.16,190.81
+CDB-515,"Vodka Absolut Elyx 750 ml",vodka-absolut-elyx-750-ml,0,59,200.31,196.82,220.34,11.95
+CDB-5,"Vodka Absolut Mandrin 1L",vodka-absolut-mandrin-1l,1,33,77.98,48.90,85.78,75.42
+CDB-6,"Vodka Absolut Mango 750 ml",vodka-absolut-mango-750-ml,1,97,75.69,54.90,83.26,51.66
+CDB-8,"Vodka Absolut Peppar 1L",vodka-absolut-peppar-1l,1,13,165.27,51.90,181.80,250.29
+CDB-1104,"Vodka Absolut Vanilia 750 ml",vodka-absolut-vanilia-750-ml,5,289,72.23,38.90,79.45,104.24
+CDB-4798,"Vodka Al Danzka Grapefruit 750ml",vodka-al-danzka-grapefruit-750ml,0,2,161.18,72.90,177.30,143.21
+CDB-3199,"Vodka Beluga Gold Line 700ml",vodka-beluga-gold-line-700ml,0,50,1339.42,978.06,1473.36,50.64
+CDB-534,"Vodka Belvedere 1,750 ml",vodka-belvedere-1-750-ml,0,52,535.99,212.90,589.59,176.93
+CDB-533,"Vodka Belvedere 3 Litros com Led",vodka-belvedere-3-litros-com-led,0,121,1373.53,578.30,1510.88,161.26
+CDB-2482,"Vodka Belvedere Lake Bartezek 700ml",vodka-belvedere-lake-bartezek-700ml,0,11,354.19,313.37,389.61,24.33
+CDB-4686,"Vodka Belvedere Pure Chrome 1,750 L",vodka-belvedere-pure-chrome-1-750-l,0,26,895.19,652.21,984.71,50.98
+CDB-3883,"Vodka Belvedere Pure Summer 700 ml",vodka-belvedere-pure-summer-700-ml,1,6,221.44,119.90,243.59,103.16
+CDB-537,"Vodka Ciroc 3 Litros",vodka-ciroc-3-litros,0,67,979.08,497.90,1076.98,116.30
+CDB-543,"Vodka Crystal Head 750 ml",vodka-crystal-head-750-ml,0,29,469.22,201.90,516.15,155.65
+CDB-157,"Vodka Danzka Grapefruit 1000 ml",vodka-danzka-grapefruit-1000-ml,1,3,161.18,47.90,177.30,270.15
+CDB-680,"Vodka Grey Goose 1,5 Litros",vodka-grey-goose-1-5-litros,0,322,392.92,295.04,432.21,46.49
+CDB-269,"Vodka Grey Goose 200 ml",vodka-grey-goose-200-ml,0,7,117.23,53.90,128.95,139.24
+CDB-383,"Vodka Grey Goose 4,5 Litros",vodka-grey-goose-4-5-litros,0,196,2452.26,780.90,2697.49,245.43
+CDB-120,"Vodka Grey Goose La Poire 750 ml",vodka-grey-goose-la-poire-750-ml,0,85,146.48,142.32,161.13,13.22
+CDB-3190,"Vodka Kreskova 700ml",vodka-kreskova-700ml,0,7,46.35,38.85,50.98,31.22
+CDB-1944,"Vodka Skyy Pineapple Infusions 750 ml",vodka-skyy-pineapple-infusions-750-ml,0,10,31.10,25.98,34.20,31.64
+CDB-23,"Vodka Smirnoff Black 1000 ml",vodka-smirnoff-black-1000-ml,3,28,86.83,48.90,95.51,95.32
+CDB-4316,"Vodka Smirnoff Natural 600ml",vodka-smirnoff-natural-600ml,3,54,21.66,15.90,23.82,49.81
+CDB-768,"Vodka Smirnoff Vanilla 998ml",vodka-smirnoff-vanilla-998ml,0,16,35.76,24.90,39.33,57.95
+CDB-154,"Vodka Stolichnaya 750 ml",vodka-stolichnaya-750-ml,0,135,145.73,143.30,160.30,11.86
+CDB-356,"Vodka Svedka 1000 ml",vodka-svedka-1000-ml,2,8,55.76,19.90,61.34,208.24
+CDB-1131,"Vodka Tito’s 750 ml",vodka-tito-s-750-ml,0,16,83.42,45.62,91.76,101.14
+CDB-3612,"Weber Haus Apple 750 ml",weber-haus-apple-750-ml,0,8,225.36,214.79,247.89,15.41
+CDB-2097,"Weber Haus com Banana 500 ml",weber-haus-com-banana-500-ml,0,37,84.54,80.70,92.99,15.23
+CDB-3037,"Weber Haus Fire 750 ml",weber-haus-fire-750-ml,0,7,210.19,175.33,231.21,31.87
+CDB-3038,"Weber Haus Honey 750 ml",weber-haus-honey-750-ml,1,12,226.50,85.90,249.15,190.05
+CDB-1087,"Whisky Aberfeldy 16 anos 750 ml – Single Malt",whisky-aberfeldy-16-anos-750-ml-single-malt,3,66,407.68,207.90,448.45,115.70
+CDB-4730,"Whisky Ame Sazerac Rye 750ml",whisky-ame-sazerac-rye-750ml,0,41,197.58,108.90,217.33,99.57
+CDB-779,"Whisky Ardbeg 10 Anos – Single Malt 750 ml",whisky-ardbeg-10-anos-single-malt-750-ml,3,210,500.39,343.90,550.43,60.06
+SPL-785,"Whisky Balvenie PortWood 21 anos 700 ml",whisky-balvenie-portwood-21-anos-700-ml,0,24,3356.67,3123.97,3692.34,18.19
+CDB-2621,"Whisky Black & White Orange 700 ml",whisky-black-white-orange-700-ml,2,87,57.40,45.90,63.14,37.56
+CDB-563,"Whisky Bourbon Evan Williams Black 1000 ml",whisky-bourbon-evan-williams-black-1000-ml,0,53,137.68,71.90,151.45,110.64
+CDB-1133,"Whisky Bruichladdich Port Charlotte Scottish Barley 700 ml – Single Malt",whisky-bruichladdich-port-charlotte-scottish-barley-700-ml-single-malt,0,26,511.09,386.38,562.20,45.50
+CDB-2887,"Whisky Buchanan’s Master 750 ml",whisky-buchanan-s-master-750-ml,0,996,213.06,117.90,234.36,98.78
+CDB-32,"Whisky Buchanan’s Special Reserve 18 anos 750 ml",whisky-buchanan-s-special-reserve-18-anos-750-ml,0,125,705.29,672.95,775.82,15.29
+CDB-755,"Whisky Cardhu 12 anos 1L",whisky-cardhu-12-anos-1l,1,193,638.71,156.90,702.58,347.79
+CDB-2113,"Whisky Chivas Regal 13 anos Extra 750 ml",whisky-chivas-regal-13-anos-extra-750-ml,1,90,150.34,70.90,165.37,133.24
+CDB-324,"Whisky Chivas Regal 25 anos 700 ml",whisky-chivas-regal-25-anos-700-ml,0,107,2703.01,2359.31,2973.32,26.02
+CDB-898,"Whisky Chivas Regal Extra 750 ml",whisky-chivas-regal-extra-750-ml,0,131,150.34,125.02,165.37,32.27
+CDB-2768,"Whisky Chivas Royal Salute Chinese 700ml",whisky-chivas-royal-salute-chinese-700ml,0,118,1433.69,1100.62,1577.05,43.29
+CDB-719,"Whisky Dalmore Cigar Malt Reserve 700 ml",whisky-dalmore-cigar-malt-reserve-700-ml,0,11,1145.88,775.90,1260.47,62.45
+CDB-1170,"Whisky Dewars 12 Anos 750 ml",whisky-dewars-12-anos-750-ml,0,52,93.25,66.90,102.57,53.32
+CDB-861,"Whisky Dewars 18 anos 750 ml",whisky-dewars-18-anos-750-ml,3,129,485.01,403.67,533.51,32.16
+CDB-3653,"Whisky Duck & Co. Green Apple 750 ml",whisky-duck-co-green-apple-750-ml,3,155,69.82,34.90,76.80,120.06
+CDB-846,"Whisky Evan Williams Honey 750 ml",whisky-evan-williams-honey-750-ml,0,7,121.64,50.90,133.80,162.87
+CDB-1433,"Whisky Fettercairn 12 Anos – Highland Single Malt Scotch 700 ml",whisky-fettercairn-12-anos-highland-single-malt-scotch-700-ml,0,5,730.81,410.90,803.90,95.64
+CDB-114,"Whisky Glenfiddich 12 anos 750ml",whisky-glenfiddich-12-anos-750ml,1,356,387.60,289.90,426.36,47.07
+CDB-4773,"Whisky Glenfiddich 12 Pack C/ Copo 750ml",whisky-glenfiddich-12-pack-c-copo-750ml,2,121,510.68,228.90,561.75,145.41
+CDB-247,"Whisky Glenfiddich 15 anos 750 ml",whisky-glenfiddich-15-anos-750-ml,0,68,612.30,550.60,673.53,22.33
+CDB-786,"Whisky Glenfiddich Excellence 26 anos 700 ml",whisky-glenfiddich-excellence-26-anos-700-ml,0,41,6832.84,2193.90,7516.12,242.59
+CDB-705,"Whisky Glenmorangie 12 anos 750 ml",whisky-glenmorangie-12-anos-750-ml,0,61,518.77,210.90,570.64,170.57
+CDB-871,"Whisky Glenmorangie 18 anos 700 ml",whisky-glenmorangie-18-anos-700-ml,0,60,1457.13,414.21,1602.84,286.96
+CDB-4405,"Whisky Glenmorangie Nectar 16 Anos 750ml",whisky-glenmorangie-nectar-16-anos-750ml,1,12,611.49,436.90,672.64,53.96
+CDB-708,"Whisky Glenmorangie Quinta Ruban 12 anos 750 ml",whisky-glenmorangie-quinta-ruban-12-anos-750-ml,0,32,452.77,258.90,498.05,92.37
+CDB-1623,"Whisky Glenmorangie Quinta Ruban 14 anos 750 ml",whisky-glenmorangie-quinta-ruban-14-anos-750-ml,0,87,464.10,259.90,510.51,96.43
+CDB-513,"Whisky Hankey Bannister 12 Anos 1000 ml",whisky-hankey-bannister-12-anos-1000-ml,2,38,249.13,90.90,274.04,201.47
+CDB-29,"Whisky Jack Daniel’s 1000 ml",whisky-jack-daniel-s-1000-ml,1,106,164.44,85.90,180.88,110.57
+CDB-4277,"Whisky Jack Daniel’s Honey 700 ml",whisky-jack-daniel-s-honey-700-ml,2,683,96.01,69.90,105.61,51.09
+CDB-1129,"Whisky Jack Daniels 500 ml",whisky-jack-daniels-500-ml,2,150,75.96,32.90,83.56,153.98
+CDB-666,"Whisky Jack Daniels Honey 1000 ml",whisky-jack-daniels-honey-1000-ml,3,184,164.05,119.33,180.46,51.23
+CDB-2760,"Whisky Jack Daniels Honey 375ml",whisky-jack-daniels-honey-375ml,2,104,71.71,32.90,78.88,139.76
+CDB-64,"Whisky Jim Beam Black Bourbon Extra Aged 1000 ml",whisky-jim-beam-black-bourbon-extra-aged-1000-ml,0,102,133.87,92.90,147.26,58.51
+CDB-63,"Whisky Jim Beam Original Bourbon 1000 ml",whisky-jim-beam-original-bourbon-1000-ml,0,345,73.93,54.90,81.33,48.14
+CDB-977,"Whisky Johnnie Walker 18 Anos 750ml",whisky-johnnie-walker-18-anos-750ml,0,628,527.91,280.90,580.70,106.73
+CDB-2221,"Whisky Johnnie Walker Black Label 12 anos 750 ml",whisky-johnnie-walker-black-label-12-anos-750-ml,4,640,103.20,68.90,113.52,64.76
+CDB-4000,"Whisky Johnnie Walker Black Label Edição Limitada 12 anos 750 ml",whisky-johnnie-walker-black-label-edicao-limitada-12-anos-750-ml,1,84,103.20,58.90,113.52,92.73
+CDB-3650,"Whisky Johnnie Walker Black Label Sherry Finish 750 ml",whisky-johnnie-walker-black-label-sherry-finish-750-ml,1,78,141.99,97.90,156.18,59.53
+CDB-2390,"Whisky Johnnie Walker Blonde 750 ml",whisky-johnnie-walker-blonde-750-ml,0,428,79.53,39.90,87.48,119.25
+CDB-17,"Whisky Johnnie Walker Blue Label 750 ml",whisky-johnnie-walker-blue-label-750-ml,1,897,1453.16,880.31,1598.48,81.58
+CDB-2030,"Whisky Johnnie Walker Gold 200 anos Limited Edition 750 ml",whisky-johnnie-walker-gold-200-anos-limited-edition-750-ml,0,26,339.12,185.90,373.03,100.66
+CDB-3995,"Whisky Johnnie Walker Gold Label Edição Limitada 750 ml",whisky-johnnie-walker-gold-label-edicao-limitada-750-ml,1,122,319.12,152.90,351.03,129.58
+CDB-13,"Whisky Johnnie Walker Red Label 1L",whisky-johnnie-walker-red-label-1l,1,326,70.13,63.90,77.14,20.72
+CDB-2168,"Whisky Johnnie Walker Red Label 750 ml",whisky-johnnie-walker-red-label-750-ml,5,1024,55.51,39.90,61.07,53.06
+CDB-1436,"Whisky Jura 18 anos 700 ml",whisky-jura-18-anos-700-ml,0,16,1339.34,1301.18,1473.28,13.23
+CDB-1134,"Whisky Kamiki Blended Malt 500 ml – Japão",whisky-kamiki-blended-malt-500-ml-japao,0,15,634.36,223.90,697.79,211.65
+CDB-2952,"Whisky Lamas Rarus Single Malt Barril ex-rum 720 ml",whisky-lamas-rarus-single-malt-barril-ex-rum-720-ml,0,202,190.81,145.25,209.89,44.50
+CDB-4521,"Whisky Macallan Harmony Collect Vibrant Oak 700ml",whisky-macallan-harmony-collect-vibrant-oak-700ml,0,27,1941.73,1529.52,2135.90,39.65
+CDB-4912,"Whisky Maker’s Mark 46 Bourbon 750ml",whisky-maker-s-mark-46-bourbon-750ml,1,27,271.92,217.90,299.11,37.27
+CDB-4938,"Whisky Michter’s Sour Mash 750 ml",whisky-michter-s-sour-mash-750-ml,0,4,569.97,557.12,626.97,12.54
+CDB-3076,"Whisky Monkey Howler Spirit Head 750ml",whisky-monkey-howler-spirit-head-750ml,1,88,157.50,73.90,173.25,134.44
+CDB-557,"Whisky Old Parr 18 anos 750 ml",whisky-old-parr-18-anos-750-ml,3,251,596.77,334.13,656.45,96.47
+CDB-758,"Whisky Old Parr Silver 1L",whisky-old-parr-silver-1l,0,48,91.64,61.90,100.81,62.86
+CDB-953,"Whisky Old Virginia 6 anos Bourbon 700 ml",whisky-old-virginia-6-anos-bourbon-700-ml,0,28,175.38,58.90,192.92,227.54
+CDB-1593,"Whisky Royal Salute Menagerie 700 ml",whisky-royal-salute-menagerie-700-ml,1,742,1119.11,764.63,1231.02,61.00
+CDB-3047,"Whisky Royal Salute The Couture Collection Richard Quinn Edition Black 700 ml",whisky-royal-salute-the-couture-collection-richard-quinn-edition-black-700-ml,1,322,1826.61,900.90,2009.27,123.03
+CDB-1432,"Whisky Shackleton – Blended Malt Scotch 700 ml",whisky-shackleton-blended-malt-scotch-700-ml,0,21,818.94,305.90,900.84,194.49
+CDB-586,"Whisky Sir Edwards 1000 ml",whisky-sir-edwards-1000-ml,0,54,69.19,39.90,76.11,90.75
+CDB-1103,"Whisky Tamnavulin Double Cask 700 ml – Single Malt",whisky-tamnavulin-double-cask-700-ml-single-malt,1,116,246.88,148.90,271.57,82.38
+CDB-1768,"Whisky Teachers 12 anos Golden Thistle 750ml",whisky-teachers-12-anos-golden-thistle-750ml,3,94,79.24,37.90,87.16,129.97
+CDB-198,"Whisky The Macallan 12 anos – Fine Oak – Triple Cask Matured 700 ml",whisky-the-macallan-12-anos-fine-oak-triple-cask-matured-700-ml,2,310,1387.14,300.90,1525.86,407.10
+CDB-2570,"Whisky The Macallan Edition No.6 700 ml",whisky-the-macallan-edition-no-6-700-ml,1,150,2947.91,591.90,3242.70,447.85
+CDB-3385,"Whisky Union Distillery Blended 1000 ml",whisky-union-distillery-blended-1000-ml,1,17,114.60,29.90,126.06,321.61
+CDB-3393,"Whisky Union Distillery Extraturfado Pure Malt 750ml",whisky-union-distillery-extraturfado-pure-malt-750ml,4,418,251.71,89.90,276.89,208.00
+CDB-3387,"Whisky Union Distillery Extraturfado Sherry Cask Finish Px Pure Malt 750 ml",whisky-union-distillery-extraturfado-sherry-cask-finish-px-pure-malt-750-ml,0,94,251.71,147.90,276.89,87.21
+CDB-3392,"Whisky Union Distillery Turfado Pure Malt 750 ml",whisky-union-distillery-turfado-pure-malt-750-ml,1,103,251.71,107.90,276.89,156.62
+CDB-565,"Whisky Whyte & Mackay 1000 ml",whisky-whyte-mackay-1000-ml,0,17,93.63,52.70,102.99,95.43
+CDB-3035,"Whisky Wild Side – American Whiskey Kentucky 700 ml",whisky-wild-side-american-whiskey-kentucky-700-ml,1,25,99.81,47.90,109.79,129.21
+CDB-762,"Whisky Wild Turkey 81 Bourbon 1000 ml",whisky-wild-turkey-81-bourbon-1000-ml,3,299,124.01,71.90,136.41,89.72
+CDB-2024,"Xarope Marie Brizard Grenadine (Groselha) 700 ml",xarope-marie-brizard-grenadine-groselha-700-ml,1,154,41.38,40.90,45.52,11.30
+CDB-1996,"Xarope Marie Brizard Limão 700 ml",xarope-marie-brizard-limao-700-ml,0,356,63.95,61.80,70.35,13.83
+CDB-3165,"Xarope Monin Abacaxi 700ml",xarope-monin-abacaxi-700ml,1,19,68.75,35.90,75.63,110.67
+CDB-3150,"Xarope Monin Amora 700ml",xarope-monin-amora-700ml,3,66,60.37,30.90,66.40,114.89
+CDB-3932,"Xarope Monin Avela 700 ml",xarope-monin-avela-700-ml,5,44,64.67,30.90,71.14,130.23
+CDB-3169,"Xarope Monin Baunilha 700ml",xarope-monin-baunilha-700ml,4,279,62.37,31.90,68.61,115.08
+CDB-3167,"Xarope Monin Cassis 700ml",xarope-monin-cassis-700ml,2,33,72.81,38.90,80.09,105.89
+CDB-3929,"Xarope Monin Coco 700 ml",xarope-monin-coco-700-ml,3,44,69.44,30.90,76.38,147.18
+CDB-3162,"Xarope Monin Curacau Blue 700ml",xarope-monin-curacau-blue-700ml,1,111,64.66,42.90,71.13,65.80
+CDB-1662,"Xarope Monin Lichia 700ml",xarope-monin-lichia-700ml,1,140,58.73,41.90,64.60,54.18
+CDB-3168,"Xarope Monin Limao Siciliano E Tahiti 700ml",xarope-monin-limao-siciliano-e-tahiti-700ml,2,45,63.66,35.90,70.02,95.04
+CDB-3918,"Xarope Monin Manga 700 ml",xarope-monin-manga-700-ml,1,23,65.63,30.90,72.20,133.66
+CDB-1663,"Xarope Monin Melão 700ml",xarope-monin-melao-700ml,4,78,61.14,40.90,67.25,64.43
+CDB-1657,"Xarope Monin Mirtilo 700ml",xarope-monin-mirtilo-700ml,0,104,69.11,39.90,76.02,90.53
+CDB-3323,"Xarope Monin Mojito Mint 700ml",xarope-monin-mojito-mint-700ml,0,43,66.71,56.60,73.38,29.65
+CDB-1658,"Xarope Monin Pessego 700ml",xarope-monin-pessego-700ml,4,86,66.85,37.90,73.54,94.04
+CDB-3174,"Xarope Monin Rose 700ml",xarope-monin-rose-700ml,3,292,56.46,18.90,62.10,228.57
+CDB-3921,"Xarope Monin Spicy Mango 700ml",xarope-monin-spicy-mango-700ml,1,32,66.07,38.90,72.68,86.84
+CDB-3173,"Xarope Monin Triple Sec Curacao 700ml",xarope-monin-triple-sec-curacao-700ml,0,12,69.97,33.90,76.97,127.05
+CDB-3166,"Xarope Monin Violeta 700ml",xarope-monin-violeta-700ml,0,53,57.13,47.12,62.84,33.36
+CDB-4125,"Xarope Vora Blue Lemonade 1 L",xarope-vora-blue-lemonade-1-l,0,24,54.39,39.90,59.83,49.95
+CDB-4132,"Xarope Vora Caramelo Salgado 1 L",xarope-vora-caramelo-salgado-1-l,0,17,66.79,60.54,73.46,21.34
+CDB-4119,"Xarope Vora Limao Siciliano 1 L",xarope-vora-limao-siciliano-1-l,0,74,61.57,49.90,67.73,35.73
+CDB-4121,"Xarope Vora Tropical Lemonade 1 L",xarope-vora-tropical-lemonade-1-l,0,252,63.78,59.25,70.16,18.41

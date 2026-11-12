@@ -8,6 +8,7 @@ import {
   Loader2,
   Mail,
   MapPin,
+  Phone,
   Send,
 } from "lucide-react";
 import { z } from "zod";
@@ -18,8 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useStoreSettings } from "@/lib/store-settings";
 import { STORE } from "@/lib/settings";
-import { WhatsAppIcon } from "@/components/store/WhatsAppIcon";
-import { mailtoHref } from "@/lib/contact-links";
+import { mailtoHref, telHref } from "@/lib/contact-links";
 import { pageMeta } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -177,23 +177,20 @@ function ContactPage() {
                 </div>
               )}
 
-              <div className="flex gap-4 py-5">
-                <WhatsAppIcon className="h-5 w-5 shrink-0 text-[#25D366]" aria-hidden="true" />
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground">WhatsApp</h3>
-                  <div className="mt-1">
+              {phone && (
+                <div className="flex gap-4 py-5">
+                  <Phone className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">Telefone</h3>
                     <a
-                      href={`https://wa.me/${STORE.whatsappNumber}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-semibold text-foreground hover:text-primary"
+                      href={telHref(phone) ?? `tel:+55${STORE.phoneDigits}`}
+                      className="mt-1 inline-block text-sm text-muted-foreground hover:text-primary hover:underline"
                     >
-                      WhatsApp: {STORE.whatsappDisplay}
+                      {phone}
                     </a>
-                    <p className="mt-1 text-sm text-muted-foreground">Telefone: {phone}</p>
                   </div>
                 </div>
-              </div>
+              )}
 
               {email && (
                 <div className="flex gap-4 py-5">
